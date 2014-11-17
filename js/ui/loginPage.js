@@ -1,7 +1,6 @@
-define('ui/loginPage',['lib/global','lib/bootstrap'], function(require, exports, module) {
-	//载入JQuery，以及bootstrap插件
+define('ui/loginPage',['lib/global'], function(require, exports, module) {
+	//载入JQuery插件
 	var $ = require('lib/global');
-	require('lib/bootstrap')($);
 	
 	return {
 		use:function( option ){

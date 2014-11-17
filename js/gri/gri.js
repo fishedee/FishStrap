@@ -1,4 +1,4 @@
-define('gri/gri',['lib/global','../../css/gri/style.css','../../css/gri/module.css','../../css/gri/reset.css','../../css/gri/form.css'],function(require, exports, module){
+define('gri/gri',['lib/global','../../css/gri/bootstrap.css','../../css/gri/style.css','../../css/gri/module.css','../../css/gri/reset.css','../../css/gri/form.css'],function(require, exports, module){
 /**
  * ===========================================
  * GRI 前台JS框架

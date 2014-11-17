@@ -7,6 +7,15 @@ define('lib/global',['lib/jquery'], function(require, exports, module) {
 				window.console.log(msg);
 		}
 	};
+	//全局唯一数字
+	(function(){
+		var $i = 10000;
+		$.uniqueNum = function(){
+			$i++;
+			var id = 'id_'+$i;
+			return id;
+		}
+	})();
 	//加入动态添加样式表扩展
 	$.addCssToHead = function(str_css) {
 		try { 

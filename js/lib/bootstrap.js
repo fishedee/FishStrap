@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * ========================================================== */
-define('lib/bootstrap',['../../css/bootstrap.css','../../css/bootstrap-theme.css'],function(require, exports, module){
+define('lib/bootstrap',['../../css/bootstrap.css'],function(require, exports, module){
 return function(jQuery){
 var window = {};
 window.jQuery = jQuery;

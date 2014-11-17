@@ -1,5 +1,5 @@
-define('gri/gritable',['../../css/gri/style.css','../../css/gri/module.css','../../css/gri/reset.css','../../css/gri/form.css'],function(require, exports, module){
-var GRI;
+define('gri/griTable',['../../css/gri/bootstrap.css','../../css/gri/style.css','../../css/gri/module.css','../../css/gri/reset.css','../../css/gri/form.css'],function(require, exports, module){
+var self = {};
 // Copyright 2012 Tencent Inc. All Rights Reserved.
 
 /**
@@ -1078,7 +1078,7 @@ var GRI;
             loadingDiv.className = 'gri_datatable_loading';
             loadingDiv.innerHTML = "<img src='../../assets/css/images/loading.gif' alt='加载中...' />";
 
-            document.getElementsByTagName('body')[0].appendChild(loadingDiv);
+            //document.getElementsByTagName('body')[0].appendChild(loadingDiv);
             loadingDiv.style.position = "absolute";
             loadingDiv.style.left = positon.left + (_table.clientWidth / 2) + "px";
             loadingDiv.style.top = positon.top + 120 + "px";
@@ -1982,7 +1982,7 @@ var GRI;
     }
 
     //传入window，可以加速读取
-})(this, document, undefined);
+})(self, document, undefined);
 
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -2210,5 +2210,5 @@ var superTable = function (tableId, options) {
     this.callbackFunc && this.callbackFunc();
 };
 
-return GRI;
+return self.GRI;
 });

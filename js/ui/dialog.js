@@ -1,7 +1,7 @@
 define('ui/dialog',['lib/global','gri/gri'], function(require, exports, module) {
 	//载入JQuery，以及bootstrap插件
 	var $ = require('lib/global');
-	var GRI = require('bui/gri');
+	var GRI = require('gri/gri');
 	return {
 		message:function(msg,callback){
 			var title = '提示信息';
