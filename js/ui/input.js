@@ -12,7 +12,8 @@ define('ui/input',['lib/global','ui/dialog'], function(require, exports, module)
 			};
 			for( var i in option )
 				defaultOption[i] = option[i];
-			
+			if( defaultOption.field.length == 0 )
+				return;
 			var div = "";
 			//基本框架
 			for( var i in defaultOption.field ){
@@ -69,11 +70,20 @@ define('ui/input',['lib/global','ui/dialog'], function(require, exports, module)
 			for( var i in defaultOption.field ){
 				var field = defaultOption.field[i];
 				contentDiv += 
-				'<tr>'+
-					'<td class="tableleft">'+field.name+'</td>'+
-					'<td>';
+					'<tr>'+
+						'<td class="tableleft">'+field.name+'</td>';
+				if( typeof field.targetId != 'undefined'){
+					contentDiv += '<td id="'+field.targetId+'">';
+				}else{
+					contentDiv += '<td>';
+				}
 				if( field.type == 'read'){
 					contentDiv += '<div name="'+field.id+'"/>';
+				}else if( field.type == 'image'){
+					field.imageTargetId = $.uniqueNum();
+					contentDiv += '<img name="'+field.id+'" src=""/><input type="file" name="'+field.id+'" accept="image/*" id="'+field.imageTargetId +'"/>';
+				}else if( field.type == 'area'){
+					contentDiv += '<textarea name="'+field.id+'" style="width:90%;height:300px;"></textarea>';
 				}else if( field.type == 'text'){
 					contentDiv += '<input type="text" name="'+field.id+'"/>';
 				}else if( field.type == 'password'){
@@ -89,7 +99,6 @@ define('ui/input',['lib/global','ui/dialog'], function(require, exports, module)
 					'</td>'+
 				'</tr>';
 			}
-			console.log(contentDiv);
 			div += '<table class="table table-bordered table-hover definewidth m10">'+
 				contentDiv+
 				'<tr>'+
@@ -108,10 +117,43 @@ define('ui/input',['lib/global','ui/dialog'], function(require, exports, module)
 					continue;
 				if( field.type == 'read')
 					div.find('div[name='+field.id+']').text(defaultOption.value[field.id]);
+				else if( field.type == 'image')
+					div.find('img[name='+field.id+']').attr("src",defaultOption.value[field.id]);
+				else if( field.type == 'area')
+					div.find('textarea[name='+field.id+']').val(defaultOption.value[field.id]);
 				else if( field.type == 'text' || field.type == 'password')
 					div.find('input[name='+field.id+']').val(defaultOption.value[field.id]);
 				else if( field.type == 'enum')
 					div.find('select[name='+field.id+']').val(defaultOption.value[field.id]);
+			}
+			//挂载image事件
+			for( var i in defaultOption.field ){
+				var field = defaultOption.field[i];
+				if( field.type == 'image'){
+					(function(field){
+						div.find('input[name='+field.id+']').change(function(){
+							$.ajaxFileUpload({
+								url:field.url,
+								secureuri:false,
+								fileElementId:field.imageTargetId,
+								dataType:'json',
+								success: function (data, status){
+									if( data.code != 0 ){
+										dialog.message('上传文件失败:'+data.msg);
+										return;
+									}
+									$('#'+defaultOption.id).find('img[name='+field.id+']').attr('src',data.data);
+								},
+								error:function(data,status,e){
+									console.log(data);
+									console.log(status);
+									console.log(e);
+									dialog.message('上传文件失败:'+data.status);
+								}
+							});
+						});
+					})(field);
+				}
 			}
 			//挂载事件
 			div.find('.submit').click(function(){
@@ -120,6 +162,10 @@ define('ui/input',['lib/global','ui/dialog'], function(require, exports, module)
 					var field = defaultOption.field[i];
 					if( field.type == 'read'){
 						data[field.id] = $.trim($('#'+defaultOption.id).find('div[name='+field.id+']').text());
+					}else if( field.type == 'image'){
+						data[field.id] = $.trim($('#'+defaultOption.id).find('img[name='+field.id+']').attr("src"));
+					}else if( field.type == 'area'){
+						data[field.id] = $.trim($('#'+defaultOption.id).find('textarea[name='+field.id+']').val());
 					}else if( field.type == 'text' || field.type == 'password'){
 						data[field.id] = $.trim($('#'+defaultOption.id).find('input[name='+field.id+']').val());
 					}else if( field.type == 'enum'){

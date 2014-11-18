@@ -9,7 +9,8 @@ define('ui/query',['lib/global','ui/table','ui/input'], function(require, export
 			var defaultOption = {
 				id:'',
 				column:[],
-				params:[],
+				queryColumn:[],
+				params:{},
 				operate:[],
 				checkAll:false,
 				url:'',
@@ -29,7 +30,7 @@ define('ui/query',['lib/global','ui/table','ui/input'], function(require, export
 			//生成staticTable框架
 			table.staticTable({
 				id:tableId,
-				params:[],
+				params:defaultOption.params,
 				column:defaultOption.column,
 				operate:defaultOption.operate,
 				checkAll:defaultOption.checkAll,
@@ -37,8 +38,8 @@ define('ui/query',['lib/global','ui/table','ui/input'], function(require, export
 			});
 			//生成flowInput框架
 			var field = [];
-			for( var i in defaultOption.params ){
-				var param = defaultOption.params[i];
+			for( var i in defaultOption.queryColumn ){
+				var param = defaultOption.queryColumn[i];
 				var columnInfo;
 				for( var j in defaultOption.column ){
 					var column = defaultOption.column[j];
@@ -60,7 +61,7 @@ define('ui/query',['lib/global','ui/table','ui/input'], function(require, export
 				submit:function(data){
 					table.staticTable({
 						id:tableId,
-						params:data,
+						params:$.extend(defaultOption.params,data),
 						column:defaultOption.column,
 						operate:defaultOption.operate,
 						checkAll:defaultOption.checkAll,
