@@ -1,6 +1,8 @@
-define('ui/input',['lib/global','ui/dialog'], function(require, exports, module){
+define('ui/input',['lib/global','ui/editor','ui/dialog'], function(require, exports, module){
 	var $ = require('lib/global');
 	var dialog = require('ui/dialog');
+	var editor = require('ui/editor');
+	console.log(editor);
 	return {
 		flowInput:function( option ){
 			//处理option
@@ -79,6 +81,9 @@ define('ui/input',['lib/global','ui/dialog'], function(require, exports, module)
 				}
 				if( field.type == 'read'){
 					contentDiv += '<div name="'+field.id+'"/>';
+				}else if( field.type == 'simpleEditor'){
+					field.editorTargetId = $.uniqueNum();
+					contentDiv += '<div name="'+field.id+'" id="'+field.editorTargetId+'"/>';
 				}else if( field.type == 'image'){
 					field.imageTargetId = $.uniqueNum();
 					contentDiv += '<img name="'+field.id+'" src=""/><input type="file" name="'+field.id+'" accept="image/*" id="'+field.imageTargetId +'"/>';
@@ -110,23 +115,9 @@ define('ui/input',['lib/global','ui/dialog'], function(require, exports, module)
 				'</tr>'+
 			'</table>';
 			div = $(div);
-			//设置value
-			for( var i in defaultOption.field ){
-				var field = defaultOption.field[i];
-				if( typeof defaultOption.value[field.id] == 'undefined' )
-					continue;
-				if( field.type == 'read')
-					div.find('div[name='+field.id+']').text(defaultOption.value[field.id]);
-				else if( field.type == 'image')
-					div.find('img[name='+field.id+']').attr("src",defaultOption.value[field.id]);
-				else if( field.type == 'area')
-					div.find('textarea[name='+field.id+']').val(defaultOption.value[field.id]);
-				else if( field.type == 'text' || field.type == 'password')
-					div.find('input[name='+field.id+']').val(defaultOption.value[field.id]);
-				else if( field.type == 'enum')
-					div.find('select[name='+field.id+']').val(defaultOption.value[field.id]);
-			}
-			//挂载image事件
+			//插入到页面中
+			$('#'+defaultOption.id).append(div);
+			//挂载控件事件
 			for( var i in defaultOption.field ){
 				var field = defaultOption.field[i];
 				if( field.type == 'image'){
@@ -145,15 +136,34 @@ define('ui/input',['lib/global','ui/dialog'], function(require, exports, module)
 									$('#'+defaultOption.id).find('img[name='+field.id+']').attr('src',data.data);
 								},
 								error:function(data,status,e){
-									console.log(data);
-									console.log(status);
-									console.log(e);
 									dialog.message('上传文件失败:'+data.status);
 								}
 							});
 						});
 					})(field);
+				}else if( field.type == 'simpleEditor'){
+					field._editor = editor.simpleEditor({
+						id:field.editorTargetId
+					});
 				}
+			}
+			//设置value
+			for( var i in defaultOption.field ){
+				var field = defaultOption.field[i];
+				if( typeof defaultOption.value[field.id] == 'undefined' )
+					continue;
+				if( field.type == 'read')
+					div.find('div[name='+field.id+']').text(defaultOption.value[field.id]);
+				else if( field.type == 'simpleEditor')
+					field._editor.setFormatData(defaultOption.value[field.id]);
+				else if( field.type == 'image')
+					div.find('img[name='+field.id+']').attr("src",defaultOption.value[field.id]);
+				else if( field.type == 'area')
+					div.find('textarea[name='+field.id+']').val(defaultOption.value[field.id]);
+				else if( field.type == 'text' || field.type == 'password')
+					div.find('input[name='+field.id+']').val(defaultOption.value[field.id]);
+				else if( field.type == 'enum')
+					div.find('select[name='+field.id+']').val(defaultOption.value[field.id]);
 			}
 			//挂载事件
 			div.find('.submit').click(function(){
@@ -162,6 +172,8 @@ define('ui/input',['lib/global','ui/dialog'], function(require, exports, module)
 					var field = defaultOption.field[i];
 					if( field.type == 'read'){
 						data[field.id] = $.trim($('#'+defaultOption.id).find('div[name='+field.id+']').text());
+					}else if( field.type == 'simpleEditor'){
+						data[field.id] = field._editor.getFormatData();
 					}else if( field.type == 'image'){
 						data[field.id] = $.trim($('#'+defaultOption.id).find('img[name='+field.id+']').attr("src"));
 					}else if( field.type == 'area'){
@@ -175,8 +187,6 @@ define('ui/input',['lib/global','ui/dialog'], function(require, exports, module)
 				defaultOption.submit(data);
 			});
 			div.find('.cancel').click(defaultOption.cancel);
-			//插入到页面中
-			$('#'+defaultOption.id).append(div);
 		}
 	};
 });
