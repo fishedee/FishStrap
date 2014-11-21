@@ -1,4 +1,5 @@
-define('gri/griTable',['../../css/gri/bootstrap.css','../../css/gri/style.css','../../css/gri/module.css','../../css/gri/reset.css','../../css/gri/form.css'],function(require, exports, module){
+define('gri/griTable',['lib/gloabl','../../css/gri/bootstrap.css','../../css/gri/style.css','../../css/gri/module.css','../../css/gri/reset.css','../../css/gri/form.css'],function(require, exports, module){
+var $ = require('lib/global');
 var self = {};
 // Copyright 2012 Tencent Inc. All Rights Reserved.
 
@@ -142,7 +143,7 @@ var self = {};
             	if(allFields[key].needOrder==undefined) 
             		allFields[key].needOrder = false;
             }
-            
+
             //如果没有设置Html详情，则自动创建
             if (ifDivNode) {
                 container.innerHTML = '';
@@ -171,6 +172,7 @@ var self = {};
                 var ifClicked = false;
 
                 if (document.all) {
+					
                     var _colgroup = document.createElement('COLGROUP');
                     var _thead = document.createElement('THEAD');
                     var _tr = document.createElement('TR');
@@ -370,6 +372,7 @@ var self = {};
                 }
 
                 this.columnCount = count;
+
             }
             else {
                 var _table = document.getElementById(options.tableId);
@@ -378,6 +381,7 @@ var self = {};
                     this.columnCount = _colgroup.getAttribute('span');
                 }
             }
+
 
 
             //删除已经存在的page控件
@@ -443,6 +447,7 @@ var self = {};
                 this.page.data = options.data;
             }
 
+
             /*
              * 如果没有数据进行的初始化工作
              */
@@ -459,6 +464,7 @@ var self = {};
             for (var i =0; i < this.summary.length ; i++) {      
                 this.page.data.push(this.summary[i]);
             }
+
 
             //遍历index页的值进行处理
             for (var i = 0; i < this.page.data.length; i++) {
@@ -586,10 +592,13 @@ var self = {};
                     tableBody = tr + tableBody;
                 }
             }
+			
+
 
 
             //兼容各浏览器的增加到页面方式
             var _tbody = _table.getElementsByTagName('TBODY')[0];
+
 
             if (document.all) {
 
@@ -599,6 +608,7 @@ var self = {};
                 var tbody = document.createElement('TBODY');
 
                 if (options.data.length == 0) {
+
                     var _p = document.createElement("p");
                     _p.style.lineHeight = "50px";
                     _p.style.textAlign = "center";
@@ -613,9 +623,11 @@ var self = {};
                     _tr.appendChild(_td);
 
                     tbody.appendChild(_tr);
-                } else {
-                    var trs = [];
 
+                } else {
+
+                    var trs = [];
+		
                     while (tableBody.length > 0) {
                         var trRow = tableBody.substring(4, tableBody.indexOf("</tr>"));
                         tableBody = tableBody.replace("<tr>" + trRow + "</tr>", "");
@@ -630,19 +642,32 @@ var self = {};
                         if (i % 2 == 1) {
                             trNode.className = 'gri_listtd';
                         }
-
+						
+						//Fish 修复Td无限循环的问题
                         var trRow = trs[i];
+						var newTrRow = "";
+						var regEx = /(<td[^>]*>)([^<]*)(<\/td>)/g;
+						while((r = regEx.exec(trRow) ) != null ){
+							newTrRow += r[1]+decodeURIComponent(r[2])+r[3];
+						}
+						$(trNode).html(newTrRow);
+						/*
                         while (trRow.length > 0) {
+							var temp = trRow.className;
+							trRow.className = "";
                             var tdHTML = trRow.substring(4, trRow.indexOf("</td>"));
                             trRow = trRow.replace("<td>" + tdHTML + "</td>", "");
 
                             var tdNode = document.createElement('TD');
                             tdNode.innerHTML = decodeURIComponent(tdHTML);
+							tdNode.className = temp;
                             trNode.appendChild(tdNode);
                         }
+						*/
 
                         tbody.appendChild(trNode);
                     }
+
                 }
 
                 _table.appendChild(tbody);
@@ -682,6 +707,7 @@ var self = {};
                     }
                 }
             }
+			
 
 
             //获取当前的table

@@ -2,7 +2,6 @@ define('ui/input',['lib/global','ui/editor','ui/dialog'], function(require, expo
 	var $ = require('lib/global');
 	var dialog = require('ui/dialog');
 	var editor = require('ui/editor');
-	console.log(editor);
 	return {
 		flowInput:function( option ){
 			//处理option

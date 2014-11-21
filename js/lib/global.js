@@ -7,6 +7,17 @@ define('lib/global',['lib/jquery'], function(require, exports, module) {
 				window.console.log(msg);
 		}
 	};
+	//加入自动加时间戳扩展
+	$._ajax = $.ajax;
+	$.ajax = function(opt){
+		var timestamp = new Date().getTime();
+		if( opt.url.indexOf('?') == -1 )
+			opt.url = opt.url +'?t='+timestamp;
+		else
+			opt.url = opt.url +'&t='+timestamp;
+		opt.cache = false;
+		$._ajax(opt);
+	};
 	//全局唯一数字
 	(function(){
 		var $i = 10000;

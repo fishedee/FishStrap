@@ -25,6 +25,7 @@ define('ui/editor',['lib/global'],function(require, exports, module){
 				},
 				getFormatData:function(){
 					var content = ue.getContent();
+
 					var div = $(content);
 					var data = [];
 					div.each(function(){
@@ -63,7 +64,6 @@ define('ui/editor',['lib/global'],function(require, exports, module){
 							});
 						}
 					});
-					console.log(data);
 					return data;
 				},
 				setContent:function(content){
@@ -81,6 +81,7 @@ define('ui/editor',['lib/global'],function(require, exports, module){
 							content += '<p><img src="'+singleData.data+'"/></p>';
 					}
 					ue.ready(function(){
+
 						ue.setContent(content);
 					});
 				}
