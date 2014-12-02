@@ -1,0 +1,22 @@
+{
+  "name": "FishStrap",
+  "version": "1.0.0",
+  "description": "Fish通用前端工具库",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fishedee/FishStrap"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fishedee/FishStrap/issues"
+  },
+  "homepage": "https://github.com/fishedee/FishStrap",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-copy": "^0.7.0",
+    "grunt-contrib-uglify": "^0.6.0"
+  }
+}

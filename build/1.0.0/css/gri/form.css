@@ -1,0 +1,817 @@
+@import "reset.css";
+.anchor{position: relative;}
+.anchor-right{position: absolute;right:0;}
+textarea {
+  overflow: auto;
+  vertical-align: top;
+}
+input,
+button,
+select,
+textarea {
+  font-family:"微软雅黑","Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+select,
+textarea,
+input[type="text"],
+input[type="password"],
+input[type="number"]{
+  display: inline-block;
+  height: 18px;
+  padding: 8px 4px;
+  font-size: 12px;
+  line-height: 18px;
+  color: #555555;
+}
+
+input [type="text"],
+textarea {
+  width: 210px;
+}
+
+textarea {
+  height: auto;
+}
+
+textarea,
+input[type="text"],
+input[type="password"]
+{
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  -webkit-border-radius: 2px;
+     -moz-border-radius: 2px;
+          border-radius: 2px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
+     -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
+      -ms-transition: border linear 0.2s, box-shadow linear 0.2s;
+       -o-transition: border linear 0.2s, box-shadow linear 0.2s;
+          transition: border linear 0.2s, box-shadow linear 0.2s;
+}
+
+textarea:focus,
+input[type="text"]:focus,
+input[type="password"]:focus {
+  border-color: rgba(82, 168, 236, 0.8);
+  outline: 0;
+  outline: thin dotted \9;
+  /* IE6-9 */
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+  margin: 3px 0;
+	margin-right:3px;
+  *margin-top: 0;
+  /* IE7 */
+  cursor: pointer;
+}
+
+
+
+select {
+  width: 220px;
+border: 1px solid #bbb;
+height: 26px;
+line-height: 26px;
+padding:4px;
+ *margin-top: 4px;
+}
+
+select:focus,
+input[type="file"]:focus,
+input[type="radio"]:focus,
+input[type="checkbox"]:focus {
+  outline: thin dotted #333;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+
+.radio,
+.checkbox {
+  min-height: 18px;
+  padding-left: 18px;
+}
+
+.radio input[type="radio"],
+.checkbox input[type="checkbox"] {
+  float: left;
+  margin-left: -18px;
+}
+
+.controls > .radio:first-child,
+.controls > .checkbox:first-child {
+  padding-top: 5px;
+}
+
+.radio.inline,
+.checkbox.inline {
+  display: inline-block;
+  padding-top: 5px;
+  margin-bottom: 0;
+  vertical-align: middle;
+}
+
+.radio.inline + .radio.inline,
+.checkbox.inline + .checkbox.inline {
+  margin-left: 10px;
+}
+
+.input-normal{width:249px;}
+.sel-normal{width:259px;}
+.sel-middle{width:150px;}
+.sel-small{width:127px;}
+.sel-mini{width:70px;}
+.input-mini { width: 60px;}
+.input-small { width: 90px;
+}
+
+.input-medium,.input-middle {
+  width: 150px;
+}
+
+.input-large {
+  width: 210px;
+}
+
+.input-xlarge {
+  width: 270px;
+}
+
+.input-xxlarge {
+  width: 530px;
+}
+
+
+
+
+input[type="radio"][disabled],
+input[type="checkbox"][disabled],
+input[type="radio"][readonly],
+input[type="checkbox"][readonly] {
+  background-color: transparent;
+}
+
+.control-group.warning > label,
+.control-group.warning .help-block,
+.control-group.warning .help-inline {
+  color: #ff4800;
+}
+.control-group.warning .checkbox,
+.control-group.warning .radio,
+.control-group.warning input,
+.control-group.warning select,
+.control-group.warning textarea {
+  border-color: #ff4800;
+}
+
+
+
+
+
+.form-horizontal .form-actions {
+  margin-top: 18px;
+  margin-bottom: 18px;
+  *zoom: 1;
+	padding-left: 108px;
+}
+
+.form-actions:before,
+.form-actions:after {
+  display: table;
+  content: "";
+}
+
+.form-actions:after {
+  clear: both;
+}
+
+
+.help-block,
+.help-inline {
+  color: #999;
+	font-size: 12px;
+}
+
+.help-block {
+  display: block;
+  margin-bottom: 9px;
+}
+.help-wrong{display: none;}
+.help-inline {
+  display: inline-block;
+  *display: inline;
+  padding-left: 5px;
+  vertical-align: middle;
+  *zoom: 1;
+}
+
+.input-prepend,
+.input-append {
+  margin-bottom: 5px;
+  font-size:0;
+}
+
+.input-prepend input,
+.input-append input,
+.input-prepend select,
+.input-append select, {
+  position: relative;
+  margin-bottom: 0;
+  *margin-left: 0;
+  vertical-align:middle;
+  -webkit-border-radius: 0 2px 2px 0;
+     -moz-border-radius: 0 2px 2px 0;
+          border-radius: 0 2px 2px 0;
+}
+
+.input-prepend input:focus,
+.input-append input:focus,
+.input-prepend select:focus,
+.input-append select:focus,
+ {
+  z-index: 2;
+}
+
+
+.input-append input,
+.input-append select{
+  -webkit-border-radius: 2px 0 0 2px;
+     -moz-border-radius: 2px 0 0 2px;
+          border-radius: 2px 0 0 2px;
+}
+
+.input-append .btn-select{position: relative;margin-left: -1px;}
+.input-append .btn-append{line-height:24px;*line-height:26px;vertical-align:top;*vertical-align:middle;; margin-left: -1px;border-radius: 0px 2px 2px 0px;}
+.input-append .input-normal{width:205px;}
+.search-query {
+  padding-right: 14px;
+  padding-right: 4px \9;
+  padding-left: 14px;
+  padding-left: 4px \9;
+  /* IE7-8 doesn't have border-radius, so don't indent the padding */
+  margin-bottom: 0;
+  -webkit-border-radius: 14px;
+     -moz-border-radius: 14px;
+          border-radius: 14px;
+}
+.form-horizontal input,
+.form-horizontal textarea,
+.form-horizontal select,
+.form-horizontal .help-inline,
+.form-horizontal .input-prepend,
+.form-horizontal .input-append
+.form-horizontal .select-append{
+  display: inline-block;
+  *display: inline;
+  margin-bottom: 0;
+  *zoom: 1;
+}
+.form-horizontal .input-append {display: inline;}
+select{padding:8px 4px; height:36px; line-height:36px; width: 260px; border: 1px solid #ccc}
+.form-horizontal h2{font-size: 16px; padding:5px 0; border-bottom: none;}
+.control-group {
+  margin-bottom: 9px;
+}
+
+
+
+.form-horizontal .control-group {
+	font-size: 14px;
+  margin-bottom: 10px;
+  *zoom: 1;
+}
+
+.form-horizontal .control-group:before,
+.form-horizontal .control-group:after {
+  display: table;
+  content: "";
+}
+
+.form-horizontal .control-group:after {
+  clear: both;
+}
+
+.form-horizontal .control-label,.lable-left .control-label {
+  float: left;
+  width:100px;
+  line-height: 34px;
+	height: 34px;
+  text-align: right;
+	color: #666;
+}
+.lable-left .control-label{text-align: left}
+
+.form-horizontal .controls {
+  *display: inline-block;
+  margin-left:110px;
+  *padding-left: 10px;
+	*margin-left:0px;
+}
+
+
+.form-horizontal .help-block {
+  margin-top: 9px;
+  margin-bottom: 0;
+}
+.form-horizontal .divide-row .div-item{display: block;margin-bottom: 5px;}
+.form-horizontal .divide{width:600px;}
+.form-horizontal .divide .div-item{float: left;margin-right: 10px; width:150px;}
+/*展示表单*/
+.show-form .control-group {margin-bottom: 5px; }
+.show-form .controls{margin-left: 105px;}
+.show-form .control-label{color: #999; width:105px}
+.show-form .control-label,.show-form .title-primary {line-height: 24px; height: 24px;}
+.show-form  .form-actions{padding-left:105px ;}
+.btn {
+  display: inline-block;
+  *display: inline;
+  padding:5px 10px 5px;
+ margin: 0 ;
+  font-size: 12px;
+  line-height: 18px;
+  *line-height: 19px;
+ *padding:2px 0px 2px;
+  color: #333333;
+  text-align: center;
+  vertical-align: middle;
+	*vertical-align:top;
+  cursor: pointer;
+  background-color: #f5f5f5;
+  *background-color: #e6e6e6;
+  background-image: -ms-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6));
+  background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: -o-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6);
+  background-repeat: repeat-x;
+  border: 1px solid #cccccc;
+  *zoom: 1;
+	border-radius:3px;
+}
+
+.btn:hover,
+.btn:active,
+.btn.active,
+.btn.disabled,
+.btn[disabled] {
+  background-color: #e6e6e6;
+}
+
+.btn:active {
+  background-color: #cccccc \9;
+}
+.btn:first-child {
+  *margin-left: 0;
+}
+
+.btn:hover {
+  color: #333333;
+  text-decoration: none;
+  background-color: #e6e6e6;
+  *background-color: #d9d9d9;
+  /* Buttons in IE7 don't get borders, so darken on hover */
+  background-position: 0 -15px;
+  -webkit-transition: background-position 0.1s linear;
+     -moz-transition: background-position 0.1s linear;
+      -ms-transition: background-position 0.1s linear;
+       -o-transition: background-position 0.1s linear;
+          transition: background-position 0.1s linear;
+}
+
+.btn.active,
+.btn:active {
+  background-color: #e6e6e6;
+  background-color: #d9d9d9 \9;
+  background-image: none;
+  outline: 0;
+  -webkit-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+     -moz-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+          box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.btn.disabled,
+.btn[disabled] {
+  cursor: default;
+  background-color: #e6e6e6;
+  background-image: none;
+  opacity: 0.65;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+     -moz-box-shadow: none;
+          box-shadow: none;
+}
+
+.btn-select {width:40px;padding:10px; vertical-align: top}
+.btn-primary,.btn-normal,.btn-thin,.btn-warn,.btn-primary-dis,.btn-normal-dis,.btn-thin-dis{
+    font-family:"微软雅黑";
+    border:none;
+    color:#fff;
+	border-radius:2px;
+	cursor: pointer;
+	vertical-align: middle;;
+}
+.btn-primary-dis,.btn-normal-dis,.btn-thin-dis{cursor:default;}
+.btn-primary,.btn-primary-dis,.btn-primary-dis:hover{
+    background-color:#ff8700;
+	background-image:none;
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ff8700), to(#ff7800));
+	    background-image: -webkit-linear-gradient(top, #ff8700, #ff7800);
+	    background-image: -o-linear-gradient(top, #ff8700, #ff7800);
+	    background-image: linear-gradient(to bottom, #ff8700, #ff7800);
+	    background-image: -moz-linear-gradient(top, #ff8700, #ff7800);
+	border:1px solid #ff6800;
+}
+.btn-primary:hover{
+    background-color:#ff9900;
+	background-image:none;
+	background-image: -webkit-gradient(linear, 0 0, 0 80%, from(#ff9900), to(#ff7700));
+	    background-image: -webkit-linear-gradient(top, #ff9900, #ff9900);
+	    background-image: -o-linear-gradient(top, #ff9900, #ff9900);
+	    background-image: linear-gradient(to bottom, #ff9900, #ff9900);
+	    background-image: -moz-linear-gradient(top, #ff9900, #ff9900);
+    color:#fff;
+	border:1px solid #ff6800;
+}
+.btn-primary-dis,.btn-primary-dis:hover{color:#ffb751}
+.btn-normal,.btn-normal-dis,.btn-normal-dis:hover{
+    background-color:#1d81bd;
+	border:1px solid #0a6eaa;
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#1d81bd), to(#1579b5));
+	    background-image: -webkit-linear-gradient(top, #1d81bd, #1579b5);
+	    background-image: -o-linear-gradient(top, #1d81bd, #1579b5);
+	    background-image: linear-gradient(to bottom, #1d81bd, #1579b5);
+	background-image: -moz-linear-gradient(top, #1d81bd, #1579b5);
+}
+.btn-normal:hover{
+    background-color: #288cc8;
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#288cc8), to(#2277aa));
+		    background-image: -webkit-linear-gradient(top, #288cc8, #2277aa);
+		    background-image: -o-linear-gradient(top, #288cc8, #2277aa);
+		    background-image: -moz-linear-gradient(top, #288cc8, #2277aa);
+}
+.btn-normal-dis,.btn-normal-dis:hover{color:#68add7}
+.btn-thin,.btn-thin-dis,.btn-thin-dis:hover{
+    background-color:#f9f9f9;
+	border:1px solid #cdcdcd;
+	color: #555;
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#f9f9f9), to(#f5f5f5));
+	    background-image: -webkit-linear-gradient(top, #f9f9f9, #f5f5f5);
+	    background-image: -o-linear-gradient(top, #f9f9f9, #f5f5f5);
+	    background-image: linear-gradient(to bottom, #f9f9f9, #f5f5f5);
+	background-image: -moz-linear-gradient(top, #f9f9f9, #f5f5f5);
+}
+.btn-thin:hover{
+    background-color: #fefefe;
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fefefe), to(#f8f8f8));
+		    background-image: -webkit-linear-gradient(top, #fefefe, #f8f8f8);
+		    background-image: -o-linear-gradient(top, #fefefe, #f8f8f8);
+		    background-image: -moz-linear-gradient(top, #fefefe, #f8f8f8);
+}
+.btn-thin-dis,.btn-thin-dis:hover{color:#b1b0b0}
+.btn-warn{
+    background-color:#fd6753;
+	border:1px solid #ec5642;
+	color: #fff;
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fd6753), to(#ec5642));
+	    background-image: -webkit-linear-gradient(top, #fd6753, #ec5642);
+	    background-image: -o-linear-gradient(top, #fd6753, #ec5642);
+	background-image: -moz-linear-gradient(top, #fd6753, #ec5642);
+}
+.btn-warn:hover{
+    background-color: #ff7f6e;
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ff7f6e), to(#ec5642));
+	    background-image: -webkit-linear-gradient(top, #ff7f6e, #ec5642);
+	    background-image: -o-linear-gradient(top, #ff7f6e, #ec5642);
+	background-image: -moz-linear-gradient(top, #ff7f6e, #ec5642);
+
+}
+
+.btn-large {
+  padding: 9px 25px;
+  font-size: 15px;
+}
+
+.btn-small {
+  padding: 3px 10px;
+  font-size: 12px;
+  line-height: 16px;
+}
+.btn-middle {
+  padding:5px 15px 5px;
+ *padding:2px;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+/*模拟下拉*/
+
+.open {
+  *z-index: 1000;
+}
+
+.open .dropdown{
+  display: block;
+}
+.open .dropdown-iframe{
+  display: block;
+}
+.dropdown{  /*===下拉层div==*/
+	font-size:14px;
+  position: absolute;
+  z-index: 1000;
+  display: none;
+  float: left;
+  padding: 2px 0;
+  list-style: none;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+     -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  -webkit-background-clip: padding-box;
+     -moz-background-clip: padding;
+          background-clip: padding-box;
+	width:265px;
+}
+
+/*==三角形==*/
+
+.open .icon-caret{
+  border-bottom: 4px solid #808080;
+  border-right: 4px dashed transparent;
+  border-left: 4px dashed transparent;
+  border-top:none;
+}
+.dropdown .icon-caret {
+  margin-top: 8px;
+  margin-left: 2px;
+}
+/*竖向展示列表*/
+.list-menu li{ font-size:12px;}
+.list-menu li strong{ font-weight:bold; padding-top:10px; display:inline-block;}
+.list-menu li a {
+  display: block;
+  padding: 7px 15px;
+  clear: both;
+  font-weight: normal;
+  line-height: 20px;
+  height: 20px;
+  color: #333333;
+  white-space: nowrap;
+}
+.list-menu li  a:hover
+{
+  text-decoration: none;
+  background: #eee;
+	color: #333333;
+}
+
+
+/*==三角形==*/
+.icon-caret,.icon-caret-top,.icon-caret-down {
+  display: inline-block;
+  width: 0;
+  height: 0;
+ line-height: 0;
+font-size:0;
+border:4px solid #444;
+border-color: #444  transparent transparent  transparent;
+border-style: solid dashed dashed dashed;
+  content: "";
+}
+.icon-caret-down{
+	border:4px solid #000;
+	border-color: #000  transparent transparent  transparent;
+	border-style: solid dashed dashed  dashed;
+}
+
+.icon-caret-left {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 4px solid #444;
+  border-top: 4px dashed transparent;
+  border-bottom: 4px dashed transparent;
+  font-size:0;
+  content: "";
+  overflow:hidden;
+}
+.icon-caret-right {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-right: 4px solid #444;
+  border-top: 4px dashed transparent;
+  border-bottom: 4px dashed transparent;
+  font-size:0;
+  content: "";
+  overflow:hidden;
+}
+
+.selected .icon-caret-left {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-top: 4px solid #444;
+  border-right: 4px dashed transparent;
+  border-left: 4px dashed transparent;
+  font-size:0;
+  content: "";
+}
+
+/*==公用图标==*/
+.icon-user ,.icon-friends,.icon-chevron-down,.icon-load,.icon-help,.icon-radio,.icon-checkbox,.icon-check,.icon-question,.icon-tanhao
+{ width:16px; height:16px;line-height:16px;display:inline-block; vertical-align:middle; font-size:0;
+	background:url(../../assets/img/element.png) no-repeat;}
+.icon-help{background-position:-48px -40px; position: relative;vertical-align:-3px; }
+.error .icon-help{ background-position:0 -40px; }
+.warning .icon-help{background-position:-48px -40px; }
+.icon-tanhao{background-position:-17px -40px; }
+.success .icon-help{background-position:-32px -40px;}
+.icon-radio{ position:relative;vertical-align:-2px;background-position:-48px -56px; margin-right: 5px;}
+.selected .icon-radio{background-position:-64px -56px;}
+.disabled .icon-radio{background-position:-80px -56px;}
+.icon-user {background-position: -95px -72px;*margin-top:5px;}
+.icon-checkbox{ margin:0 5px 2px 0;background-position: -0px -56px; }
+.selected .icon-checkbox{background-position: -16px -56px;}
+.disabled .icon-checkbox{ background-position: -32px -56px;}
+.disabled a:link,.disabled a:hover{color:#afafaf; cursor:default;}
+.disabled a:link, .disabled a:visited {color:#afafaf; cursor:default;}
+.icon-check{ background-position: -112px -72px;}
+.icon-pw-high,.icon-pw-mid ,.icon-pw-low{background:url(../../images/public/pw-bg.png) no-repeat; width:68px; height: 22px; display: inline-block;}
+.icon-pw-high{background-position: 0 0;}
+.icon-pw-mid{background-position: -75px 0;}
+.icon-pw-low{background-position: -150px 0;}
+/*模拟raido框选项 radio-box*/
+
+.radio-box{display:inline-block;_display:inline; zoom:1;font-size:14px;_font-family:"宋体";
+	padding:0 10px;vertical-align:middle; margin-right:9px;text-decoration:none;outline:0;position:relative;}
+.imit-radio-box{position: relative;display: block;
+	color: #555555;
+	background:#f5f5f5;
+	border:2px solid #cfcfcf;
+}
+.selected .imit-radio-box,.imit-radio-box:hover{background:#ffffff;border:2px solid #a5c85b;outline:0; display: block;}
+.radio-box{display:inline-block;_display:inline; zoom:1;font-size:14px;_font-family:"宋体";padding:0 10px;vertical-align:middle; margin-right:9px;
+	text-decoration:none;outline:0;position:relative;}
+.open .radio-box{ border-bottom:none; z-index:20; }
+.open a.radio-box:hover{
+	color: #555555;
+	border-bottom:none;
+	padding:10px 10px 0 10px;
+	height:28px;
+}
+.radio-box .icon-bookmark{position:absolute; top:-5px; right:-3px;}
+.radio-box .icon-check,.imit-radio-box .icon-check{ position:absolute; bottom:0; right:0;display:none;}
+ .radio-box input[type="radio"]{margin-right: 5px; vertical-align: -2px;}
+.radio-box em{font-size:12px; color:#aaa; padding-left:3px;}
+.radio-box em,.radio-box .icon-caret{_padding-right:1px;}
+.selected .radio-box .icon-check,.selected .imit-radio-box .icon-check{display:block;}
+.open .selected .radio-box .icon-check{display:none;}
+a.radio-box:link, a.radio-box:visited {
+	color: #555555;
+	background:#f5f5f5;
+	border:1px solid #cfcfcf;
+	padding:0 10px;
+	padding-top:9px;
+	height:29px;
+	text-decoration:none;
+}
+a.radio-box:hover {
+	color: #555555;
+	background:#ffffff;
+ 	border:2px solid #a5c85b;
+	padding:0 9px;
+	text-decoration:none;
+	padding-top:8px;
+	height:28px;
+
+}
+.selected a.radio-box:link, .selected a.radio-box:visited,.selected a.radio-box:active, .selected a.radio-box:hover {
+	color: #555555;
+	background:#ffffff;
+ 	border:2px solid #a5c85b;
+	padding:0 9px;
+	padding-top:8px;
+	height:28px;
+	outline:0;
+}
+.open a.radio-box:link, .open a.radio-box:visited,.open a.radio-box:active, .open a.radio-box:hover {
+ 	border:2px solid #a5c85b;
+	border-bottom:none;
+	background:#ffffff;
+	padding:0 9px;
+	padding-top:7px;
+	height:29px;
+}
+
+.disabled  a.radio-box:link, .disabled  a.radio-box:visited {
+	color: #afafaf;
+	background:#fafafa;
+	border:1px solid #e8e8e8;
+	padding:0 10px;
+	padding-top:9px;
+	height:29px;
+}
+.disabled  a.radio-box:active, .disabled a.radio-box:hover {
+	color: #afafaf;
+	background:#fafafa;
+ 	border:1px solid #e8e8e8;
+	text-decoration:none;
+	padding:0 10px;
+	padding-top:9px;
+	height:29px;
+
+}
+
+/*模拟raido选项*/
+a.radio:link, a.radio:visited {
+	text-decoration:none;
+	color: #555555;
+	padding:2px 0;
+	cursor:pointer;
+}
+a.radio:active, a.radio:hover {
+	color: #555555;
+	text-decoration:none;
+	padding:2px 0;
+	cursor:pointer;
+}
+
+/*模拟checkbox选项*/
+a.checkbox:link, a.checkbox:visited {
+	text-decoration:none;
+	color: #555555;
+	padding:2px 0;
+}
+a.checkbox:active, a.checkbox:hover {
+	color: #555555;
+	text-decoration:none;
+	padding:2px 0;
+
+}
+.title-primary { /*===独立文字使用，文字加强==*/
+	font-weight:400;
+	height:34px;
+	line-height:34px;
+	margin-right:5px;
+}
+.title-primary label{padding-right: 5px;}
+/*智能选择*/
+.mod-select-group{position: relative;width:260px; background: #fff;}
+.mod-select{padding: 0;}
+.mod-select input{width:97%;}
+
+.mod-select .touch{position: absolute; right:0px; top:0px; z-index: 10; width:30px; height: 36px;}
+.mod-select a:hover{text-decoration: none}
+.mod-select .touch i{margin-left:10px; margin-top:16px}
+.mod-select-group .dropdown{
+	left:0px;
+	top:31px;
+	width:100%;
+	max-height: 200px;
+	overflow-y: auto;
+	padding-top:0
+}
+.mod-select-group .dropdown ul{padding: 0; margin: 0;}
+.mod-select-group .select-list  a{ display: block;
+	text-overflow:ellipsis; overflow: hidden;padding:6px 5px; margin: 0; color: #555; _height:20px;}
+.mod-select-group .select-list a:hover{background: #f2f2f2; text-decoration: none;}
+.mod-select .mod-select-show{height: 34px;}
+.mod-select .touch-tx{color: #555; font-size: 12px;position: absolute;
+	right:0px; top:0px; z-index: 10;  height: 34px; line-height: 34px;
+background: #f2f2f2;padding:0 10px; border-left:1px solid #e3e3e3;
+	background-image: -ms-linear-gradient(top, #ffffff, #e6e6e6);
+	  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6));
+	  background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6);
+	  background-image: -o-linear-gradient(top, #ffffff, #e6e6e6);
+	  background-image: linear-gradient(top, #ffffff, #e6e6e6);
+	  background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6);}
+.mod-select .touch-tx:hover{background: #e6e6e6; -webkit-transition: background-position 0.1s linear;
+     -moz-transition: background-position 0.1s linear;
+      -ms-transition: background-position 0.1s linear;
+       -o-transition: background-position 0.1s linear;
+          transition: background-position 0.1s linear;}
+.mod-select .touch-tx i{margin-left: 5px;}
+.input-border{border:1px solid #ccc;}
+.mod-select-group .dropdown .mod-chose-group a{padding:0;}
+.mod-select-group .dropdown .mod-chose-group ul li a{padding-left: 10px; border-left:1px solid #ebebeb; margin-left: 12px;}
+
+
+
+
+
+
+
+
+
+
