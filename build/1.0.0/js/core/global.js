@@ -26,6 +26,18 @@ define('core/global',[], function(require, exports, module) {
 			return id;
 		}
 	})();
+	//加入安全扩展
+	$.security = {
+		htmlEncode:function (value){
+			return $('<div/>').text(value).html();
+		},
+		urlEncode:function (value){
+			return encodeURI(value);
+		},
+		jsEncode:function (value){
+			return escape(value);
+		}
+	};
 	//加入动态添加样式表扩展
 	$.addCssToHead = function(str_css) {
 		try { 
@@ -520,11 +532,13 @@ define('core/global',[], function(require, exports, module) {
 				// Create the request object
 				var xml = {};
 				s = jQuery.extend({}, jQuery.ajaxSettings, s);
-				if(window.ActiveXObject){
+				if(window.ActiveXObject){	
+					//IE6
 					var upload =  new jQuery.ajaxUpload(s,xml);
 					upload.start();
 				  
 			   }else{
+					//IE6以上
 				var id = new Date().getTime();
 				var form = jQuery.createUploadForm(id,s.url, s.fileElementId, (typeof(s.data)=='undefined'?false:s.data));
 				var io = jQuery.createUploadIframe(id, s.secureuri);

@@ -38,6 +38,10 @@ define('page/indexPage',['core/global','../../css/common.css'], function(require
 				'<div class="comm_ableft" id="leftbar">'+
 					menu+
 				'</div>'+
+				'<div class="comm_abright" id="rightbar">'+
+				'	<div id="pageTitle">用户管理</div>'+
+				'	<div id="pageLine"></div>'+
+				'</div>'+
 				'<div class="comm_abfull" id="centerbar">'+
 				'	<iframe name="myframe" src="" frameborder="no"/>'+
 				'</div>';
@@ -109,7 +113,7 @@ define('page/indexPage',['core/global','../../css/common.css'], function(require
 				' 	color:white;'+
 				'}'+
 				'#centerbar{'+
-				'	top:50px;'+
+				'	top:100px;'+
 				'	left:200px;'+
 				'	bottom:10px;'+
 				'	padding-top:15px;'+
@@ -122,10 +126,31 @@ define('page/indexPage',['core/global','../../css/common.css'], function(require
 				'	width:100%;'+
 				'	height:100%;'+
 				'	border:0px;'+
+				'}'+
+				'#rightbar{'+
+				'	display:none;'+
+				'	top:50px;'+
+				'	left:200px;'+
+				'	height:50px;'+
+				'	padding-top:15px;'+
+				'	padding-left:10px;'+
+				'	padding-right:10px;'+
+				'	width:auto;'+
+				'	height:auto;'+
+				'}'+
+				'#rightbar #pageTitle{'+
+				'	font-size:24px;'+
+				'	color:rgb(180,180,180);'+
+				'}'+
+				'#rightbar #pageLine{'+
+				'	border-bottom:1px solid rgb(220,220,220);'+
+				'	margin-top:20px;'+
 				'}'
 			);
 			//设置事件
 			div.find('a').click(function(){
+				$('#rightbar').show();
+				$('#rightbar #pageTitle').text($(this).find('.title').text());
 				$('#leftbar .category .title').removeClass('activetitle');
 				$(this).find('.title').addClass('activetitle');
 				$.location.setHashArgv('location',$(this).attr('href'));

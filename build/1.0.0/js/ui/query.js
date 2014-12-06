@@ -26,6 +26,7 @@ define('ui/query',['core/global','ui/table','ui/input'], function(require, expor
 			var div = $(
 			'<form id="'+formId+'" class="form-inline m10"></form>'+
 			'<div class="m10"><div id="'+buttonListId+'"></div><div id="'+tableId+'"></div></div>');
+			target.empty();
 			target.append(div);
 			//生成staticTable框架
 			table.staticTable({
