@@ -32,10 +32,10 @@ var fishstrap = {};
 		for( var i in requires )
 			if( requires[i] == 'ui/editor'){
 				seajs.config({
-					preload:['/fishstrap/js/ui/uedit/ueditor.config.js']
+					preload:['/fishstrap/js/ui/uedit/ueditor.all.min.js']
 				});
 				seajs.config({
-					preload:['/fishstrap/js/ui/uedit/ueditor.all.min.js']
+					preload:['/fishstrap/js/ui/uedit/ueditor.config.js']
 				});
 				break;
 			}
