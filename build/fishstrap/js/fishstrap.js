@@ -21,26 +21,24 @@ var fishstrap = {};
 			preload:['http://libs.baidu.com/underscore/1.3.3/underscore-min.js']
 		});
 		//加载echarts
-		seajs.config({
-			charset: 'utf-8',
-			timeout: 20000,
-			preload:['ui/echarts/echarts']
-		});
-		//加载uedit
-		var hasUIInput = false;
 		for( var i in requires )
-			if( requires[i] == 'ui/input'){
-				hasUIInput = true;
+			if( requires[i] == 'ui/chart'){
+				seajs.config({
+					preload:['/fishstrap/js/ui/echarts/echarts.js']
+				});
 				break;
 			}
-		if( hasUIInput ){
-			seajs.config({
-				preload:['/js/ui/uedit/ueditor.config.js']
-			});
-			seajs.config({
-				preload:['/js/ui/uedit/ueditor.all.min.js']
-			});
-		}
+		//加载uedit
+		for( var i in requires )
+			if( requires[i] == 'ui/editor'){
+				seajs.config({
+					preload:['/fishstrap/js/ui/uedit/ueditor.config.js']
+				});
+				seajs.config({
+					preload:['/fishstrap/js/ui/uedit/ueditor.all.min.js']
+				});
+				break;
+			}
 		seajs.use(requires,callback);
 	}
 })();
