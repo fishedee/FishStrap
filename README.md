@@ -1,8 +1,9 @@
 FishStrap
 =========
+#概述
+前端开发框架，整合现有的各种成熟的开源库，jquery,fastclick,iscroll，echarts,uedit,并使用seajs做依赖加载器，加入前端一些常见工具，异步上传工具，图片延迟工具等。
 
 #功能
-前端常用工具框架
 * 跨平台兼容库,jquery,base64编解码,json编解码,html5兼容性库
 * 跨平台工具库，fastclick,iscroll,异步上传文件（包括上传时的类型校验，大小校验，图片压缩，进度显示等功能),图片延迟加载
 * 国内常见API封装，QQ与微信SDK，获取地理位置API
