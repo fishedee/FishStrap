@@ -391,6 +391,7 @@ define('ui/chart',['core/global'], function(require, exports, module) {
 				});
 			}
 			//绘图
+			console.log(series);
 			var myChart = echarts.init($('#'+defaultOption.id)[0]); 
 			option = {
 				tooltip : {

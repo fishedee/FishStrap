@@ -22,21 +22,23 @@ var fishstrap = {};
 		});
 		//加载echarts
 		for( var i in requires )
-			if( requires[i] == 'ui/chart'){
+			if( requires[i] == 'echart'){
 				seajs.config({
 					preload:['/fishstrap/js/ui/echarts/echarts.js']
 				});
+				requires[i] = undefined;
 				break;
 			}
 		//加载uedit
 		for( var i in requires )
-			if( requires[i] == 'ui/editor'){
-				seajs.config({
-					preload:['/fishstrap/js/ui/uedit/ueditor.all.min.js']
-				});
+			if( requires[i] == 'uedit'){
 				seajs.config({
 					preload:['/fishstrap/js/ui/uedit/ueditor.config.js']
 				});
+				seajs.config({
+					preload:['/fishstrap/js/ui/uedit/ueditor.all.min.js']
+				});
+				requires[i] = undefined;
 				break;
 			}
 		seajs.use(requires,callback);
