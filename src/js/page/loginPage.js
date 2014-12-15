@@ -78,7 +78,7 @@ define('page/loginPage',['core/global'], function(require, exports, module) {
 			);
 			div.find('.title').text(option.title);
 			//设置事件
-			$("input").keydown(function(e){
+			div.find("input").keydown(function(e){
 				var e = e || event;
 				if(e.keyCode == 13) {
 					var data = {

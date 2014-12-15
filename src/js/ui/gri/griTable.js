@@ -44,7 +44,6 @@ var self = {};
          * @param {object} params 赋值到控件的属性列表.
          */
         initDataTable:function (params) {
-
             //配置
             var options = {
 
@@ -1102,9 +1101,9 @@ var self = {};
             var positon = _this.getElementAbsPos(_table);
             var loadingDiv = document.createElement('div');
             loadingDiv.className = 'gri_datatable_loading';
-            loadingDiv.innerHTML = "<img src='../../assets/css/images/loading.gif' alt='加载中...' />";
+            loadingDiv.innerHTML = "<img src='/fishstrap/img/loading.gif' alt='加载中...' />";
 
-            //document.getElementsByTagName('body')[0].appendChild(loadingDiv);
+            document.getElementsByTagName('body')[0].appendChild(loadingDiv);
             loadingDiv.style.position = "absolute";
             loadingDiv.style.left = positon.left + (_table.clientWidth / 2) + "px";
             loadingDiv.style.top = positon.top + 120 + "px";
@@ -1120,10 +1119,8 @@ var self = {};
             }
 
             _this.ajaxGet(sendUrl, function (result, _this) {
-
                 var resultObj = eval("(" + result + ")");
                 _this.resultObj = resultObj.data[_this.name];
-
                 //更新data和回调函数的参数值
                 if (resultObj.data) {
                     _this.options.data = resultObj.data[_this.name];
@@ -1136,7 +1133,7 @@ var self = {};
                         _this.options.callbackParam.value = resultObj[_this.options.callbackParam.key];
                     }
                 }
-
+				
 
                 loadingDiv.parentNode.removeChild(loadingDiv);
                 _this.initDataTable(_this.options);
