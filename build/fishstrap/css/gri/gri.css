@@ -6244,7 +6244,7 @@ form{
 }
 
 
-/*formValidatorï¿½íµ¥ï¿½ï¿½Ö¤*/
+/*formValidatorï¿½ï¿½ï¿½ï¿½Ö¤*/
 .onShow,.onFocus,.onError,.onCorrect,.onLoad,.onTime{display:inline-block;display:-moz-inline-stack;zoom:1;*display:inline; vertical-align:middle;background:url(../Images/msg_bg.png) no-repeat;	color:#444;line-height:18px;padding:2px 10px 2px 23px; margin-left:10px;_margin-left:5px}
 .onShow{background-position:3px -147px;border-color:#40B3FF;color:#959595}
 .onFocus{background-position:3px -147px;border-color:#40B3FF;}
