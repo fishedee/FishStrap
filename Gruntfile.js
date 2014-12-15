@@ -29,6 +29,10 @@ module.exports = function(grunt){
 			css:{
 				src:['src/css/gri/bootstrap.css','src/css/gri/style.css','src/css/gri/module.css','src/css/gri/reset.css','src/css/gri/form.css'],
 				dest:'build/fishstrap/css/gri/gri.css'
+			},
+			uijs:{
+				src:['src/js/ui/chart.js','src/js/ui/dialog.js','src/js/ui/editor.js','src/js/ui/input.js','src/js/ui/query.js','src/js/ui/table.js','src/js/ui/tree.js','src/js/ui/ui.js'],
+				dest:'build/fishstrap/js/ui/ui.js'
 			}
 		},
 		uglify:{

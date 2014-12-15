@@ -328,10 +328,12 @@ define('ui/chart',['core/global'], function(require, exports, module) {
 				itemData.data = [];
 				for( var j in xAxises ){
 					var xAxise = xAxises[j];
-					if( datas[xAxise][category])
+					if( _.isUndefined(datas[xAxise][category]) == false ){
 						itemData.data.push(datas[xAxise][category]);
-					else
+					}else{
 						itemData.data.push(0);
+						$.console.warn('chart exist not data:'+xAxise+","+category);
+					}
 				}
 				series.push(itemData);
 			}
