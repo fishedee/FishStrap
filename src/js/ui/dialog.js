@@ -36,6 +36,20 @@ define('ui/dialog',['core/global','ui/gri/gri'], function(require, exports, modu
 					winSize : 2
 				}
 			}, callback );
+		},
+		loadingBegin:function(){
+			var loadingDiv = document.createElement('div');
+			loadingDiv.id = '__loading';
+			loadingDiv.className = 'gri_body_loading';
+			loadingDiv.innerHTML = "<img src='/fishstrap/img/loading.gif' alt='加载中...' />";
+			loadingDiv.style.position = "absolute";
+			loadingDiv.style.left = "49%";
+			loadingDiv.style.top = "45%";
+			loadingDiv.style.zIndex = '9999999';
+			$('body').append(loadingDiv);
+		},
+		loadingEnd:function(){
+			$('#__loading').remove();
 		}
 	};
 });

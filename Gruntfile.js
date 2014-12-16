@@ -9,7 +9,7 @@ module.exports = function(grunt){
 		copy:{
 			normal:{
 				files:[
-					{expand: true, cwd: 'src/', src: ['css/**','img/**','font/**','!css/gri/bootstrap.css','!css/gri/style.css','!css/gri/module.css','!css/gri/reset.css','!css/gri/form.css'], dest: 'build/fishstrap'}
+					{expand: true, cwd: 'src/', src: ['css/**','img/**','font/**','!css/gri/bootstrap.css','!css/gri/style.css','!css/gri/module.css','!css/gri/reset.css','!css/gri/form.css','!css/gri/jquery.datetimepicker.css'], dest: 'build/fishstrap'}
 				]
 			},
 			js:{
@@ -27,7 +27,7 @@ module.exports = function(grunt){
 				dest:'build/fishstrap/js/util/upload.js'
 			},
 			css:{
-				src:['src/css/gri/bootstrap.css','src/css/gri/style.css','src/css/gri/module.css','src/css/gri/reset.css','src/css/gri/form.css'],
+				src:['src/css/gri/bootstrap.css','src/css/gri/style.css','src/css/gri/module.css','src/css/gri/reset.css','src/css/gri/form.css','src/css/gri/jquery.datetimepicker.css'],
 				dest:'build/fishstrap/css/gri/gri.css'
 			},
 			uijs:{
