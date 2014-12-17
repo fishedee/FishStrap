@@ -9,11 +9,23 @@ var fishstrap = {};
 (function(){
 	fishstrap.use = function(requires,callback){
 		//加载jQuery
-		seajs.config({
-			charset: 'utf-8',
-			timeout: 20000,
-			preload:['http://libs.baidu.com/jquery/1.11.1/jquery.min.js']
-		});
+		var ua = navigator.userAgent;
+		var ie = ua.match(/MSIE ([\d.]+)/);
+		if( ie && ie[1] < 9  ){
+			//IE6，7，8版本使用JQuery 1.x版本
+			seajs.config({
+				charset: 'utf-8',
+				timeout: 20000,
+				preload:['http://libs.baidu.com/jquery/1.11.1/jquery.min.js']
+			});
+		}else{
+			//其它的使用JQuery 2.x版本
+			seajs.config({
+				charset: 'utf-8',
+				timeout: 20000,
+				preload:['http://libs.baidu.com/jquery/2.1.1/jquery.min.js']
+			});
+		}
 		//加载underscore
 		seajs.config({
 			charset: 'utf-8',
