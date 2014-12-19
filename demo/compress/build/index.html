@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>烘焙帮后台管理系统</title>
+	<script type="text/javascript" src="/fishstrap/mod_df9079e.js" charset="utf-8"></script>
+<link rel="stylesheet" type="text/css" href="/fishstrap/ui/gri/gri_aa30262.css">
+
+<script type="text/javascript" src="/fishstrap/core/jquery_ddf32be.js"></script>
+<script type="text/javascript" src="/pkg/normal_440f53c.js"></script>
+<script type="text/javascript" src="/fishstrap/page/loginPage_2c471cf.js"></script>
+
+</head>
+<body>
+	<script type="text/javascript">
+		var loginPage = require('fishstrap/page/loginPage');
+		var dialog = require('fishstrap/ui/dialog');
+		loginPage.use({
+			title:'Fish个人管理系统',
+			init:function(){
+				$.get('/login/islogin?t='+Math.random(),{},function(data){
+					data = $.JSON.parse(data);
+					if( data.code == 0 ){
+						location.href = 'index.html';
+						return;
+					}
+				});
+			},
+			login:function(data){
+				$.post('/login/checkin?t='+Math.random(),data,function(data){
+					data = $.JSON.parse(data);
+					if( data.code != 0 ){
+						dialog.message(data.msg);
+						return;
+					}
+					location.href = 'index.html';
+				});
+			}
+		});
+	</script>
+</body>
+</html>
