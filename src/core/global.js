@@ -1,5 +1,5 @@
 /*
-* 依赖jquery.js
+* 依赖jquery.js与underscore.js
 * @require ../lib/underscore.js
 * @require ../lib/jquery.js
 */

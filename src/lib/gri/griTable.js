@@ -1101,7 +1101,7 @@
             var positon = _this.getElementAbsPos(_table);
             var loadingDiv = document.createElement('div');
             loadingDiv.className = 'gri_datatable_loading';
-            loadingDiv.innerHTML = "<img src='/fishstrap/img/loading.gif' alt='加载中...' />";
+            loadingDiv.innerHTML = "<img src='"+__uri('../../ui/loading.gif')+"' alt='加载中...' />";
 
             document.getElementsByTagName('body')[0].appendChild(loadingDiv);
             loadingDiv.style.position = "absolute";
@@ -2005,7 +2005,7 @@
     }
 
     //传入window，可以加速读取
-})(self, document, undefined);
+})(this, document, undefined);
 
 
 /////////////////////////////////////////////////////////////////////////////////////////

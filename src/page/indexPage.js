@@ -1,5 +1,5 @@
 /*
-* @require ../lib/gri/gri.css
+*@require ./indexPage.css
 */
 var $ = require('../core/global.js');
 module.exports = {
