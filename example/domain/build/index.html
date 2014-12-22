@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>烘焙帮后台管理系统</title>
+	<script type="text/javascript" src="/fishstrap/lib/mod_df9079e.js" charset="utf-8"></script>
+<link rel="stylesheet" type="text/css" href="/fishstrap/lib/gri/gri_e181dce.css">
+
+<script type="text/javascript" src="http://apps.bdimg.com/libs/underscore.js/1.7.0/underscore-min.js"></script>
+<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript" src="/pkg/normal_e04fe70.js"></script>
+<script type="text/javascript" src="/fishstrap/page/loginPage_4e6127e.js"></script>
+
+</head>
+<body>
+	<script type="text/javascript">
+		var loginPage = require('fishstrap/page/loginPage.js');
+		var dialog = require('fishstrap/ui/dialog.js');
+		loginPage.use({
+			title:'Fish个人管理系统',
+			init:function(){
+				$.get('/login/islogin?t='+Math.random(),{},function(data){
+					data = $.JSON.parse(data);
+					if( data.code == 0 ){
+						location.href = 'index.html';
+						return;
+					}
+				});
+			},
+			login:function(data){
+				$.post('/login/checkin?t='+Math.random(),data,function(data){
+					data = $.JSON.parse(data);
+					if( data.code != 0 ){
+						dialog.message(data.msg);
+						return;
+					}
+					location.href = 'index.html';
+				});
+			}
+		});
+	</script>
+</body>
+</html>

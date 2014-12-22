@@ -1,0 +1,134 @@
+@charset "utf-8";
+
+
+/*==默认链接颜色 ==*/
+a:link,a:visited{color:#288cc8;text-decoration:none;}
+a:active,a:hover{text-decoration:none;color: #136499;}
+/*==默认灰色链接颜色，有划线==*/
+a.link-thin:link, a.link-thin:visited {color:#555555;text-decoration:underline;}
+a.link-thin:active, a.link-thin:hover {color:#666;text-decoration:underline;}
+/*==灰色，无划线==*/
+a.thin:link, a.thin:visited {color:#999;text-decoration:none;}
+a.thin:active, a.thin:hover {color:#999;text-decoration:none;}
+/*==链接红色红色，无划线==*/
+a.em:link, a.em:visited {color:#ff7355;text-decoration:none;}
+a.em:active, a.em:hover {color:#eb5541;text-decoration:none;}
+
+em{color:#ff4800; }/*红色*/
+.strong{color:#7fcb61; }/*绿色*/
+.tx-thin{color:#999;font-weight:normal;}
+.tx-thin12{ font-size:12px;color:#999;font-weight:normal;}
+.tx-price{font-size: 22px; margin-right: 2px; font-family: arial; font-weight: 700;}
+.hidden{ display:none;}
+.layer-relative{position: relative;}
+.layer-relative .turn-right{top:0;}
+.center{text-align: center;}
+.tx-nowrap{white-space: nowrap;}
+.tx-break{word-wrap:break-word; }
+.tx-ellipsis{white-space: nowrap;text-overflow: ellipsis;overflow: hidden;}
+.item-overflow{overflow: hidden;}
+.font12{font-size: 12px;}
+
+/*=================================图标==================================================================*/
+/*=======左边菜单图标=======*/
+.sales-actions{margin-top:10px ;}
+a.btn-sales{ background:#ff8800; border:none;   border-radius: 2px;
+	display:block; color:#fff; font-size:14px;  font-weight:700;padding-left:10px;margin:0 10px;cursor: pointer; }
+a.btn-sales:hover{background:#ff9900;  color:#fff;}
+.sales-actions span{ font-size: 18px; line-height: 40px; height: 40px;font-weight: normal;  }
+.current a.btn-sales,.current a.btn-sales:hover{background:#045999 }
+.menu-list .icons{background-image:url(../../images/saler/nav-icon.png); _background-image:url(../../images/saler/nav-icon-ie.png);display: block; width:16px; height: 16px; background-repeat: no-repeat;
+	position:absolute; left:30px; top:9px; *top:7px;}
+.menu-list .current .icons{background-image:url(../../images/saler/nav-icon-h.png); background-repeat: no-repeat; _background-image:url(../../images/saler/nav-icon-h-ie.png);}
+.icon-spxs{background-position:-0px 1px; }
+.icon-spk{background-position:-17px 1px; }
+.icon-xsjsd{background-position:-32px 1px; }
+.icon-spbgtz{background-position:-50px 1px; }
+.icon-xsjlcx{background-position:-70px 1px; }
+.icon-cwjlcx{background-position:-86px 1px; }
+.icon-zjcz{background-position:-103px 1px; }
+.icon-jzgl{background-position:-234px 1px; }
+.icon-zjtx{background-position:-123px 1px; }
+.icon-zlxg{background-position:-142px 1px; }
+.icon-yggl{background-position:-159px 1px; }
+.icon-bzzx{background-position:-212px 1px; }
+.icon-aqzx{background-position:-177px 1px; }
+.icon-tsgl{background-position:-193px 1px; }
+.sales-actions .icon-menu{padding-left:15px;}
+.sales-actions .icon-arrow{position: absolute;right: 15px;top:12px;}
+
+
+
+
+.icon-ip,.icon-ip-h,.icon-yjm,.icon-yjm-h,.icon-clock,.icon-clock-h,.icon-lock-l,.icon-phones-l,.icon-pc-l ,.icon-ip-l{width:18px; height:18px;font-size:0; display:inline-block;vertical-align:middle; background-repeat:no-repeat;
+background: url(/fishstrap/lib/gri/images/icon_44bd2d2.png) no-repeat;}
+.icon-ip {background-position:-3px -3px; }
+.icon-ip-h{background-position:-26px -3px; }
+.icon-yjm{background-position:-3px -26px; }
+.icon-yjm-h{background-position:-26px -27px; }
+.icon-clock{background-position:-3px -46px; }
+.icon-clock-h{background-position:-26px -46px; }
+.icon-lock-l,.icon-phones-l,.icon-pc-l ,.icon-ip-l{width:34px; height: 34px;}
+.icon-lock-l{background-position:-57px -0px;}
+.icon-phones-l{background-position:-96px -0px;}
+.icon-pc-l {background-position:-137px -0px;}
+.icon-ip-l {background-position:-185px -0px;}
+
+.header-inner .logo a{background:url(../../images/saler/logo.png) no-repeat;}
+
+/*elynn 定单页面*/
+.box-form h2{font-size: 16px;   border-bottom: 1px solid #d5d5d5; margin-bottom: 10px;padding-bottom: 10px;}
+.mod-select-item a.radio-box{width:80%; display: block;margin-bottom:5px;}
+.box-select-product{float: left; width:40%; margin-bottom: 10px;}
+.wrap-order .box-form{float:right; width:58%;}
+.wrap-order .box-form h2{font-size: 16px; margin:20px 20px 0px 20px;  font-weight: normal; border:none;}
+.box-select-product .mod-select-item{margin: 0 10px ; height:350px; overflow-y: scroll;overflow-x: hidden;}
+.box-select-product .mod-select-item ul li{margin-bottom:5px;width:100%;}
+.box-select-product  .radio-box{width:250px;}
+.box-select-product .caption{position: relative;  display: block;margin:20px 10px 20px 10px }
+.box-select-product .caption p{padding-right: 100px;font-size: 16px;}
+.turn-right{position: absolute;right:15px;top:10px;}
+.box-select-product .caption .turn-right{top:-5px; }
+.box-select-product select{padding:0; height:26px; line-height: 26px;}
+
+.pay_way {position: relative;display: block;}
+.pay_way li{margin-bottom:10px;}
+.pay_way .con{padding:20px 10px ;}
+.pay_way .con .tit{width:100px;display: inline-block;  font-weight: 700;font-size: 14px;}
+.pay_way  .pay-need{position: absolute;right: 0; top:0; background: #f2f2f2;height:57px; line-height: 57px; padding:0 15px; border-left:1px solid #d5d5d5;}
+.pay-need em{font-size: 16px; font-weight: 700; color:#ff4800; padding:0 3px; }
+
+.box-result {}
+
+
+.business-info .box-form { padding:00px 50px 10px 50px;}
+.business-info  .form-horizontal .control-label{width:200px}
+.business-info  .form-horizontal .controls{margin-left: 210px;*margin-left:0;}
+.business-info  .box-form  .form-actions{padding-left:220px;  }
+.business-info  .mod-basic{min-height: 800px;}
+
+.nav-tree{margin:20px  10px }
+
+.product-list {margin: 10px; overflow: hidden; }
+.product-list li{float: left;  width:25%;  text-align: center; margin-top: 10px;}
+.product-list  li a{line-height: 35px;margin-right:20px;display:block; padding:0 10px;background: #f5f5f5; color: #555;}
+.product-list  li a:hover{background: #cdcdcd}
+.prompt{color: #666; margin-bottom: 10px;padding-left: 20px;}
+.form-layout-middle{width:800px; margin: 0 auto;}
+
+.box-tit img{width:40px;height:40px}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
