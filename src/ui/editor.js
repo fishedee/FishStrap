@@ -1,7 +1,7 @@
 /*
 *加载依赖的ueditor
-*@require ../lib/uedit/ueditor.config.js
-*@require ../lib/uedit/ueditor.all.min.js
+*@require ../lib/ueditor/ueditor.config.js
+*@require ../lib/ueditor/ueditor.all.min.js
 */
 var $ = require('../core/global.js');
 module.exports = {
