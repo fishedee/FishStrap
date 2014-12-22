@@ -11,8 +11,8 @@ FishStrap
 
 #特性
 * 兼容IE6以上的IE浏览器，以及chrome,firefox,opera,safari内核浏览器
-* 使用seajs控制js与css的加载依赖关系，自动加载最小依赖模块，加快载入效率
-* 自动引用国内优质cdn，像jquery这种常见的库fishstrap会引用百度或可牛的cdn，加快载入效率。
+* 使用fis管理项目，你可以将fishstrap放在任意子目录，fishstrap依然能正常运行！
+* 使用modjs控制js与css的加载依赖关系，自动加载最小依赖模块，加快载入效率
 
 #使用
-后续加上
+看sample
