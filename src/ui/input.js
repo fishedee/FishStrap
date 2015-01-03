@@ -2,6 +2,7 @@ var $ = require('../core/global.js');
 var dialog = require('./dialog.js');
 var editor = require('./editor.js');
 var upload = require('../util/upload.js');
+require('../util/jqueryDatetimePicker.js');
 module.exports = {
 	flowInput:function( option ){
 		//处理option
@@ -21,6 +22,8 @@ module.exports = {
 			var field = defaultOption.field[i];
 			if( field.type == 'text'){
 				div += '<span>&nbsp;'+field.name+'：</span>' + '<input type="text" name="'+field.id+'" class="input-small"/>';
+			}else if(field.type == 'time'){
+				div += '<span>&nbsp;'+field.name+'：</span>' + '<input type="text" name="'+field.id+'" class="time input-small"/>';
 			}else if( field.type == 'enum'){
 				var option = "";
 				if( typeof field.map[""] != 'undefined')
@@ -37,12 +40,26 @@ module.exports = {
 		div = $(div);
 		//加入页面
 		$('#'+defaultOption.id).append(div);
+		//挂载控件事件
+		for( var i in defaultOption.field ){
+			var field = defaultOption.field[i];
+			if( field.type == 'time'){
+				$('#'+defaultOption.id).find('input[name='+field.id+']').datetimepicker({
+					lang:'ch',
+					timepicker:false,
+					format: 'Y-m-d',
+					closeOnDateSelect:true
+				});
+			}
+		}
 		//挂载事件
 		$('#'+defaultOption.id).find('.query').click(function(){
 			var data = {};
 			for( var i in defaultOption.field ){
 				var field = defaultOption.field[i];
 				if( field.type == 'text'){
+					data[field.id] = $.trim($('#'+defaultOption.id).find('input[name='+field.id+']').val());
+				}else if( field.type == 'time'){
 					data[field.id] = $.trim($('#'+defaultOption.id).find('input[name='+field.id+']').val());
 				}else if( field.type == 'enum'){
 					data[field.id] = $.trim($('#'+defaultOption.id).find('select[name='+field.id+']').val());
@@ -80,6 +97,8 @@ module.exports = {
 			}
 			if( field.type == 'read'){
 				contentDiv += '<div name="'+field.id+'"/>';
+			}else if( field.type == 'link'){
+				contentDiv += '<a name="'+field.id+'" target="_blank"><div name="'+field.id+'"/></a>';
 			}else if( field.type == 'fullEditor'){
 				field.editorTargetId = $.uniqueNum();
 				contentDiv += '<div name="'+field.id+'" id="'+field.editorTargetId+'"/>';
@@ -168,7 +187,10 @@ module.exports = {
 				continue;
 			if( field.type == 'read')
 				div.find('div[name='+field.id+']').text(defaultOption.value[field.id]);
-			else if( field.type == 'fullEditor')
+			else if( field.type == 'link'){
+				div.find('div[name='+field.id+']').text(defaultOption.value[field.id]);
+				div.find('a[name='+field.id+']').attr('href',defaultOption.value[field.id]);
+			}else if( field.type == 'fullEditor')
 				field._editor.setContent(defaultOption.value[field.id]);
 			else if( field.type == 'simpleEditor')
 				field._editor.setFormatData(defaultOption.value[field.id]);

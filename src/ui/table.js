@@ -61,6 +61,7 @@ module.exports = {
 			div += '</table>';
 			div += '</div>';
 			div = $(div);
+			$('#'+defaultOption.id).empty();
 			$('#'+defaultOption.id).append(div);
 			//挂载事件
 			for( var i in defaultOption.operate ){
