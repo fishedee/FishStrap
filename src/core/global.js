@@ -382,8 +382,12 @@ $.addCssToHead = function(str_css) {
 				return unescape(r[2]); 
 			return null;
 		},
-		setHashArgv:function(name,value){
-			window.location.hash = '#'+name+'='+value;
+		setHashArgv:function(argv){
+			var hash = '';
+			for( var i in argv ){
+				hash += i+'='+escape(argv[i])+'&';
+			}
+			window.location.hash = '#'+encodeURI(hash);
 		},
 		redirect:function(a){
 			location.href = a;

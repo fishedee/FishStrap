@@ -19,25 +19,15 @@ module.exports = {
 		//添加基本框架
 		var menu = "";
 		for( var name in defaultOption.menu ){
-			var items = defaultOption.menu[name];
-			menu +=
-			'	<div class="category">'+
-			'		<div class="head">'+name+'</div>';
-			for( var i in items ){
-				var item = items[i];
-				menu += '<a href="'+item.url+'" target="myframe">'+
-				'<div class="title">'+item.name+'</div>'+
-				'</a>';
-			}
-			menu += '</div>';
+			menu = '<div class="comm_rightcol item button" name="'+name+'">'+name+'</div>' + menu;
 		}
 		var div = 
 			'<div class="comm_abtop" id="topbar">'+
 			'	<div class="comm_leftcol item" id="title">'+defaultOption.title+'</div>'+
-			'	<div class="comm_rightcol item button" id="logout">[退出]</div>'+
+			'	<div class="comm_rightcol item button" name="logout">[退出]</div>'+
+				menu+
 			'</div>'+
 			'<div class="comm_ableft" id="leftbar">'+
-				menu+
 			'</div>'+
 			'<div class="comm_abright" id="rightbar">'+
 			'	<div id="pageTitle">用户管理</div>'+
@@ -47,6 +37,7 @@ module.exports = {
 			'	<iframe name="myframe" src="" frameborder="no"/>'+
 			'</div>';
 		div = $(div);
+		$('body').append(div);
 		//设置样式
 		$.addCssToHead(
 			'#topbar{'+
@@ -148,26 +139,79 @@ module.exports = {
 			'	margin-top:20px;'+
 			'}'
 		);
-		//设置事件
-		div.find('a').click(function(){
+		function chooseTopMenu(topMenuItemName){
+			if( topMenuItemName == 'logout'){
+				defaultOption.logout();
+			}else{
+				var menu = "";
+				for( var name in defaultOption.menu[topMenuItemName] ){
+					var items = defaultOption.menu[topMenuItemName][name];
+					menu +=
+					'	<div class="category">'+
+					'		<div class="head">'+name+'</div>';
+					for( var i in items ){
+						var item = items[i];
+						menu += '<a href="'+item.url+'" target="myframe">'+
+						'<div class="title">'+item.name+'</div>'+
+						'</a>';
+					}
+					menu += '</div>';
+				}
+				$('#leftbar').html(menu);
+				$.location.setHashArgv({
+					'menu':topMenuItemName
+				});
+				var firstMenuClick = _.keys(defaultOption.menu[topMenuItemName])[0];
+				chooseLeftBarAndClick(defaultOption.menu[topMenuItemName][firstMenuClick][0].url);
+			}
+		}
+		function chooseLeftBar(leftMenuHref){
+			var leftMenu = null;
+			div.filter('#leftbar').find('a').each(function(){
+				if( $(this).attr('href') != leftMenuHref )
+					return;
+				leftMenu = $(this);
+			});
+			if( leftMenu == null )
+				return;
 			$('#rightbar').show();
-			$('#rightbar #pageTitle').text($(this).find('.title').text());
+			$('#rightbar #pageTitle').text(leftMenu.find('.title').text());
 			$('#leftbar .category .title').removeClass('activetitle');
-			$(this).find('.title').addClass('activetitle');
-			$.location.setHashArgv('location',$(this).attr('href'));
+			leftMenu.find('.title').addClass('activetitle');
+			$.location.setHashArgv({
+				'menu':$.location.getHashArgv('menu'),
+				'location':leftMenuHref
+			});
+		}
+		function chooseLeftBarAndClick(leftMenuHref){
+			var leftMenu = null;
+			div.filter('#leftbar').find('a').each(function(){
+				if( $(this).attr('href') != leftMenuHref )
+					return;
+				leftMenu = $(this);
+			});
+			leftMenu.find('div').click();
+		}
+		//设置事件
+		div.on('click','a',function(){
+			chooseLeftBar($(this).attr('href'));
 		});
-		div.find('#logout').click(function(){
-			defaultOption.logout();
+		div.filter('#topbar').on('click','.button',function(){
+			chooseTopMenu($(this).attr('name'));
 		});
 		//启动
-		$('body').append(div);
-		var location = $.location.getHashArgv('location');
-		if( location != null ){
-			div.find('a').each(function(){
-				if( $(this).attr('href') != location )
-					return;
-				$(this).find('div').click();
-			});
+		var menu = $.location.getHashArgv('menu');
+		if( menu != null ){
+			var location = $.location.getHashArgv('location');
+			if( location != null ){
+				chooseTopMenu(menu);
+				chooseLeftBarAndClick(location);
+			}else{
+				chooseTopMenu(menu);
+			}
+		}else{
+			var firstMenuKey = _.keys(defaultOption.menu)[0];
+			chooseTopMenu(firstMenuKey);
 		}
 		defaultOption.init();
 	}
