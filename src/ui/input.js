@@ -97,6 +97,8 @@ module.exports = {
 			}
 			if( field.type == 'read'){
 				contentDiv += '<div name="'+field.id+'"/>';
+			}else if(field.type == 'time'){
+				contentDiv += '<input type="text" name="'+field.id+'" class="time input-small"/>';
 			}else if( field.type == 'link'){
 				contentDiv += '<a name="'+field.id+'" target="_blank"><div name="'+field.id+'"/></a>';
 			}else if( field.type == 'fullEditor'){
@@ -123,6 +125,12 @@ module.exports = {
 					option += '<option value="'+j+'">'+field.map[j]+'</option>';
 				}
 				contentDiv += '<select name="'+field.id+'">'+option+'</select>';
+			}else if( field.type == 'check'){
+				var option = "";
+				for( var j in field.map ){
+					option += '<span><input type="checkbox" name="'+field.id+'" value="'+j+'">'+field.map[j]+'</span>&nbsp;&nbsp;';
+				}
+				contentDiv += option;
 			}
 			contentDiv +=
 				'</td>'+
@@ -177,6 +185,13 @@ module.exports = {
 					field._editor = editor.fullEditor({
 						id:field.editorTargetId
 					});
+				}else if( field.type == 'time'){
+					$('#'+defaultOption.id).find('input[name='+field.id+']').datetimepicker({
+						lang:'ch',
+						timepicker:false,
+						format: 'Y-m-d',
+						closeOnDateSelect:true
+					});
 				}
 			})(field);
 		}
@@ -185,23 +200,34 @@ module.exports = {
 			var field = defaultOption.field[i];
 			if( typeof defaultOption.value[field.id] == 'undefined' )
 				continue;
-			if( field.type == 'read')
+			if( field.type == 'read'){
 				div.find('div[name='+field.id+']').text(defaultOption.value[field.id]);
-			else if( field.type == 'link'){
+			}else if( field.type == 'link'){
 				div.find('div[name='+field.id+']').text(defaultOption.value[field.id]);
 				div.find('a[name='+field.id+']').attr('href',defaultOption.value[field.id]);
-			}else if( field.type == 'fullEditor')
+			}else if( field.type == 'fullEditor'){
 				field._editor.setContent(defaultOption.value[field.id]);
-			else if( field.type == 'simpleEditor')
+			}else if( field.type == 'simpleEditor'){
 				field._editor.setFormatData(defaultOption.value[field.id]);
-			else if( field.type == 'image')
+			}else if( field.type == 'image'){
 				div.find('img[name='+field.id+']').attr("src",defaultOption.value[field.id]);
-			else if( field.type == 'area')
+			}else if( field.type == 'area'){
 				div.find('textarea[name='+field.id+']').val(defaultOption.value[field.id]);
-			else if( field.type == 'text' || field.type == 'password')
+			}else if( field.type == 'text' || field.type == 'password' || field.type == 'time'){
 				div.find('input[name='+field.id+']').val(defaultOption.value[field.id]);
-			else if( field.type == 'enum')
+			}else if( field.type == 'enum'){
 				div.find('select[name='+field.id+']').val(defaultOption.value[field.id]);
+			}else if( field.type == 'check'){
+				div.find('input[name='+field.id+']').each(function(){
+					for( var i in defaultOption.value[field.id] ){
+						var value = defaultOption.value[field.id][i];
+						if( $(this).val() == value )
+							$(this).attr('checked',true);
+						else
+							$(this).attr('checked',false);
+					}
+				});
+			}
 		}
 		//挂载事件
 		div.find('.submit').click(function(){
@@ -210,6 +236,8 @@ module.exports = {
 				var field = defaultOption.field[i];
 				if( field.type == 'read'){
 					data[field.id] = $.trim($('#'+defaultOption.id).find('div[name='+field.id+']').text());
+				}else if( field.type == 'link'){
+					data[field.id] = div.find('a[name='+field.id+']').attr('href');
 				}else if( field.type == 'simpleEditor'){
 					data[field.id] = field._editor.getFormatData();
 				}else if( field.type == 'fullEditor'){
@@ -218,10 +246,15 @@ module.exports = {
 					data[field.id] = $.trim($('#'+defaultOption.id).find('img[name='+field.id+']').attr("src"));
 				}else if( field.type == 'area'){
 					data[field.id] = $.trim($('#'+defaultOption.id).find('textarea[name='+field.id+']').val());
-				}else if( field.type == 'text' || field.type == 'password'){
+				}else if( field.type == 'text' || field.type == 'password' || field.type == 'time'){
 					data[field.id] = $.trim($('#'+defaultOption.id).find('input[name='+field.id+']').val());
 				}else if( field.type == 'enum'){
 					data[field.id] = $.trim($('#'+defaultOption.id).find('select[name='+field.id+']').val());
+				}else if( field.type == 'check'){
+					data[field.id] = [];
+					$('#'+defaultOption.id).find('input[name='+field.id+']:checked').each(function(){
+						data[field.id].push($(this).val());
+					});
 				}
 			}
 			defaultOption.submit(data);
