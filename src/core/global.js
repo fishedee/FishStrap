@@ -3,24 +3,53 @@
 * @require ../lib/underscore.js
 * @require ../lib/jquery.js
 */
+//加入log扩展
+$.log = {
+	fatal:function(msg){
+		if( window.console )
+			window.console.log('fatal: '+msg);
+	},
+	error:function(msg){
+		if( window.console )
+			window.console.log('error: '+msg);
+	},
+	info:function(msg){
+		if( window.console )
+			window.console.log('info: '+msg);
+	},
+	debug:function(msg){
+		if( window.console )
+			window.console.log('debug: '+msg);
+	},
+	
+};
 //加入console扩展
 $.console = {
 	log:function(msg){
 		if( window.console )
 			window.console.log('log: '+msg);
 	},
+	fatal:function(msg){
+		if( window.console )
+			window.console.log('fatal: '+msg);
+	},
+	error:function(msg){
+		if( window.console )
+			window.console.log('error: '+msg);
+	},
 	warn:function(msg){
 		if( window.console )
 			window.console.log('warn: '+msg);
+	},
+	info:function(msg){
+		if( window.console )
+			window.console.log('info: '+msg);
 	},
 	debug:function(msg){
 		if( window.console )
 			window.console.log('debug: '+msg);
 	},
-	info:function(msg){
-		if( window.console )
-			window.console.log('info: '+msg);
-	}
+	
 };
 //加入自动加时间戳扩展
 $._ajax = $.ajax;
