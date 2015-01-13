@@ -83,6 +83,80 @@ $.security = {
 		return escape(value);
 	}
 };
+//加入日期扩展
+(function(){
+	Date.prototype.format =function(format)
+    {
+        var o = {
+			"M+" : this.getMonth()+1, //month
+			"d+" : this.getDate(),    //day
+			"h+" : this.getHours(),   //hour
+			"m+" : this.getMinutes(), //minute
+			"s+" : this.getSeconds(), //second
+			"q+" : Math.floor((this.getMonth()+3)/3),  //quarter
+			"S" : this.getMilliseconds() //millisecond
+        }
+        if(/(y+)/.test(format)) format=format.replace(RegExp.$1,
+        (this.getFullYear()+"").substr(4- RegExp.$1.length));
+        for(var k in o)if(new RegExp("("+ k +")").test(format))
+        format = format.replace(RegExp.$1,
+        RegExp.$1.length==1? o[k] :
+        ("00"+ o[k]).substr((""+ o[k]).length));
+        return format;
+    }
+	Date.parseByFormat = function(format,string){
+		//抽取所有整数
+		var digits = string.match(/\d+/g);
+		for( var i = 0 ; i != digits.length ; ++i )
+			digits[i] = parseInt(digits[i]);
+		var date = new Date(0,0,0,0,0,0);
+		//分析匹配规则
+		var o = {
+			'y+':function(value){
+				date.setFullYear(value);
+			},
+			'M+':function(value){
+				date.setMonth(value-1);
+			},
+			"d+" : function(value){
+				date.setDate(value);
+			},
+			"h+" : function(value){
+				date.setHours(value);
+			},
+			"m+" : function(value){
+				date.setMinutes(value);
+			},
+			"s+" : function(value){
+				date.setSeconds(value);
+			},
+			"S" : function(value){
+				date.setMilliseconds(value);
+			}
+		};
+		
+		var finder = [];
+		for( var i in o ){
+			var temp = format.match(i);
+			if( temp == null )
+				continue;
+			finder.push({
+				index:temp.index,
+				rule:o[i]
+			});
+		}
+		finder.sort(function(a,b){
+			return a.index - b.index;
+		});
+		//填充数据
+		for( var i = 0 ; i != finder.length ; ++i ){
+			var item = finder[i];
+			item.rule(digits[i]);
+		}
+		return date;
+		
+	}
+})();
 //加入动态添加样式表扩展
 $.addCssToHead = function(str_css) {
 	try { 
