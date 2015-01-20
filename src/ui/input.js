@@ -221,11 +221,12 @@ module.exports = {
 				div.find('input[name='+field.id+']').each(function(){
 					for( var i in defaultOption.value[field.id] ){
 						var value = defaultOption.value[field.id][i];
-						if( $(this).val() == value )
+						if( $(this).val() == value ){
 							$(this).attr('checked',true);
-						else
-							$(this).attr('checked',false);
+							return;
+						}
 					}
+					$(this).attr('checked',false);
 				});
 			}
 		}
