@@ -11,21 +11,28 @@ return {
 			login:function(){
 			},
 			init:function(){
-			}
+			},
+			button:[]
 		};
 		for( var i in option )
 			defaultOption[i] = option[i];
 		//添加基本框架
+		var buttonDiv = '';
+		for( var i = 0 ; i != defaultOption.button.length ; ++i ){
+			defaultOption.button[i].id = $.uniqueNum();
+			buttonDiv +=  '<a class="rightbutton" href="#" id="'+defaultOption.button[i].id+'">'+defaultOption.button[i].name+'</a>';
+		}
 		var div = $(
 		'<div class="container">'+
 			'<form class="form-signin" method="post" id="login-form">'+
 				'<div class="title">烘焙帮微信后台管理系统</div>'+
 				'<div class="name"><input class="input-small" type="text" name="name" placeholder="账号"></div>'+
 				'<div class="password"><input class="input-small" type="password" name="password" placeholder="密码"></div>'+
-				'<div class="button"><button type="button" class="btn submit">登录</button></div>'+
+				'<div class="button"><button type="button" class="btn submit">登录</button>'+buttonDiv+'</div>'+
 			'</form>'+
 		'</div>'
 		);
+		$('body').append(div);
 		//设置样式
 		$.addCssToHead(
 			'body {'+
@@ -68,11 +75,18 @@ return {
 			'}'+
 			''+
 			'.button{'+
-			'	width:72px;'+
-			'	margin:0 auto;'+
+			'	overflow:auto;'+
+			'	zoom:1;'+
+			'	padding-left:10%;'+
+			'	padding-right:10%;'+
 			'	margin-bottom:15px;'+
 			'}'+
+			'.rightbutton{'+
+			'	margin-top:10px;'+
+			'	float:right;'+
+			'}'+
 			'.submit{'+
+			'	float:left;'+
 			'	padding-left:20px;'+
 			'	padding-right:20px;'+
 			'}'
@@ -96,8 +110,10 @@ return {
 			};
 			option.login(data);
 		});
+		for( var i = 0 ; i != defaultOption.button.length ; ++i ){
+			$('#'+defaultOption.button[i].id).click(defaultOption.button[i].click);
+		}
 		//启动
-		$('body').append(div);
 		option.init();
 	}
 };

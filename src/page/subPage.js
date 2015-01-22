@@ -130,15 +130,17 @@ return {
 		div.find(".tip").text(defaultOption.title);
 		div.find("iframe").attr('src',defaultOption.url);
 		div.find("iframe").attr('frameborder',"no");
+		var operation = {
+			close:function(argv){
+				div.remove();
+				defaultOption.close(argv);
+			}
+		};
 		function whenCancel(){
-			var argv = div.find('iframe')[0].contentWindow.whenWindowClose('cancel');
-			div.remove();
-			defaultOption.close(argv);
+			div.find('iframe')[0].contentWindow.whenWindowClose('cancel',operation);
 		}
 		function whenConfirm(){
-			var argv = div.find('iframe')[0].contentWindow.whenWindowClose('confirm');
-			div.remove();
-			defaultOption.close(argv);
+			div.find('iframe')[0].contentWindow.whenWindowClose('confirm',operation);
 		}
 		div.find(".closeicon").click(whenCancel);
 		div.find(".cancelicon").click(whenCancel);

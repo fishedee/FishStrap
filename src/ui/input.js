@@ -128,9 +128,12 @@ module.exports = {
 				}
 				contentDiv += '<select name="'+field.id+'">'+option+'</select>';
 			}else if( field.type == 'check'){
+				var disabledDiv = '';
+				if( _.isUndefined(field.disabled) == false &&  field.disabled === true )
+					disabledDiv = 'disabled="true"';
 				var option = "";
 				for( var j in field.map ){
-					option += '<span><input type="checkbox" name="'+field.id+'" value="'+j+'">'+field.map[j]+'</span>&nbsp;&nbsp;';
+					option += '<span><input type="checkbox" '+disabledDiv+' name="'+field.id+'" value="'+j+'">'+field.map[j]+'</span>&nbsp;&nbsp;';
 				}
 				contentDiv += option;
 			}else if( field.type == 'table'){
@@ -149,15 +152,24 @@ module.exports = {
 				'</td>'+
 			'</tr>';
 		}
-		div += '<table class="table table-bordered table-hover definewidth m10">'+
-			contentDiv+
+		var buttonDiv = '';
+		if( _.isUndefined(defaultOption.submit) == false ||
+			_.isUndefined(defaultOption.cancel) == false ){
+			buttonDiv += 
 			'<tr>'+
 				'<td class="tableleft"></td>'+
-				'<td>'+
-					'<button type="button" class="btn btn-primary submit" >提交</button>'+
-					'<button type="button" class="btn btn-success cancel">返回列表</button>'+
+				'<td>';
+			if( _.isUndefined(defaultOption.submit) == false)
+				buttonDiv += '<button type="button" class="btn btn-primary submit" >提交</button>';
+			if( _.isUndefined(defaultOption.cancel) == false)
+				buttonDiv += '<button type="button" class="btn btn-success cancel">返回列表</button>';
+			buttonDiv += 
 				'</td>'+
-			'</tr>'+
+			'</tr>';
+		}
+		div += '<table class="table table-bordered table-hover definewidth m10">'+
+			contentDiv+
+			buttonDiv+
 		'</table>';
 		div = $(div);
 		//插入到页面中
@@ -259,7 +271,7 @@ module.exports = {
 			}
 		}
 		//挂载事件
-		div.find('.submit').click(function(){
+		function getAllData(){
 			var data = {};
 			for( var i in defaultOption.field ){
 				var field = defaultOption.field[i];
@@ -288,8 +300,14 @@ module.exports = {
 					data[field.id] = field.tableOperation.get();
 				}
 			}
-			defaultOption.submit(data);
+			return data;
+		}
+		div.find('.submit').click(function(){
+			defaultOption.submit(getAllData());
 		});
 		div.find('.cancel').click(defaultOption.cancel);
+		return {
+			get:getAllData
+		};
 	}
 };
