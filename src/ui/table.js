@@ -46,7 +46,12 @@ module.exports = {
 						var operation = {
 							remove:function(){
 								tr.remove();
-							}
+							},
+							mod:function(data){
+								tr.find('td').each(function(){
+									$(this).text(data[$(this).attr('class')]);
+								});
+							},
 						};
 						defaultOption.operate[i].click(data,operation);
 					});
