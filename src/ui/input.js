@@ -180,10 +180,11 @@ module.exports = {
 			(function(field){
 				if( field.type == 'image'){
 					upload.image({
-						url:field.url,
+						url:field.option.url,
 						target:field.imageTargetId,
 						field:'data',
-						width:2048,
+						width:field.option.width,
+						height:field.option.height,
 						quality:0.8,
 						onProgress:function(progress){
 							$.console.log(progress);

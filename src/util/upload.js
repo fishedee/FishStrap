@@ -101,7 +101,7 @@ module.exports = {
 					continue;
 				var allowType = '.'+allowType;
 				if( defaultOption._fileName.substring( 
-					defaultOption._fileName.length - allowType.length ) == allowType ){
+					defaultOption._fileName.length - allowType.length ).toLowerCase() == allowType.toLowerCase() ){
 					isAllow = true;
 					break;
 				}
@@ -156,18 +156,22 @@ module.exports = {
 		//读取并压缩图片
 		var img = new Image();
 		img.onload = function() {
-			var uploadBase64;
-			try {
-				uploadBase64 = imageCompresser.getImageBase64(this, conf);
-			} catch (e) {
-				defaultOption.onFail('压缩图片失败 '+e);
-				return false;
+			if (file.files[0].type == 'image/jpeg') {
+				var uploadBase64;
+				try {
+					uploadBase64 = imageCompresser.getImageBase64(this, conf);
+				} catch (e) {
+					defaultOption.onFail('压缩图片失败 '+e);
+					return false;
+				}
+				if (uploadBase64.indexOf('data:image') < 0) {
+					defaultOption.onFail('上传照片格式不支持');
+					return false;
+				}
+				defaultOption._uploadData = uploadBase64.split(';base64,')[1];
+			}else{
+				defaultOption._uploadData = $.base64.encode(defaultOption._fieldata,false);
 			}
-			if (uploadBase64.indexOf('data:image') < 0) {
-				defaultOption.onFail('上传照片格式不支持');
-				return false;
-			}
-			defaultOption._uploadData = uploadBase64.split(';base64,')[1];
 			nextStep();
 		}
 		img.onerror = function() {
