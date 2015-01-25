@@ -205,11 +205,13 @@ module.exports = {
 					});
 				}else if( field.type == 'simpleEditor'){
 					field._editor = editor.simpleEditor({
-						id:field.editorTargetId
+						id:field.editorTargetId,
+						url:field.option.url
 					});
 				}else if( field.type == 'fullEditor'){
 					field._editor = editor.fullEditor({
-						id:field.editorTargetId
+						id:field.editorTargetId,
+						url:field.option.url
 					});
 				}else if( field.type == 'time'){
 					$('#'+defaultOption.id).find('input[name='+field.id+']').datetimepicker({
