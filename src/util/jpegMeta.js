@@ -112,6 +112,7 @@ module.exports = {init: function() {
 				headersize = JpegMeta.parseNum(">", this._binary_data, pos, 2);
 				pos += headersize;
 				while (pos < this._binary_data.length) {
+					console.log(pos+','+this._binary_data.length);
 					delim = this._binary_data.charCodeAt(pos++);
 					if (delim == this._DELIM) {
 						_mark = this._binary_data.charCodeAt(pos++);
@@ -289,6 +290,8 @@ module.exports = {init: function() {
 				this._parseIfd(endian, this._binary_data, pos, this.tiff.ExifIfdPointer.value, this._exiftags, "exif", "Exif");
 			}
 			if (this.tiff.GPSInfoIfdPointer) {
+				//FIXME 以下代码有死循环的问题，暂时注释掉，不拉取gps信息
+				/*
 				this._parseIfd(endian, this._binary_data, pos, this.tiff.GPSInfoIfdPointer.value, this._gpstags, "gps", "GPS");
 				if (this.gps.GPSLatitude) {
 					var latitude;
@@ -306,6 +309,7 @@ module.exports = {init: function() {
 					}
 					this.gps._addProperty("longitude", "Dec. Longitude", longitude);
 				}
+				*/
 			}
 		};
 	}}
