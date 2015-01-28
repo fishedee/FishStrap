@@ -115,6 +115,14 @@ module.exports = {
 				contentDiv += '<div><img name="'+field.id+'" src=""/></div>'+
 					'<div class="progress"><div class="bar" id="'+field.imageProgressTargetId+'"></div></div>'+
 					'<div class="btn" id="'+field.imageTargetId+'"><span>点击这里上传图片</span></div>';
+			}else if( field.type == 'compressFile'){
+				field.tableId = $.uniqueNum();
+				field.fileTargetId = $.uniqueNum();
+				field.fileProgressTargetId = $.uniqueNum();
+				contentDiv += 
+					'<div id="'+field.tableId+'"></div>'+
+					'<div class="progress"><div class="bar" id="'+field.fileProgressTargetId+'"></div></div>'+
+					'<div class="btn" id="'+field.fileTargetId+'"><span>点击这里上传压缩文件</span></div>';
 			}else if( field.type == 'area'){
 				contentDiv += '<textarea name="'+field.id+'" style="width:90%;height:300px;"></textarea>';
 			}else if( field.type == 'text'){
@@ -203,6 +211,44 @@ module.exports = {
 							dialog.message(msg);
 						}
 					});
+				}else if( field.type == 'compressFile'){
+					field.tableOperation = table.staticSimpleTable({
+						id:field.tableId,
+						data:[],
+						column:[
+							{id:'name',type:'html',name:'文件'}
+						],
+						operate:[]
+					});
+					upload.file({
+						url:field.option.url,
+						target:field.fileTargetId,
+						field:'data',
+						type:field.option.type,
+						maxSize:field.option.maxSize,
+						onProgress:function(progress){
+							$.console.log(progress);
+							$('#'+field.fileProgressTargetId).text(progress+'%');
+							$('#'+field.fileProgressTargetId).css('width',progress+'%');
+						},
+						onSuccess:function(data){
+							data = $.JSON.parse(data);
+							if( data.code != 0 ){
+								dialog.message(data.msg);
+								return;
+							}
+							var fileAddress = _.map(data.data,function(single){
+								return {name:'<a href="'+single+'" target="_blank">'+single+'</a>'};
+							});
+							console.log(data.data);
+							console.log(fileAddress);
+							field.tableOperation.clear();
+							field.tableOperation.add(fileAddress);
+						},
+						onFail:function(msg){
+							dialog.message(msg);
+						}
+					});
 				}else if( field.type == 'simpleEditor'){
 					field._editor = editor.simpleEditor({
 						id:field.editorTargetId,
@@ -252,6 +298,12 @@ module.exports = {
 				field._editor.setFormatData(defaultOption.value[field.id]);
 			}else if( field.type == 'image'){
 				div.find('img[name='+field.id+']').attr("src",defaultOption.value[field.id]);
+			}else if( field.type == 'compressFile'){
+				var fileAddress = _.map(defaultOption.value[field.id],function(single){
+					return {name:'<a href="'+single+'" target="_blank">'+single+'</a>'};
+				});
+				field.tableOperation.clear();
+				field.tableOperation.add(fileAddress);
 			}else if( field.type == 'area'){
 				div.find('textarea[name='+field.id+']').val(defaultOption.value[field.id]);
 			}else if( field.type == 'text' || field.type == 'password' || field.type == 'time'){
@@ -288,6 +340,10 @@ module.exports = {
 					data[field.id] = field._editor.getContent();
 				}else if( field.type == 'image'){
 					data[field.id] = $.trim($('#'+defaultOption.id).find('img[name='+field.id+']').attr("src"));
+				}else if( field.type == 'compressFile'){
+					data[field.id] = _.map(field.tableOperation.get(),function(single){
+						return single.name;
+					});
 				}else if( field.type == 'area'){
 					data[field.id] = $.trim($('#'+defaultOption.id).find('textarea[name='+field.id+']').val());
 				}else if( field.type == 'text' || field.type == 'password' || field.type == 'time'){

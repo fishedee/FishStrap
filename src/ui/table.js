@@ -15,6 +15,10 @@ module.exports = {
 		};
 		for( var i in option )
 			defaultOption[i] = option[i];
+		//清除数据
+		function clearAllData(){
+			$('#'+defaultOption.id).find('tbody').empty();
+		}
 		//获取数据
 		function getAllData(){
 			var data = [];
@@ -126,6 +130,7 @@ module.exports = {
 		return {
 			add:addDataAndRefreshEvent,
 			get:getAllData,
+			clear:clearAllData,
 		};
 	},
 	staticTable:function(option){
