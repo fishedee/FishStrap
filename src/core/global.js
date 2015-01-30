@@ -288,16 +288,6 @@ $.addCssToHead = function(str_css) {
 	window.NETTYPE_DEFAULT = 0;
 	$.console.log($.JSON.stringify(jQuery.os));
 })($);
-//加入FastClick扩展
-(function(){
-	if( $.os.android == true || $.os.ios == true ){
-		$(document).ready(function(){
-			require.async('lib/fastclick',function(fastclick){
-				fastclick.FastClick.attach(document.body);
-			});
-		});
-	}
-})();
 //加入base64扩展
 (function($){
 	$.base64 = {
