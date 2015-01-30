@@ -82,8 +82,8 @@ module.exports = {
 	},
 	getImageBase64: function(C, n) {
 		n = $.extend({
-			maxW: 800,
-			maxH: 800,
+			maxW: 2000,
+			maxH: 2000,
 			quality: 0.8,
 			scale:0,
 			orien: 1

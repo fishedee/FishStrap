@@ -15,33 +15,64 @@ module.exports = {
 		};
 		for( var i in option )
 			defaultOption[i] = option[i];
-		//显示数据
-		function showData(data){
-			var div = '';
-			var operateDiv = '';
-			div += '<div class="mod-basic">';
-			div += '<table class="mod_table" style="table-layout: auto;">';
+		//清除数据
+		function clearAllData(){
+			$('#'+defaultOption.id).find('tbody').empty();
+		}
+		//获取数据
+		function getAllData(){
+			var data = [];
+			$('#'+defaultOption.id).find('tbody tr').each(function(){
+				var tr = $(this);
+				while( tr.is('tr') == false )
+					tr = tr.parent();
+				var singleData = {};
+				tr.find('td').each(function(){
+					singleData[$(this).attr('class')] = $(this).text();
+				});
+				data.push(singleData);
+			});
+			return data;
+		}
+		//挂在事件
+		function addEvent(){
+			//挂载事件
+			for( var i in defaultOption.operate ){
+				(function(i){
+					$('#'+defaultOption.id).find('.operate_'+defaultOption.operate[i].id).unbind("click").click(function(){
+						var tr = $(this);
+						while( tr.is('tr') == false )
+							tr = tr.parent();
+						var data = {};
+						tr.find('td').each(function(){
+							data[$(this).attr('class')] = $(this).text();
+						});
+						var operation = {
+							remove:function(){
+								tr.remove();
+							},
+							mod:function(data){
+								tr.find('td').each(function(){
+									$(this).text(data[$(this).attr('class')]);
+								});
+							},
+						};
+						defaultOption.operate[i].click(data,operation);
+					});
+				})(i);
+			}
+		}
+		//添加数据
+		function addData(data){
 			//构造操作
+			var operateDiv = '';
 			for( var i in defaultOption.operate ){
 				defaultOption.operate[i].id = $.uniqueNum();
 				operateDiv += "<a href='#' class=operate_"+defaultOption.operate[i].id
 					+">"+defaultOption.operate[i].name+"</a>&nbsp;";
 			}
-			//显示列表头数据
-			div += '<thead><tr>';
-			for( var i in defaultOption.column ){
-				var column = defaultOption.column[i];
-				var style = '';
-				if( column.type == 'hidden')
-					style = 'style="display:none;"';
-				div += '<th '+style+' ><span class="label">'+column.name+'</span></th>';
-			}
-			if( defaultOption.operate.length != 0 ){
-				div += '<th><span class="label">操作</span></th>';
-			}
-			div += '</tr></thead>';
-			//显示列表身数据
-			div += '<tbody>';
+			//构造添加数据
+			var div = '';
 			for( var i in data ){
 				var item = data[i];
 				div += '<tr>';
@@ -57,6 +88,29 @@ module.exports = {
 				}
 				div += '</tr>';
 			}
+			return div;
+		}
+		//显示数据
+		function showData(data){
+			var div = '';
+			div += '<div class="mod-basic">';
+			div += '<table class="mod_table" style="table-layout: auto;">';
+			//显示列表头数据
+			div += '<thead><tr>';
+			for( var i in defaultOption.column ){
+				var column = defaultOption.column[i];
+				var style = '';
+				if( column.type == 'hidden')
+					style = 'style="display:none;"';
+				div += '<th '+style+' ><span class="label">'+column.name+'</span></th>';
+			}
+			if( defaultOption.operate.length != 0 ){
+				div += '<th><span class="label">操作</span></th>';
+			}
+			div += '</tr></thead>';
+			//显示列表身数据
+			div += '<tbody>';
+			div += addData(data);
 			div += '</tbody>';
 			div += '</table>';
 			div += '</div>';
@@ -64,22 +118,20 @@ module.exports = {
 			$('#'+defaultOption.id).empty();
 			$('#'+defaultOption.id).append(div);
 			//挂载事件
-			for( var i in defaultOption.operate ){
-				(function(i){
-					$('.operate_'+defaultOption.operate[i].id).unbind("click").click(function(){
-						var tr = $(this);
-						while( tr.is('tr') == false )
-							tr = tr.parent();
-						var data = {};
-						tr.find('td').each(function(){
-							data[$(this).attr('class')] = $(this).text();
-						});
-						defaultOption.operate[i].click(data);
-					});
-				})(i);
-			}
+			addEvent();
+		}
+		function addDataAndRefreshEvent(data){
+			//添加数据
+			$('#'+defaultOption.id).find('tbody').append(addData(data));
+			//挂载事件
+			addEvent();
 		}
 		showData(defaultOption.data);
+		return {
+			add:addDataAndRefreshEvent,
+			get:getAllData,
+			clear:clearAllData,
+		};
 	},
 	staticTable:function(option){
 		//执行Option
@@ -108,7 +160,7 @@ module.exports = {
 		_option.summary     = '';
 		_option.ifRealPage  = true;
 		_option.data        = 'data';
-		_option.checkAll    = false;
+		_option.checkAll    = defaultOption.checkAll;
 		_option.params      = {};
 
 		//拼接url
@@ -206,6 +258,22 @@ module.exports = {
 				}
 			});
 		});
+		
+		return {
+			getCheckData:function(){
+				var target = $('#'+defaultOption.id+' .gri_td_checkbox:checked');
+				var data = [];
+				target.each(function(){
+					var parent = $(this).parent().parent();
+					var singleData = {};
+					parent.find('td').each(function(){
+						singleData[$(this).attr('class')] = $(this).text();
+					});
+					data.push(singleData);
+				});
+				return data;
+			}
+		};
 	},
 	
 };

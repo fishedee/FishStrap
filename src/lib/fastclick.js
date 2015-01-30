@@ -1,4 +1,3 @@
-define('util/fastclick',[], function(require, exports, module){
 (function () {
 	'use strict';
 
@@ -805,4 +804,3 @@ define('util/fastclick',[], function(require, exports, module){
 		window.FastClick = FastClick;
 	}
 }());
-});

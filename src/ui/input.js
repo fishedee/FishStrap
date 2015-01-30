@@ -1,7 +1,9 @@
 var $ = require('../core/global.js');
 var dialog = require('./dialog.js');
 var editor = require('./editor.js');
+var table = require('./table.js');
 var upload = require('../util/upload.js');
+var subPage = require('../page/subPage.js');
 require('../util/jqueryDatetimePicker.js');
 module.exports = {
 	flowInput:function( option ){
@@ -103,7 +105,7 @@ module.exports = {
 				contentDiv += '<a name="'+field.id+'" target="_blank"><div name="'+field.id+'"/></a>';
 			}else if( field.type == 'fullEditor'){
 				field.editorTargetId = $.uniqueNum();
-				contentDiv += '<div name="'+field.id+'" id="'+field.editorTargetId+'"/>';
+				contentDiv += '<div class="alert alert-danger" role="alert">注意！为了保证微信内观看视频的兼容性，强烈建议你只插入腾讯视频网址，不要插入其它视频网站，或直接上传视频。</div><div name="'+field.id+'" id="'+field.editorTargetId+'"/>';
 			}else if( field.type == 'simpleEditor'){
 				field.editorTargetId = $.uniqueNum();
 				contentDiv += '<div name="'+field.id+'" id="'+field.editorTargetId+'"/>';
@@ -113,6 +115,14 @@ module.exports = {
 				contentDiv += '<div><img name="'+field.id+'" src=""/></div>'+
 					'<div class="progress"><div class="bar" id="'+field.imageProgressTargetId+'"></div></div>'+
 					'<div class="btn" id="'+field.imageTargetId+'"><span>点击这里上传图片</span></div>';
+			}else if( field.type == 'compressFile'){
+				field.tableId = $.uniqueNum();
+				field.fileTargetId = $.uniqueNum();
+				field.fileProgressTargetId = $.uniqueNum();
+				contentDiv += 
+					'<div id="'+field.tableId+'"></div>'+
+					'<div class="progress"><div class="bar" id="'+field.fileProgressTargetId+'"></div></div>'+
+					'<div class="btn" id="'+field.fileTargetId+'"><span>点击这里上传压缩文件</span></div>';
 			}else if( field.type == 'area'){
 				contentDiv += '<textarea name="'+field.id+'" style="width:90%;height:300px;"></textarea>';
 			}else if( field.type == 'text'){
@@ -126,25 +136,48 @@ module.exports = {
 				}
 				contentDiv += '<select name="'+field.id+'">'+option+'</select>';
 			}else if( field.type == 'check'){
+				var disabledDiv = '';
+				if( _.isUndefined(field.disabled) == false &&  field.disabled === true )
+					disabledDiv = 'disabled="true"';
 				var option = "";
 				for( var j in field.map ){
-					option += '<span><input type="checkbox" name="'+field.id+'" value="'+j+'">'+field.map[j]+'</span>&nbsp;&nbsp;';
+					option += '<span><input type="checkbox" '+disabledDiv+' name="'+field.id+'" value="'+j+'">'+field.map[j]+'</span>&nbsp;&nbsp;';
 				}
 				contentDiv += option;
+			}else if( field.type == 'table'){
+				field.tableId = $.uniqueNum();
+				contentDiv += '<div>';
+				for( var i = 0 ; i != field.option.button.length ; ++i ){
+					var singleButton = field.option.button[i];
+					singleButton.buttonId = $.uniqueNum();
+					contentDiv += '<button type="button" class="btn" id="'+singleButton.buttonId+'">'+singleButton.name+'</button>';
+					field.option.button[i] = singleButton;
+				}
+				contentDiv += '</div>';
+				contentDiv += '<div id="'+field.tableId+'"></div>';
 			}
 			contentDiv +=
 				'</td>'+
 			'</tr>';
 		}
-		div += '<table class="table table-bordered table-hover definewidth m10">'+
-			contentDiv+
+		var buttonDiv = '';
+		if( _.isUndefined(defaultOption.submit) == false ||
+			_.isUndefined(defaultOption.cancel) == false ){
+			buttonDiv += 
 			'<tr>'+
 				'<td class="tableleft"></td>'+
-				'<td>'+
-					'<button type="button" class="btn btn-primary submit" >提交</button>'+
-					'<button type="button" class="btn btn-success cancel">返回列表</button>'+
+				'<td>';
+			if( _.isUndefined(defaultOption.submit) == false)
+				buttonDiv += '<button type="button" class="btn btn-primary submit" >提交</button>';
+			if( _.isUndefined(defaultOption.cancel) == false)
+				buttonDiv += '<button type="button" class="btn btn-success cancel">返回列表</button>';
+			buttonDiv += 
 				'</td>'+
-			'</tr>'+
+			'</tr>';
+		}
+		div += '<table class="table table-bordered table-hover definewidth m10">'+
+			contentDiv+
+			buttonDiv+
 		'</table>';
 		div = $(div);
 		//插入到页面中
@@ -155,10 +188,11 @@ module.exports = {
 			(function(field){
 				if( field.type == 'image'){
 					upload.image({
-						url:field.url,
+						url:field.option.url,
 						target:field.imageTargetId,
 						field:'data',
-						width:2048,
+						width:field.option.width,
+						height:field.option.height,
 						quality:0.8,
 						onProgress:function(progress){
 							$.console.log(progress);
@@ -177,13 +211,53 @@ module.exports = {
 							dialog.message(msg);
 						}
 					});
+				}else if( field.type == 'compressFile'){
+					field.tableOperation = table.staticSimpleTable({
+						id:field.tableId,
+						data:[],
+						column:[
+							{id:'name',type:'html',name:'文件'}
+						],
+						operate:[]
+					});
+					upload.file({
+						url:field.option.url,
+						target:field.fileTargetId,
+						field:'data',
+						type:field.option.type,
+						maxSize:field.option.maxSize,
+						onProgress:function(progress){
+							$.console.log(progress);
+							$('#'+field.fileProgressTargetId).text(progress+'%');
+							$('#'+field.fileProgressTargetId).css('width',progress+'%');
+						},
+						onSuccess:function(data){
+							data = $.JSON.parse(data);
+							if( data.code != 0 ){
+								dialog.message(data.msg);
+								return;
+							}
+							var fileAddress = _.map(data.data,function(single){
+								return {name:'<a href="'+single+'" target="_blank">'+single+'</a>'};
+							});
+							console.log(data.data);
+							console.log(fileAddress);
+							field.tableOperation.clear();
+							field.tableOperation.add(fileAddress);
+						},
+						onFail:function(msg){
+							dialog.message(msg);
+						}
+					});
 				}else if( field.type == 'simpleEditor'){
 					field._editor = editor.simpleEditor({
-						id:field.editorTargetId
+						id:field.editorTargetId,
+						url:field.option.url
 					});
 				}else if( field.type == 'fullEditor'){
 					field._editor = editor.fullEditor({
-						id:field.editorTargetId
+						id:field.editorTargetId,
+						url:field.option.url
 					});
 				}else if( field.type == 'time'){
 					$('#'+defaultOption.id).find('input[name='+field.id+']').datetimepicker({
@@ -192,6 +266,19 @@ module.exports = {
 						format: 'Y-m-d',
 						closeOnDateSelect:true
 					});
+				}else if( field.type == 'table'){
+					field.tableOperation = table.staticSimpleTable({
+						id:field.tableId,
+						data:[],
+						column:field.option.column,
+						operate:field.option.operate
+					});
+					for( var i = 0 ; i != field.option.button.length ; ++i ){
+						var singleButton = field.option.button[i];
+						$('#'+singleButton.buttonId).click(function(){
+							singleButton.click(field.tableOperation);
+						});
+					}
 				}
 			})(field);
 		}
@@ -211,6 +298,12 @@ module.exports = {
 				field._editor.setFormatData(defaultOption.value[field.id]);
 			}else if( field.type == 'image'){
 				div.find('img[name='+field.id+']').attr("src",defaultOption.value[field.id]);
+			}else if( field.type == 'compressFile'){
+				var fileAddress = _.map(defaultOption.value[field.id],function(single){
+					return {name:'<a href="'+single+'" target="_blank">'+single+'</a>'};
+				});
+				field.tableOperation.clear();
+				field.tableOperation.add(fileAddress);
 			}else if( field.type == 'area'){
 				div.find('textarea[name='+field.id+']').val(defaultOption.value[field.id]);
 			}else if( field.type == 'text' || field.type == 'password' || field.type == 'time'){
@@ -221,16 +314,19 @@ module.exports = {
 				div.find('input[name='+field.id+']').each(function(){
 					for( var i in defaultOption.value[field.id] ){
 						var value = defaultOption.value[field.id][i];
-						if( $(this).val() == value )
+						if( $(this).val() == value ){
 							$(this).attr('checked',true);
-						else
-							$(this).attr('checked',false);
+							return;
+						}
 					}
+					$(this).attr('checked',false);
 				});
+			}else if( field.type == 'table'){
+				field.tableOperation.add(defaultOption.value[field.id]);
 			}
 		}
 		//挂载事件
-		div.find('.submit').click(function(){
+		function getAllData(){
 			var data = {};
 			for( var i in defaultOption.field ){
 				var field = defaultOption.field[i];
@@ -244,6 +340,10 @@ module.exports = {
 					data[field.id] = field._editor.getContent();
 				}else if( field.type == 'image'){
 					data[field.id] = $.trim($('#'+defaultOption.id).find('img[name='+field.id+']').attr("src"));
+				}else if( field.type == 'compressFile'){
+					data[field.id] = _.map(field.tableOperation.get(),function(single){
+						return single.name;
+					});
 				}else if( field.type == 'area'){
 					data[field.id] = $.trim($('#'+defaultOption.id).find('textarea[name='+field.id+']').val());
 				}else if( field.type == 'text' || field.type == 'password' || field.type == 'time'){
@@ -255,10 +355,18 @@ module.exports = {
 					$('#'+defaultOption.id).find('input[name='+field.id+']:checked').each(function(){
 						data[field.id].push($(this).val());
 					});
+				}else if( field.type == 'table'){
+					data[field.id] = field.tableOperation.get();
 				}
 			}
-			defaultOption.submit(data);
+			return data;
+		}
+		div.find('.submit').click(function(){
+			defaultOption.submit(getAllData());
 		});
 		div.find('.cancel').click(defaultOption.cancel);
+		return {
+			get:getAllData
+		};
 	}
 };
