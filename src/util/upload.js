@@ -338,7 +338,7 @@ module.exports = {
 			});
 		};
 		//绘制图形
-		var el = '<input id="'+defaultOption.id+'" type="file" name="'+defaultOption.field+ '" style="opacity:0;display:block;position:absolute;top:0px;bottom:0px;left:0px;right:0px;width:100%;height:100%;font-size:1000px;" accept="image/*" onchange="'+$.func.invoke(defaultOption.onUpload)+'">';
+		var el = '<input id="'+defaultOption.id+'" type="file" name="'+defaultOption.field+ '" style="opacity:0;display:block;position:absolute;top:0px;bottom:0px;left:0px;right:0px;width:100%;height:100%;" accept="image/*" onchange="'+$.func.invoke(defaultOption.onUpload)+'">';
 		return {
 			el:el
 		};
