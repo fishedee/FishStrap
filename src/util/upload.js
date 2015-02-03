@@ -168,8 +168,10 @@ module.exports = {
 					defaultOption.onFail('上传照片格式不支持');
 					return false;
 				}
+				defaultOption.onOpen(uploadBase64);
 				defaultOption._uploadData = uploadBase64.split(';base64,')[1];
 			}else{
+				defaultOption.onOpen('data'+file.files[0].type+';base64,'+defaultOption._fieldata);
 				defaultOption._uploadData = $.base64.encode(defaultOption._fieldata,false);
 			}
 			nextStep();
@@ -250,12 +252,6 @@ module.exports = {
 			type:null,
 			maxSize:null,
 			accept:null,
-			onProgress:function(data){
-			},
-			onSuccess:function(){
-			},
-			onFail:function(msg){
-			},
 		};
 		for( var i in option ){
 			defaultOption[i] = option[i];
@@ -305,6 +301,48 @@ module.exports = {
 			});
 		});
 	},
+	imageV2:function( option ){
+		//初始化option
+		var self = this;
+		var defaultOption = {
+			url:'',
+			field:'',
+			width:null,
+			height:null,
+			quality:0.8,
+			onOpen:function(data){
+			},
+			onProgress:function(data){
+			},
+			onSuccess:function(){
+			},
+			onFail:function(msg){
+			},
+		};
+		for( var i in option ){
+			defaultOption[i] = option[i];
+		}
+		defaultOption.type = 'png|jpg|jpeg|gif|bmp';
+		defaultOption.id = _.uniqueId('upload_');
+		defaultOption.onUpload = function (file){
+			self._checkCanUpload( file , defaultOption , function(){
+				self._checkFileSelect( file , defaultOption , function(){
+					self._checkFileType( file , defaultOption , function(){
+						self._readImage( file , defaultOption , function(){
+							self._compressImage( file , defaultOption , function(){
+								self._uploadImage( file,defaultOption);
+							});
+						});
+					});
+				});
+			});
+		};
+		//绘制图形
+		var el = '<input id="'+defaultOption.id+'" type="file" name="'+defaultOption.field+ '" style="opacity:0;display:block;position:absolute;top:0px;bottom:0px;left:0px;right:0px;width:100%;height:100%;font-size:1000px;" accept="image/*" onchange="'+$.func.invoke(defaultOption.onUpload)+'">';
+		return {
+			el:el
+		};
+	},
 	image:function( option ){
 		var self = this;
 		var isHtml5Support;
@@ -326,6 +364,8 @@ module.exports = {
 			width:null,
 			height:null,
 			quality:0.8,
+			onOpen:function(data){
+			},
 			onProgress:function(data){
 			},
 			onSuccess:function(){
