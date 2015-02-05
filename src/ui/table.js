@@ -79,9 +79,15 @@ module.exports = {
 				for( var j in defaultOption.column ){
 					var column = defaultOption.column[j];
 					var style = '';
-					if( column.type == 'hidden')
-						style = 'style="display:none;"';
-					div += '<td '+style+' class="'+column.id+'">'+item[column.id]+'</td>';
+					var width = 'width:'+(1/defaultOption.column.length*100)+'%;';
+					if( column.type == 'hidden'){
+						div += '<td style="display:none;'+width+'" class="'+column.id+'">'+item[column.id]+'</td>';
+					}else if( column.type == 'image'){
+						div += '<td style="'+width+'" class="'+column.id+'"><img src="'+item[column.id]+'"/></td>';
+					}else {
+						div += '<td style="'+width+'" class="'+column.id+'">'+item[column.id]+'</td>';
+					}
+					
 				}
 				if( defaultOption.operate.length != 0 ){
 					div += '<td>'+operateDiv+'</td>';
@@ -100,9 +106,12 @@ module.exports = {
 			for( var i in defaultOption.column ){
 				var column = defaultOption.column[i];
 				var style = '';
-				if( column.type == 'hidden')
-					style = 'style="display:none;"';
-				div += '<th '+style+' ><span class="label">'+column.name+'</span></th>';
+				var width = 'width:'+(1/defaultOption.column.length*100)+'%;';
+				if( column.type == 'hidden'){
+					div += '<th style="display:none;'+width+'"><span class="label">'+column.name+'</span></th>';
+				}else {
+					div += '<th style="'+width+'"><span class="label">'+column.name+'</span></th>';
+				}
 			}
 			if( defaultOption.operate.length != 0 ){
 				div += '<th><span class="label">操作</span></th>';

@@ -91,7 +91,7 @@ module.exports = {
 			var field = defaultOption.field[i];
 			contentDiv += 
 				'<tr>'+
-					'<td class="tableleft">'+field.name+'</td>';
+					'<td class="tableleft" style="width:20%;">'+field.name+'</td>';
 			if( typeof field.targetId != 'undefined'){
 				contentDiv += '<td id="'+field.targetId+'">';
 			}else{
@@ -124,7 +124,10 @@ module.exports = {
 					'<div class="progress"><div class="bar" id="'+field.fileProgressTargetId+'"></div></div>'+
 					'<div class="btn" id="'+field.fileTargetId+'"><span>点击这里上传压缩文件</span></div>';
 			}else if( field.type == 'area'){
-				contentDiv += '<textarea name="'+field.id+'" style="width:90%;height:300px;"></textarea>';
+				var disabledDiv = '';
+				if( _.isUndefined(field.disabled) == false &&  field.disabled === true )
+					disabledDiv = 'disabled="true"';
+				contentDiv += '<textarea name="'+field.id+'" style="width:90%;height:300px;" '+disabledDiv+'></textarea>';
 			}else if( field.type == 'text'){
 				contentDiv += '<input type="text" name="'+field.id+'"/>';
 			}else if( field.type == 'password'){
