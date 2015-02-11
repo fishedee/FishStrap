@@ -19,6 +19,48 @@ module.exports = {
 		function clearAllData(){
 			$('#'+defaultOption.id).find('tbody').empty();
 		}
+		//设置单行数据
+		function setSingleData(tr,singleData){
+			tr.find('td').each(function(){
+				var singleColumn =  null;
+				for( var j in defaultOption.column ){
+					if( defaultOption.column[j].id == $(this).attr('class') ){
+						singleColumn = defaultOption.column[j];
+						break;
+					}
+				}
+				if( singleColumn == null )
+					return;
+				if( singleColumn.type == 'hidden')
+					$(this).text(singleData[singleColumn.id]);
+				else if( singleColumn.type == 'image')
+					$(this).find('img').attr('src',singleData[singleColumn.id]);
+				else 
+					$(this).text(singleData[singleColumn.id]);
+			});
+		}
+		//获取单行数据
+		function getSingleData(tr){
+			var singleData = {};
+			tr.find('td').each(function(){
+				var singleColumn =  null;
+				for( var j in defaultOption.column ){
+					if( defaultOption.column[j].id == $(this).attr('class') ){
+						singleColumn = defaultOption.column[j];
+						break;
+					}
+				}
+				if( singleColumn == null )
+					return;
+				if( singleColumn.type == 'hidden')
+					singleData[singleColumn.id] = $(this).text();
+				else if( singleColumn.type == 'image')
+					singleData[singleColumn.id] = $(this).find('img').attr('src');
+				else 
+					singleData[singleColumn.id] = $(this).text();
+			});
+			return singleData;
+		}
 		//获取数据
 		function getAllData(){
 			var data = [];
@@ -26,11 +68,7 @@ module.exports = {
 				var tr = $(this);
 				while( tr.is('tr') == false )
 					tr = tr.parent();
-				var singleData = {};
-				tr.find('td').each(function(){
-					singleData[$(this).attr('class')] = $(this).text();
-				});
-				data.push(singleData);
+				data.push(getSingleData(tr));
 			});
 			return data;
 		}
@@ -43,18 +81,14 @@ module.exports = {
 						var tr = $(this);
 						while( tr.is('tr') == false )
 							tr = tr.parent();
-						var data = {};
-						tr.find('td').each(function(){
-							data[$(this).attr('class')] = $(this).text();
-						});
+						var data = getSingleData(tr);
 						var operation = {
 							remove:function(){
 								tr.remove();
 							},
 							mod:function(data){
-								tr.find('td').each(function(){
-									$(this).text(data[$(this).attr('class')]);
-								});
+								console.log(data);
+								setSingleData(tr,data);
 							},
 						};
 						defaultOption.operate[i].click(data,operation);
@@ -68,7 +102,7 @@ module.exports = {
 			var operateDiv = '';
 			for( var i in defaultOption.operate ){
 				defaultOption.operate[i].id = $.uniqueNum();
-				operateDiv += "<a href='#' class=operate_"+defaultOption.operate[i].id
+				operateDiv += "<a href='javascript: void(0)' class=operate_"+defaultOption.operate[i].id
 					+">"+defaultOption.operate[i].name+"</a>&nbsp;";
 			}
 			//构造添加数据
@@ -186,6 +220,9 @@ module.exports = {
 		_option.fields = {};
 		for(var i in defaultOption.column){
 			var column = defaultOption.column[i];
+			if( column.hidden ){
+				continue;
+			}
 			var single;
 			(function(column){
 				if( column.type == 'text'){

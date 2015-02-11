@@ -458,6 +458,21 @@ $.addCssToHead = function(str_css) {
 		}
 	};
 })($);
+//加入URL扩展
+(function($){
+	$.url = {
+		buildQueryUrl:function(url,urlArgv){
+			for( var i in urlArgv ){
+				if( url.indexOf('?') == -1 )
+					url += '?';
+				else
+					url += '&';
+				url += i + '='+ encodeURIComponent(urlArgv[i]);
+			}
+			return encodeURI(url);
+		}
+	};
+}($));
 //加入地址栏扩展
 (function($){
 	$.location = {
@@ -465,20 +480,20 @@ $.addCssToHead = function(str_css) {
 			var reg = new RegExp("(^|/?|&)" + name + "=([^&]*)(&|$)", "i");
 			var r = decodeURI(window.location.search).match(reg);
 			if (r != null) 
-				return unescape(r[2]);
+				return decodeURIComponent(r[2]);
 			return null;
 		},
 		getHashArgv:function( name ){
 			var reg = new RegExp("(^|#|&)" + name + "=([^&]*)(&|$)", "i");
 			var r = decodeURI(window.location.hash).match(reg);
 			if (r != null) 
-				return unescape(r[2]); 
+				return decodeURIComponent(r[2]); 
 			return null;
 		},
 		setHashArgv:function(argv){
 			var hash = '';
 			for( var i in argv ){
-				hash += i+'='+escape(argv[i])+'&';
+				hash += i+'='+encodeURIComponent(argv[i])+'&';
 			}
 			window.location.hash = '#'+encodeURI(hash);
 		},
