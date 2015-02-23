@@ -140,7 +140,7 @@ module.exports = {
 				for( var j in field.map ){
 					option += '<option value="'+j+'">'+field.map[j]+'</option>';
 				}
-				contentDiv += '<select '+disabledDiv+' name=" '+field.id+' ">'+option+'</select>';
+				contentDiv += '<select '+disabledDiv+' name="'+field.id+'">'+option+'</select>';
 			}else if( field.type == 'check'){
 				var disabledDiv = '';
 				if( _.isUndefined(field.disabled) == false &&  field.disabled === true )
