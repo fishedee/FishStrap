@@ -46,8 +46,8 @@ return {
 			'bottom':'0px',
 			'left':'0px',
 			'right':'0px',
-			'width':'80%',
-			'height':'80%',
+			'width':'95%',
+			'height':'95%',
 			'margin':'auto auto',
 			'box-shadow':'1px 1px 8px rgba(0, 0, 0, 0.35)',
 			'border':'1px solid #737373'
