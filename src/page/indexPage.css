@@ -50,6 +50,13 @@
 	right:0px;
 	margin:auto auto;
 }
+.comm_abtop{
+	position:absolute;
+	top:0px;	
+	left:0px;
+	right:0px;
+	margin:0 auto;
+}
 .comm_ableft{
 	position:absolute;
 	top:0px;
