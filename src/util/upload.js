@@ -182,7 +182,7 @@ module.exports = {
 		}
 		img.src = defaultOption._fileAddress;//imageCompresser.getFileObjectURL(file);
 	},
-	_uploadImage:function( file,defaultOption  ){
+	_startUploadProgres:function(file,defaultOption){
 		//制作虚假的进度条，1000毫秒自动往上增加5%
 		defaultOption._progress = 1;
 		defaultOption._progressInterval = 0;
@@ -196,9 +196,89 @@ module.exports = {
 			defaultOption._progress += 5 ;
 			defaultOption.onProgress(defaultOption._progress);
 		},1000);
-		//构造数据，提交表单
+	},
+	_cloudImageUploadBlock:function( file , defaultOption ,nextStep){
+		//创建上传的二进制文件
+		var data = $.base64.decode(defaultOption._uploadData,false);
+		var arr = new Uint8Array(data.length);
+	    for(var i = 0, l = data.length; i < l; i++) {
+	        arr[i] = data.charCodeAt(i);
+	    }
+		var blob = new Blob([arr.buffer]);
+		//发送二进制数据
+		var progress = function(e) {
+			if(e.lengthComputable){
+				defaultOption._progress = Math.ceil(100 * (e.loaded / e.total));
+				defaultOption.onProgress(defaultOption._progress);
+			}
+		}
+		var complete = function(e) {
+			var response = $.JSON.parse(e.target.response);
+			nextStep(response.ctx,data.length);
+		}
+		var failed = function() {
+			defaultOption.onFail('网络断开，请稍后重新操作');
+		}
+		var abort = function() {
+			defaultOption.onFail('上传已取消');
+		}
+		var httpReuqest = new XMLHttpRequest();
+		if( httpReuqest.upload ){
+			httpReuqest.upload.addEventListener('progress',progress, false);
+		}
+		httpReuqest.open("POST", "http://upload.qiniu.com/mkblk/"+data.length,true);
+		httpReuqest.addEventListener('progress',progress, false);
+		httpReuqest.addEventListener("load", complete, false);
+		httpReuqest.addEventListener("abort", abort, false);
+		httpReuqest.addEventListener("error", failed, false);
+		httpReuqest.setRequestHeader("Authorization", "UpToken "+defaultOption.urlToken); 
+		httpReuqest.setRequestHeader("Content-Type","application/octet-stream"); 
+		httpReuqest.send(blob);
+	},
+	_cloudImageCreateFile:function( context,length,defaultOption , nextStep){
+		var data = '';
+		for( var i in context ){
+			if(data!= '')
+				data += ',';
+			data += context[i];
+		}
+		var complete = function(e) {
+			var response = $.JSON.parse(e.target.response);
+			nextStep(response);
+		}
+		var failed = function() {
+			defaultOption.onFail('网络断开，请稍后重新操作');
+		}
+		var abort = function() {
+			defaultOption.onFail('上传已取消');
+		}
+		var httpReuqest = new XMLHttpRequest();
+		httpReuqest.addEventListener("load", complete, false);
+		httpReuqest.addEventListener("abort", abort, false);
+		httpReuqest.addEventListener("error", failed, false);
+		httpReuqest.open("POST","http://upload.qiniu.com/mkfile/"+length,true);
+		httpReuqest.setRequestHeader("Authorization", "UpToken "+defaultOption.urlToken); 
+		httpReuqest.setRequestHeader("Content-Type","application/octet-stream"); 
+		httpReuqest.send(data);
+	},
+	_cloudImageUpload:function(file,defaultOption){
+		var self = this;
+		self._cloudImageUploadBlock(file,defaultOption,function(context,length){
+			self._cloudImageCreateFile([context],length,defaultOption,function(response){
+				var response = {
+					code:0,
+					msg:'',
+					data:'http://'+defaultOption.url+'/'+response.key
+				};
+				defaultOption.onSuccess($.JSON.stringify(response));
+			});
+		});
+	},
+	_localImageUpload:function(file,defaultOption){
+		//构造数据
 		var formData = new FormData();
 		formData.append('data', defaultOption._uploadData);
+		//提交表单
 		var progress = function(e) {
 			if(e.lengthComputable){
 				defaultOption._progress = Math.ceil(100 * (e.loaded / e.total));
@@ -218,12 +298,19 @@ module.exports = {
 		if( httpReuqest.upload ){
 			httpReuqest.upload.addEventListener('progress',progress, false);
 		}
+		httpReuqest.open("POST", defaultOption.url + '?t=' + Date.now(),true);
 		httpReuqest.addEventListener('progress',progress, false);
 		httpReuqest.addEventListener("load", complete, false);
 		httpReuqest.addEventListener("abort", abort, false);
 		httpReuqest.addEventListener("error", failed, false);
-		httpReuqest.open("POST", defaultOption.url + '?t=' + Date.now(),true);
 		httpReuqest.send(formData);
+	},
+	_uploadImage:function( file,defaultOption  ){
+		var self = this;
+		if( defaultOption.urlType == 'local')
+			self._localImageUpload(file,defaultOption);
+		else
+			self._cloudImageUpload(file,defaultOption);	
 	},
 	_iframeUpload:function(frameId,formId,defaultOption){
 		//制作虚假的进度条，1000毫秒自动往上增加5%
@@ -306,6 +393,8 @@ module.exports = {
 		var self = this;
 		var defaultOption = {
 			url:'',
+			urlToken:'',
+			urlType:'local',
 			field:'',
 			width:null,
 			height:null,
@@ -359,6 +448,8 @@ module.exports = {
 		//初始化option
 		var defaultOption = {
 			url:'',
+			urlToken:'',
+			urlType:'local',
 			target:'',
 			field:'',
 			width:null,

@@ -195,6 +195,8 @@ module.exports = {
 				if( field.type == 'image'){
 					upload.image({
 						url:field.option.url,
+						urlToken:field.option.urlToken,
+						urlType:field.option.urlType,
 						target:field.imageTargetId,
 						field:'data',
 						width:field.option.width,
