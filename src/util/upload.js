@@ -211,7 +211,12 @@ module.exports = {
 		}
 		var complete = function(e) {
 			var response = $.JSON.parse(e.target.response);
-			nextStep(response.ctx,data.length);
+			if( _.isUndefined(response.code) == false && response.code != 200 ){
+				defaultOption.onFail(response.error);
+			}else{
+				nextStep(response.ctx,data.length);
+			}
+			
 		}
 		var failed = function() {
 			defaultOption.onFail('网络断开，请稍后重新操作');
@@ -241,7 +246,11 @@ module.exports = {
 		}
 		var complete = function(e) {
 			var response = $.JSON.parse(e.target.response);
-			nextStep(response);
+			if( _.isUndefined(response.code) == false && response.code != 200 ){
+				defaultOption.onFail(response.error);
+			}else{
+				nextStep(response);
+			}
 		}
 		var failed = function() {
 			defaultOption.onFail('网络断开，请稍后重新操作');
