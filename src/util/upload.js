@@ -182,7 +182,7 @@ module.exports = {
 		}
 		img.src = defaultOption._fileAddress;//imageCompresser.getFileObjectURL(file);
 	},
-	_startUploadProgres:function(file,defaultOption){
+	_startUploadProgres:function(file,defaultOption,nextStep){
 		//制作虚假的进度条，1000毫秒自动往上增加5%
 		defaultOption._progress = 1;
 		defaultOption._progressInterval = 0;
@@ -196,15 +196,12 @@ module.exports = {
 			defaultOption._progress += 5 ;
 			defaultOption.onProgress(defaultOption._progress);
 		},1000);
+		nextStep();
 	},
 	_cloudImageUploadBlock:function( file , defaultOption ,nextStep){
 		//创建上传的二进制文件
 		var data = $.base64.decode(defaultOption._uploadData,false);
-		var arr = new Uint8Array(data.length);
-	    for(var i = 0, l = data.length; i < l; i++) {
-	        arr[i] = data.charCodeAt(i);
-	    }
-		var blob = new Blob([arr.buffer]);
+		var blob = html5.blob.fromString(data);
 		//发送二进制数据
 		var progress = function(e) {
 			if(e.lengthComputable){
@@ -419,7 +416,9 @@ module.exports = {
 					self._checkFileType( file , defaultOption , function(){
 						self._readImage( file , defaultOption , function(){
 							self._compressImage( file , defaultOption , function(){
-								self._uploadImage( file,defaultOption);
+								self._startUploadProgres(file,defaultOption,function(){
+									self._uploadImage( file,defaultOption);
+								});
 							});
 						});
 					});

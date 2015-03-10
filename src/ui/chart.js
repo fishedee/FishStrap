@@ -365,7 +365,7 @@ return {
 			],
 			series : series
 		};
-		// 为echarts对象加载数据 
+		// 为echarts对象加载数据
 		myChart.setTheme(theme);
 		myChart.setOption(option); 
 	},

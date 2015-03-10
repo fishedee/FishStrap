@@ -65,6 +65,40 @@ self.localStorage = function(name, value, options) {
 		
 	}
 };
+//加入Blob扩展
+self.blob = {
+	fromArray:function(array){
+		try{
+		  var jpeg = new Blob( [array],{type:"application/octet-stream"});
+		}
+		catch(e){
+		    // TypeError old chrome and FF
+		    window.BlobBuilder = window.BlobBuilder || 
+		                         window.WebKitBlobBuilder || 
+		                         window.MozBlobBuilder || 
+		                         window.MSBlobBuilder;
+		    if(e.name == 'TypeError' && window.BlobBuilder){
+		        var bb = new BlobBuilder();
+		        bb.append([array.buffer]);
+		        var jpeg = bb.getBlob("application/octet-stream");
+		    }
+		    else if(e.name == "InvalidStateError"){
+		        var jpeg = new Blob( [array.buffer], {type : "application/octet-stream"});
+		    }
+		    else{
+		       	var jpeg = null;
+		    }
+		}
+		return jpeg;
+	},
+	fromString:function(data){
+		var arr = new Uint8Array(data.length);
+	    for(var i = 0, l = data.length; i < l; i++) {
+	        arr[i] = data.charCodeAt(i);
+	    }
+	    return this.fromArray(arr);
+	}
+};
 //加入FileReader扩展
 self.fileReader = {
 	open:function(option){
