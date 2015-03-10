@@ -201,7 +201,7 @@ module.exports = {
 	_cloudImageUploadBlock:function( file , defaultOption ,nextStep){
 		//创建上传的二进制文件
 		var data = $.base64.decode(defaultOption._uploadData,false);
-		var blob = html5.blob.fromString(data);
+		var blob = html5.arraybuffer.fromString(data);
 		//发送二进制数据
 		var progress = function(e) {
 			if(e.lengthComputable){

@@ -65,25 +65,42 @@ self.localStorage = function(name, value, options) {
 		
 	}
 };
+//加入ArrayBuffer扩展
+self.arraybuffer = {
+	fromString:function(data){
+		var arraybuffer = new ArrayBuffer(data.length);
+		var longInt8View = new Uint8Array(arraybuffer);
+
+		for (var i=0; i< longInt8View.length; i++) {
+			longInt8View[i] = data.charCodeAt(i);
+		}
+		return arraybuffer;
+	}
+};
 //加入Blob扩展
 self.blob = {
 	fromArray:function(array){
 		try{
-		  var jpeg = new Blob( [array],{type:"application/octet-stream"});
+		  var jpeg = new Blob( [array],{type:"image/jpeg"});
 		}
 		catch(e){
+			alert(e.name);
+			alert(e);
 		    // TypeError old chrome and FF
 		    window.BlobBuilder = window.BlobBuilder || 
 		                         window.WebKitBlobBuilder || 
 		                         window.MozBlobBuilder || 
 		                         window.MSBlobBuilder;
+		    alert(window.BlobBuilder);
 		    if(e.name == 'TypeError' && window.BlobBuilder){
+		    	alert('TypeError!');
 		        var bb = new BlobBuilder();
-		        bb.append([array.buffer]);
-		        var jpeg = bb.getBlob("application/octet-stream");
+		        bb.append(array.buffer);
+		        var jpeg = bb.getBlob("image/jpeg");
+		        alert(jpeg.size);
 		    }
 		    else if(e.name == "InvalidStateError"){
-		        var jpeg = new Blob( [array.buffer], {type : "application/octet-stream"});
+		        var jpeg = new Blob( [array.buffer], {type : "image/jpeg"});
 		    }
 		    else{
 		       	var jpeg = null;
