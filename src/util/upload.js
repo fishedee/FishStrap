@@ -198,11 +198,8 @@ module.exports = {
 		},1000);
 		nextStep();
 	},
-	_cloudImageUploadBlock:function( file , defaultOption ,nextStep){
-		//创建上传的二进制文件
-		var data = $.base64.decode(defaultOption._uploadData,false);
-		var blob = html5.arraybuffer.fromString(data);
-		//发送二进制数据
+	_cloudImageUpload:function(file,defaultOption){
+		var data = defaultOption._uploadData;
 		var progress = function(e) {
 			if(e.lengthComputable){
 				defaultOption._progress = Math.ceil(100 * (e.loaded / e.total));
@@ -211,12 +208,16 @@ module.exports = {
 		}
 		var complete = function(e) {
 			var response = $.JSON.parse(e.target.response);
-			if( _.isUndefined(response.code) == false && response.code != 200 ){
+			if( _.isUndefined(response.error) == false ){
 				defaultOption.onFail(response.error);
-			}else{
-				nextStep(response.ctx,data.length);
+				return;
 			}
-			
+			var result = {
+				code:0,
+				msg:'',
+				data:'http://'+defaultOption.url+'/'+response.key
+			};
+			defaultOption.onSuccess($.JSON.stringify(result));
 		}
 		var failed = function() {
 			defaultOption.onFail('网络断开，请稍后重新操作');
@@ -228,57 +229,14 @@ module.exports = {
 		if( httpReuqest.upload ){
 			httpReuqest.upload.addEventListener('progress',progress, false);
 		}
-		httpReuqest.open("POST", "http://upload.qiniu.com/mkblk/"+data.length,true);
+		httpReuqest.open("POST", "http://upload.qiniu.com/putb64/-1",true);
 		httpReuqest.addEventListener('progress',progress, false);
 		httpReuqest.addEventListener("load", complete, false);
 		httpReuqest.addEventListener("abort", abort, false);
 		httpReuqest.addEventListener("error", failed, false);
 		httpReuqest.setRequestHeader("Authorization", "UpToken "+defaultOption.urlToken); 
 		httpReuqest.setRequestHeader("Content-Type","application/octet-stream"); 
-		httpReuqest.send(blob);
-	},
-	_cloudImageCreateFile:function( context,length,defaultOption , nextStep){
-		var data = '';
-		for( var i in context ){
-			if(data!= '')
-				data += ',';
-			data += context[i];
-		}
-		var complete = function(e) {
-			var response = $.JSON.parse(e.target.response);
-			if( _.isUndefined(response.code) == false && response.code != 200 ){
-				defaultOption.onFail(response.error);
-			}else{
-				nextStep(response);
-			}
-		}
-		var failed = function() {
-			defaultOption.onFail('网络断开，请稍后重新操作');
-		}
-		var abort = function() {
-			defaultOption.onFail('上传已取消');
-		}
-		var httpReuqest = new XMLHttpRequest();
-		httpReuqest.addEventListener("load", complete, false);
-		httpReuqest.addEventListener("abort", abort, false);
-		httpReuqest.addEventListener("error", failed, false);
-		httpReuqest.open("POST","http://upload.qiniu.com/mkfile/"+length,true);
-		httpReuqest.setRequestHeader("Authorization", "UpToken "+defaultOption.urlToken); 
-		httpReuqest.setRequestHeader("Content-Type","application/octet-stream"); 
 		httpReuqest.send(data);
-	},
-	_cloudImageUpload:function(file,defaultOption){
-		var self = this;
-		self._cloudImageUploadBlock(file,defaultOption,function(context,length){
-			self._cloudImageCreateFile([context],length,defaultOption,function(response){
-				var response = {
-					code:0,
-					msg:'',
-					data:'http://'+defaultOption.url+'/'+response.key
-				};
-				defaultOption.onSuccess($.JSON.stringify(response));
-			});
-		});
 	},
 	_localImageUpload:function(file,defaultOption){
 		//构造数据
@@ -314,7 +272,7 @@ module.exports = {
 	_uploadImage:function( file,defaultOption  ){
 		var self = this;
 		if( defaultOption.urlType == 'local')
-			self._localImageUpload(file,defaultOption);
+			self._localImageUpload(file,defaultOption);	
 		else
 			self._cloudImageUpload(file,defaultOption);	
 	},
@@ -346,9 +304,7 @@ module.exports = {
 			maxSize:null,
 			accept:null,
 		};
-		for( var i in option ){
-			defaultOption[i] = option[i];
-		}
+		defaultOption = $.extend(defaultOption,option);
 		//绘制图形
 		var div = "";
 		var formId = $.uniqueNum();
@@ -414,9 +370,7 @@ module.exports = {
 			onFail:function(msg){
 			},
 		};
-		for( var i in option ){
-			defaultOption[i] = option[i];
-		}
+		defaultOption = $.extend(defaultOption,option);
 		defaultOption.type = 'png|jpg|jpeg|gif|bmp';
 		defaultOption.id = _.uniqueId('upload_');
 		defaultOption.onUpload = function (file){
@@ -472,9 +426,7 @@ module.exports = {
 			onFail:function(msg){
 			},
 		};
-		for( var i in option ){
-			defaultOption[i] = option[i];
-		}
+		defaultOption = $.extend(defaultOption,option);
 		defaultOption.type = 'png|jpg|jpeg|gif|bmp';
 		//绘制图形
 		var div = "";

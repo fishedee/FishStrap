@@ -128,7 +128,7 @@ return {
 			'border-radius':'2px',
 		});
 		div.find(".tip").text(defaultOption.title);
-		div.find("iframe").attr('src',defaultOption.url);
+		div.find("iframe").attr('src',defaultOption.url+'?t='+new Date().getTime());
 		div.find("iframe").attr('frameborder',"no");
 		function whenOperation(state){
 			return operation = {

@@ -151,7 +151,7 @@ module.exports = {
 					'		<div class="head">'+name+'</div>';
 					for( var i in items ){
 						var item = items[i];
-						menu += '<a href="'+item.url+'" target="myframe">'+
+						menu += '<a href="'+item.url+'?t='+new Date().getTime()+'" target="myframe" data-href="'+item.url+'">'+
 						'<div class="title">'+item.name+'</div>'+
 						'</a>';
 					}
@@ -168,7 +168,7 @@ module.exports = {
 		function chooseLeftBar(leftMenuHref){
 			var leftMenu = null;
 			div.filter('#leftbar').find('a').each(function(){
-				if( $(this).attr('href') != leftMenuHref )
+				if( $(this).attr('data-href') != leftMenuHref )
 					return;
 				leftMenu = $(this);
 			});
@@ -178,6 +178,7 @@ module.exports = {
 			$('#rightbar #pageTitle').text(leftMenu.find('.title').text());
 			$('#leftbar .category .title').removeClass('activetitle');
 			leftMenu.find('.title').addClass('activetitle');
+			leftMenu.attr('href',leftMenu.attr('data-href')+'?t='+new Date().getTime());
 			$.location.setHashArgv({
 				'menu':$.location.getHashArgv('menu'),
 				'location':leftMenuHref
@@ -186,7 +187,7 @@ module.exports = {
 		function chooseLeftBarAndClick(leftMenuHref){
 			var leftMenu = null;
 			div.filter('#leftbar').find('a').each(function(){
-				if( $(this).attr('href') != leftMenuHref )
+				if( $(this).attr('data-href') != leftMenuHref )
 					return;
 				leftMenu = $(this);
 			});
@@ -194,7 +195,7 @@ module.exports = {
 		}
 		//设置事件
 		div.on('click','a',function(){
-			chooseLeftBar($(this).attr('href'));
+			chooseLeftBar($(this).attr('data-href'));
 		});
 		div.filter('#topbar').on('click','.button',function(){
 			chooseTopMenu($(this).attr('name'));
