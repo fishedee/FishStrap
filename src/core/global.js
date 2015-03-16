@@ -477,14 +477,14 @@ $.addCssToHead = function(str_css) {
 (function($){
 	$.location = {
 		getQueryArgv:function(name){
-			var reg = new RegExp("(^|/?|&)" + name + "=([^&]*)(&|$)", "i");
+			var reg = new RegExp("(^|[?&])" + name + "=([^&]*)(&|$)", "i");
 			var r = decodeURI(window.location.search).match(reg);
 			if (r != null) 
 				return decodeURIComponent(r[2]);
 			return null;
 		},
 		getHashArgv:function( name ){
-			var reg = new RegExp("(^|#|&)" + name + "=([^&]*)(&|$)", "i");
+			var reg = new RegExp("(^|[#&])" + name + "=([^&]*)(&|$)", "i");
 			var r = decodeURI(window.location.hash).match(reg);
 			if (r != null) 
 				return decodeURIComponent(r[2]); 
