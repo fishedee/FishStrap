@@ -31,10 +31,16 @@ module.exports = {
 				}
 				if( singleColumn == null )
 					return;
+				if( _.isUndefined(singleData[singleColumn.id]) == true )
+					return;
+				console.log(singleColumn.id);
+				console.log(singleData);
 				if( singleColumn.type == 'hidden')
 					$(this).text(singleData[singleColumn.id]);
 				else if( singleColumn.type == 'image')
 					$(this).find('img').attr('src',singleData[singleColumn.id]);
+				else if( singleColumn.type == 'textInput')
+					$(this).find('input').val(singleData[singleColumn.id]);
 				else 
 					$(this).text(singleData[singleColumn.id]);
 			});
@@ -56,6 +62,8 @@ module.exports = {
 					singleData[singleColumn.id] = $(this).text();
 				else if( singleColumn.type == 'image')
 					singleData[singleColumn.id] = $(this).find('img').attr('src');
+				else if( singleColumn.type == 'textInput')
+					singleData[singleColumn.id] = $(this).find('input').val();
 				else 
 					singleData[singleColumn.id] = $(this).text();
 			});
@@ -74,25 +82,38 @@ module.exports = {
 		}
 		//挂在事件
 		function addEvent(){
-			//挂载事件
+			//设置触发方法
+			var triggerEvent = function(tr,next){
+				while( tr.is('tr') == false )
+					tr = tr.parent();
+				var data = getSingleData(tr);
+				var operation = {
+					remove:function(){
+						tr.remove();
+					},
+					mod:function(data){
+						setSingleData(tr,data);
+					},
+				};
+				next(data,operation);
+			}
+			//挂载operate事件
 			for( var i in defaultOption.operate ){
 				(function(i){
 					$('#'+defaultOption.id).find('.operate_'+defaultOption.operate[i].id).unbind("click").click(function(){
-						var tr = $(this);
-						while( tr.is('tr') == false )
-							tr = tr.parent();
-						var data = getSingleData(tr);
-						var operation = {
-							remove:function(){
-								tr.remove();
-							},
-							mod:function(data){
-								console.log(data);
-								setSingleData(tr,data);
-							},
-						};
-						defaultOption.operate[i].click(data,operation);
+						triggerEvent($(this),defaultOption.operate[i].click);
 					});
+				})(i);
+			}
+			//挂载数据事件
+			for( var i in defaultOption.column ){
+				(function(i){
+					var column = defaultOption.column[i];
+					if( column.type == 'textInput' && _.isUndefined(column.change) == false  ){
+						$('#'+defaultOption.id).find('.'+column.id+' input').unbind("input").on('input',function(){
+							triggerEvent($(this),column.change);
+						});
+					}
 				})(i);
 			}
 		}
@@ -118,6 +139,8 @@ module.exports = {
 						div += '<td style="display:none;'+width+'" class="'+column.id+'">'+item[column.id]+'</td>';
 					}else if( column.type == 'image'){
 						div += '<td style="'+width+'" class="'+column.id+'"><img src="'+item[column.id]+'"/></td>';
+					}else if( column.type == 'textInput'){
+						div += '<td style="'+width+'" class="'+column.id+'"><input style="width:100%" type="text" value="'+item[column.id]+'"/></td>';
 					}else {
 						div += '<td style="'+width+'" class="'+column.id+'">'+item[column.id]+'</td>';
 					}

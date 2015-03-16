@@ -291,46 +291,48 @@ module.exports = {
 			})(field);
 		}
 		//设置value
-		for( var i in defaultOption.field ){
-			var field = defaultOption.field[i];
-			if( typeof defaultOption.value[field.id] == 'undefined' )
-				continue;
-			if( field.type == 'read'){
-				div.find('div[name='+field.id+']').text(defaultOption.value[field.id]);
-			}else if( field.type == 'link'){
-				div.find('div[name='+field.id+']').text(defaultOption.value[field.id]);
-				div.find('a[name='+field.id+']').attr('href',defaultOption.value[field.id]);
-			}else if( field.type == 'fullEditor'){
-				field._editor.setContent(defaultOption.value[field.id]);
-			}else if( field.type == 'simpleEditor'){
-				field._editor.setFormatData(defaultOption.value[field.id]);
-			}else if( field.type == 'image'){
-				div.find('img[name='+field.id+']').attr("src",defaultOption.value[field.id]);
-			}else if( field.type == 'compressFile'){
-				var fileAddress = _.map(defaultOption.value[field.id],function(single){
-					return {name:'<a href="'+single+'" target="_blank">'+single+'</a>'};
-				});
-				field.tableOperation.clear();
-				field.tableOperation.add(fileAddress);
-			}else if( field.type == 'area'){
-				div.find('textarea[name='+field.id+']').val(defaultOption.value[field.id]);
-			}else if( field.type == 'text' || field.type == 'password' || field.type == 'time'){
-				div.find('input[name='+field.id+']').val(defaultOption.value[field.id]);
-			}else if( field.type == 'enum'){
-				div.find('select[name='+field.id+']').val(defaultOption.value[field.id]);
-			}else if( field.type == 'check'){
-				div.find('input[name='+field.id+']').each(function(){
-					for( var i in defaultOption.value[field.id] ){
-						var value = defaultOption.value[field.id][i];
-						if( $(this).val() == value ){
-							$(this).attr('checked',true);
-							return;
+		function setAllData(dataValue){
+			for( var i in defaultOption.field ){
+				var field = defaultOption.field[i];
+				if( typeof dataValue[field.id] == 'undefined' )
+					continue;
+				if( field.type == 'read'){
+					div.find('div[name='+field.id+']').text(dataValue[field.id]);
+				}else if( field.type == 'link'){
+					div.find('div[name='+field.id+']').text(dataValue[field.id]);
+					div.find('a[name='+field.id+']').attr('href',dataValue[field.id]);
+				}else if( field.type == 'fullEditor'){
+					field._editor.setContent(dataValue[field.id]);
+				}else if( field.type == 'simpleEditor'){
+					field._editor.setFormatData(dataValue[field.id]);
+				}else if( field.type == 'image'){
+					div.find('img[name='+field.id+']').attr("src",dataValue[field.id]);
+				}else if( field.type == 'compressFile'){
+					var fileAddress = _.map(dataValue[field.id],function(single){
+						return {name:'<a href="'+single+'" target="_blank">'+single+'</a>'};
+					});
+					field.tableOperation.clear();
+					field.tableOperation.add(fileAddress);
+				}else if( field.type == 'area'){
+					div.find('textarea[name='+field.id+']').val(dataValue[field.id]);
+				}else if( field.type == 'text' || field.type == 'password' || field.type == 'time'){
+					div.find('input[name='+field.id+']').val(dataValue[field.id]);
+				}else if( field.type == 'enum'){
+					div.find('select[name='+field.id+']').val(dataValue[field.id]);
+				}else if( field.type == 'check'){
+					div.find('input[name='+field.id+']').each(function(){
+						for( var i in dataValue[field.id] ){
+							var value = dataValue[field.id][i];
+							if( $(this).val() == value ){
+								$(this).attr('checked',true);
+								return;
+							}
 						}
-					}
-					$(this).attr('checked',false);
-				});
-			}else if( field.type == 'table'){
-				field.tableOperation.add(defaultOption.value[field.id]);
+						$(this).attr('checked',false);
+					});
+				}else if( field.type == 'table'){
+					field.tableOperation.add(dataValue[field.id]);
+				}
 			}
 		}
 		//挂载事件
@@ -369,12 +371,14 @@ module.exports = {
 			}
 			return data;
 		}
+		setAllData(defaultOption.value);
 		div.find('.submit').click(function(){
 			defaultOption.submit(getAllData());
 		});
 		div.find('.cancel').click(defaultOption.cancel);
 		return {
-			get:getAllData
+			get:getAllData,
+			set:setAllData
 		};
 	}
 };

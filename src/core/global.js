@@ -3,6 +3,25 @@
 * @require ../lib/underscore.js
 * @require ../lib/jquery.js
 */
+//加入格式扩展
+$.format = {
+	intval:function(){
+		var value = arguments[0] ? arguments[0] : 0;
+		var defaultValue = arguments[1] ? arguments[1] : 0;
+		var value = parseInt(value);
+		if(_.isNaN(value))
+			value = defaultValue;
+		return value;
+	},
+	floatval:function(){
+		var value = arguments[0] ? arguments[0] : 0;
+		var defaultValue = arguments[1] ? arguments[1] : 0;
+		var value = parseFloat(value);
+		if(_.isNaN(value))
+			value = defaultValue;
+		return value;
+	}
+};
 //加入log扩展
 $.log = {
 	fatal:function(msg){
