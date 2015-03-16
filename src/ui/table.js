@@ -214,7 +214,10 @@ module.exports = {
 		}
 		
 		paramStr += ("t=" + new Date().getTime());
-		sendUrl = defaultOption.url + "?" + paramStr;
+		if(defaultOption.url.indexOf('?') == -1 )
+			sendUrl = defaultOption.url + "?" + paramStr;
+		else
+			sendUrl = defaultOption.url + "&" + paramStr;
 
 		//拼接列
 		_option.fields = {};
