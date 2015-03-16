@@ -139,6 +139,12 @@ module.exports = {
 			'	margin-top:20px;'+
 			'}'
 		);
+		function getRedirectUrl(url){
+			if(url.indexOf('?')!=-1)
+				return url + '&t='+new Date().getTime();
+			else
+				return url + '?t='+new Date().getTime();
+		}
 		function chooseTopMenu(topMenuItemName){
 			if( topMenuItemName == 'logout'){
 				defaultOption.logout();
@@ -151,7 +157,7 @@ module.exports = {
 					'		<div class="head">'+name+'</div>';
 					for( var i in items ){
 						var item = items[i];
-						menu += '<a href="'+item.url+'?t='+new Date().getTime()+'" target="myframe" data-href="'+item.url+'">'+
+						menu += '<a href="'+getRedirectUrl(item.url)+'" target="myframe" data-href="'+item.url+'">'+
 						'<div class="title">'+item.name+'</div>'+
 						'</a>';
 					}
@@ -178,7 +184,7 @@ module.exports = {
 			$('#rightbar #pageTitle').text(leftMenu.find('.title').text());
 			$('#leftbar .category .title').removeClass('activetitle');
 			leftMenu.find('.title').addClass('activetitle');
-			leftMenu.attr('href',leftMenu.attr('data-href')+'?t='+new Date().getTime());
+			leftMenu.attr('href',getRedirectUrl(leftMenu.attr('data-href')));
 			$.location.setHashArgv({
 				'menu':$.location.getHashArgv('menu'),
 				'location':leftMenuHref
