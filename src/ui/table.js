@@ -130,11 +130,14 @@ module.exports = {
 			var div = '';
 			for( var i in data ){
 				var item = data[i];
+				if( defaultOption.operate.length == 0 )
+					var width = 'width:'+(1/defaultOption.column.length*100)+'%;';
+				else
+					var width = 'width:'+(1/(defaultOption.column.length+1)*100)+'%;';
 				div += '<tr>';
 				for( var j in defaultOption.column ){
 					var column = defaultOption.column[j];
 					var style = '';
-					var width = 'width:'+(1/defaultOption.column.length*100)+'%;';
 					if( column.type == 'hidden'){
 						div += '<td style="display:none;'+width+'" class="'+column.id+'">'+item[column.id]+'</td>';
 					}else if( column.type == 'image'){
@@ -147,7 +150,7 @@ module.exports = {
 					
 				}
 				if( defaultOption.operate.length != 0 ){
-					div += '<td>'+operateDiv+'</td>';
+					div += '<td style="'+width+'" >'+operateDiv+'</td>';
 				}
 				div += '</tr>';
 			}
@@ -160,10 +163,13 @@ module.exports = {
 			div += '<table class="mod_table" style="table-layout: auto;">';
 			//显示列表头数据
 			div += '<thead><tr>';
+			if( defaultOption.operate.length == 0 )
+				var width = 'width:'+(1/defaultOption.column.length*100)+'%;';
+			else
+				var width = 'width:'+(1/(defaultOption.column.length+1)*100)+'%;';
 			for( var i in defaultOption.column ){
 				var column = defaultOption.column[i];
 				var style = '';
-				var width = 'width:'+(1/defaultOption.column.length*100)+'%;';
 				if( column.type == 'hidden'){
 					div += '<th style="display:none;'+width+'"><span class="label">'+column.name+'</span></th>';
 				}else {
@@ -171,7 +177,7 @@ module.exports = {
 				}
 			}
 			if( defaultOption.operate.length != 0 ){
-				div += '<th><span class="label">操作</span></th>';
+				div += '<th><span class="label" style="'+width+'">操作</span></th>';
 			}
 			div += '</tr></thead>';
 			//显示列表身数据
