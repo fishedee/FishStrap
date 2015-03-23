@@ -65,6 +65,24 @@ self.localStorage = function(name, value, options) {
 		
 	}
 };
+//加入history扩展
+self.history = {
+	pushState:function(data,state,url){
+		if(window.history.pushState){
+			window.history.pushState(data,state,url);
+		}else{
+			location.href = url;
+		}
+
+	},
+	replaceState:function(data,state,url){
+		if(window.history.replaceState){
+			window.history.replaceState(data,state,url);
+		}else{
+			location.href = url;
+		}
+	},
+};
 //加入ArrayBuffer扩展
 self.arraybuffer = {
 	fromString:function(data){
