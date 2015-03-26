@@ -268,6 +268,13 @@ module.exports = {
 							return column.map[data];
 						}
 					};
+				}else if( column.type == 'image'){
+					single = {
+						thText:column.name,
+						format:function(data){
+							return '<img src="'+data+'" style="width:100%;max-width:128px;">';
+						}
+					};
 				}
 			})(column);
 			_option.fields[column.id] = single;
