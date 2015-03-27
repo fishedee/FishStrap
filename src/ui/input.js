@@ -20,7 +20,7 @@ module.exports = {
 			return;
 		var div = "";
 		//基本框架
-		for( var i in defaultOption.field ){
+		for( var i = 0 ; i != defaultOption.field.length; ++i ){
 			var field = defaultOption.field[i];
 			if( field.type == 'text'){
 				div += '<span>&nbsp;'+field.name+'：</span>' + '<input type="text" name="'+field.id+'" class="input-small"/>';
@@ -43,7 +43,7 @@ module.exports = {
 		//加入页面
 		$('#'+defaultOption.id).append(div);
 		//挂载控件事件
-		for( var i in defaultOption.field ){
+		for( var i = 0 ; i != defaultOption.field.length ; ++i ){
 			var field = defaultOption.field[i];
 			if( field.type == 'time'){
 				$('#'+defaultOption.id).find('input[name='+field.id+']').datetimepicker({
@@ -57,7 +57,7 @@ module.exports = {
 		//挂载事件
 		$('#'+defaultOption.id).find('.query').click(function(){
 			var data = {};
-			for( var i in defaultOption.field ){
+			for( var i = 0 ; i != defaultOption.field.length; ++i ){
 				var field = defaultOption.field[i];
 				if( field.type == 'text'){
 					data[field.id] = $.trim($('#'+defaultOption.id).find('input[name='+field.id+']').val());
@@ -87,7 +87,8 @@ module.exports = {
 		//执行业务逻辑
 		var div = "";
 		var contentDiv = "";
-		for( var i in defaultOption.field ){
+		$.console.log($.JSON.stringify(defaultOption.field));
+		for( var i = 0; i != defaultOption.field.length; ++i ){
 			var field = defaultOption.field[i];
 			contentDiv += 
 				'<tr>'+
@@ -153,11 +154,11 @@ module.exports = {
 			}else if( field.type == 'table'){
 				field.tableId = $.uniqueNum();
 				contentDiv += '<div>';
-				for( var i = 0 ; i != field.option.button.length ; ++i ){
-					var singleButton = field.option.button[i];
+				for( var j = 0 ; j != field.option.button.length ; ++j ){
+					var singleButton = field.option.button[j];
 					singleButton.buttonId = $.uniqueNum();
 					contentDiv += '<button type="button" class="btn" id="'+singleButton.buttonId+'">'+singleButton.name+'</button>';
-					field.option.button[i] = singleButton;
+					field.option.button[j] = singleButton;
 				}
 				contentDiv += '</div>';
 				contentDiv += '<div id="'+field.tableId+'"></div>';
@@ -189,7 +190,7 @@ module.exports = {
 		//插入到页面中
 		$('#'+defaultOption.id).append(div);
 		//挂载控件事件
-		for( var i in defaultOption.field ){
+		for( var i = 0 ; i != defaultOption.field.length; ++i ){
 			var field = defaultOption.field[i];
 			(function(field){
 				if( field.type == 'image'){
@@ -248,8 +249,6 @@ module.exports = {
 							var fileAddress = _.map(data.data,function(single){
 								return {name:'<a href="'+single+'" target="_blank">'+single+'</a>'};
 							});
-							console.log(data.data);
-							console.log(fileAddress);
 							field.tableOperation.clear();
 							field.tableOperation.add(fileAddress);
 						},
@@ -292,7 +291,7 @@ module.exports = {
 		}
 		//设置value
 		function setAllData(dataValue){
-			for( var i in defaultOption.field ){
+			for( var i = 0 ; i != defaultOption.field.length ; ++i ){
 				var field = defaultOption.field[i];
 				if( typeof dataValue[field.id] == 'undefined' )
 					continue;
@@ -321,7 +320,7 @@ module.exports = {
 					div.find('select[name='+field.id+']').val(dataValue[field.id]);
 				}else if( field.type == 'check'){
 					div.find('input[name='+field.id+']').each(function(){
-						for( var i in dataValue[field.id] ){
+						for( var i = 0 ; i != dataValue[field.id].length; ++i ){
 							var value = dataValue[field.id][i];
 							if( $(this).val() == value ){
 								$(this).attr('checked',true);
@@ -338,7 +337,7 @@ module.exports = {
 		//挂载事件
 		function getAllData(){
 			var data = {};
-			for( var i in defaultOption.field ){
+			for( var i = 0 ; i != defaultOption.field.length ; ++i ){
 				var field = defaultOption.field[i];
 				if( field.type == 'read'){
 					data[field.id] = $.trim($('#'+defaultOption.id).find('div[name='+field.id+']').text());

@@ -27,6 +27,7 @@ module.exports = {
 		'<div class="m10"><div id="'+buttonListId+'"></div><div id="'+tableId+'"></div></div>');
 		target.empty();
 		target.append(div);
+		$.console.log($.JSON.stringify(option.column));
 		//生成staticTable框架
 		var tableOperation = table.staticTable({
 			id:tableId,
@@ -38,10 +39,10 @@ module.exports = {
 		});
 		//生成flowInput框架
 		var field = [];
-		for( var i in defaultOption.queryColumn ){
+		for( var i = 0 ; i != defaultOption.queryColumn.length; ++i ){
 			var param = defaultOption.queryColumn[i];
 			var columnInfo;
-			for( var j in defaultOption.column ){
+			for( var j = 0 ; j != defaultOption.column.length ; ++j ){
 				var column = defaultOption.column[j];
 				if( column.id == param ){
 					columnInfo = column;
@@ -70,7 +71,7 @@ module.exports = {
 			}
 		});
 		//生成按钮框架
-		for( var i in defaultOption.button ){
+		for( var i = 0 ; i != defaultOption.button.length ; ++i ){
 			var button = defaultOption.button[i];
 			(function(button){
 				var div = $('<button class="btn">'+

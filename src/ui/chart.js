@@ -309,7 +309,7 @@ return {
 		var xAxises = [];
 		var categorys = [];
 		var datas = {};
-		for( var i in defaultOption.data){
+		for( var i = 0 ; i != defaultOption.data.length ; ++i ){
 			var xAxis = defaultOption.data[i][defaultOption.xAxis];
 			var category = defaultOption.data[i][defaultOption.category];
 			if( _.indexOf(xAxises,xAxis) == -1 )
@@ -323,13 +323,13 @@ return {
 		xAxises.reverse();
 		//构造折点数据
 		var series = [];
-		for( var i in categorys ){
+		for( var i = 0 ; i != categorys.length ; ++i){
 			var category = categorys[i];
 			var itemData = {};
 			itemData.name = category;
 			itemData.type = 'line';
 			itemData.data = [];
-			for( var j in xAxises ){
+			for( var j  = 0 ; j != xAxises.length ; ++j ){
 				var xAxise = xAxises[j];
 				if( _.isUndefined(datas[xAxise][category]) == false ){
 					itemData.data.push(datas[xAxise][category]);
@@ -382,21 +382,20 @@ return {
 		//获取xAxixs
 		var xAxises = [];
 		var datas = {};
-		for( var i in defaultOption.data){
+		for( var i = 0 ; i != defaultOption.data.length ; ++i ){
 			var xAxis = defaultOption.data[i][defaultOption.xAxis];
 			if( _.indexOf(xAxises,xAxis) == -1 )
 				xAxises.push(xAxis);
 			datas[xAxis] = defaultOption.data[i][defaultOption.yAxis];
 		}
 		var series = [];
-		for( var i in datas ){
+		for( var i = 0 ; i != datas.length ; ++i ){
 			series.push({
 				value:datas[i],
 				name:i,
 			});
 		}
 		//绘图
-		console.log(series);
 		var myChart = echarts.init($('#'+defaultOption.id)[0]); 
 		option = {
 			tooltip : {

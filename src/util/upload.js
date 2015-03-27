@@ -312,7 +312,7 @@ module.exports = {
 		var fileId = $.uniqueNum();
 		if(defaultOption.accept)
 			defaultOption.accept = 'accept="'+defaultOption.accept+'"';
-		div = '<form id="'+formId+'" action="'+defaultOption.url+'" target="'+frameId+'" method="post" enctype="multipart/form-data" style="opacity:0;display:block;position:absolute;top:0px;bottom:0px;left:0px;right:0px;width:100%;height:100%;z-index:9;overflow:hidden;">'+
+		div = '<form id="'+formId+'" action="'+defaultOption.url+'" target="'+frameId+'" method="post" enctype="multipart/form-data" style="opacity:0;filter:alpha(opacity=0);display:block;position:absolute;top:0px;bottom:0px;left:0px;right:0px;width:100%;height:100%;z-index:9;overflow:hidden;">'+
 			'<input type="file" id="'+fileId+'" style="width:100%;height:100%;font-size:1000px;" name="'+defaultOption.field+'"'+defaultOption.accept+'/>'+
 			'<iframe name="'+frameId+'" id="'+frameId+'" style="display:none">'+
 		'</form>';

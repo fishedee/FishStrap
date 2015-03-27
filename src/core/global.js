@@ -4,6 +4,8 @@
 * @require ../lib/jquery.js
 */
 //加入格式扩展
+$ = window['jQuery'];
+_ = window._;
 $.format = {
 	intval:function(){
 		var value = arguments[0] ? arguments[0] : 0;
