@@ -553,6 +553,7 @@ $.addCssToHead = function(str_css) {
 			msgs.push("\n出错位置：" , lineNumber + '行，' + columnNumber + '列');
 			msgs.push("\n调用栈："+stack);
 			msgs.push("\n客户端："+userAgent);
+			msgs.push("\n地址："+location.href);
 			msgs = msgs.join('');
 			if( callback ){
 				callback(msgs);
