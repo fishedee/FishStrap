@@ -157,6 +157,19 @@ module.exports = {
 		var img = new Image();
 		img.onload = function() {
 			if (file.files[0].type == 'image/jpeg') {
+				//预览用的perviewBase64
+				var perviewBase64;
+				try {
+					perviewBase64 = imageCompresser.getImageBase64(this, {maxW:320,quality:0.8,orien:conf.orien});
+				} catch (e) {
+					defaultOption.onFail('压缩图片失败 '+e);
+					return false;
+				}
+				if (perviewBase64.indexOf('data:image') < 0) {
+					defaultOption.onFail('上传照片格式不支持');
+					return false;
+				}
+				//上传的uploadBase64
 				var uploadBase64;
 				try {
 					uploadBase64 = imageCompresser.getImageBase64(this, conf);
@@ -168,11 +181,12 @@ module.exports = {
 					defaultOption.onFail('上传照片格式不支持');
 					return false;
 				}
-				defaultOption.onOpen(uploadBase64);
+				defaultOption.onOpen(perviewBase64);
 				defaultOption._uploadData = uploadBase64.split(';base64,')[1];
 			}else{
-				defaultOption.onOpen('data'+file.files[0].type+';base64,'+defaultOption._fieldata);
-				defaultOption._uploadData = $.base64.encode(defaultOption._fieldata,false);
+				var uploadBase64 = $.base64.encode(defaultOption._fieldata,false);
+				defaultOption.onOpen('data:'+file.files[0].type+';base64,'+uploadBase64);
+				defaultOption._uploadData = uploadBase64;
 			}
 			nextStep();
 		}
