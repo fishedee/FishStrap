@@ -93,6 +93,12 @@ module.exports = {
 					mod:function(data){
 						setSingleData(tr,data);
 					},
+					moveUp:function(){
+
+					},
+					moveDown:function(){
+
+					}
 				};
 				next(data,operation);
 			}
@@ -267,7 +273,14 @@ module.exports = {
 							return column.map[data];
 						}
 					};
-				}
+				}else if( column.type == 'image'){		
+					single = {
+						thText:column.name,		
+						format:function(data){		
+							return '<img src="'+data+'" style="width:100%;max-width:128px;">';		
+						}		
+					};		
+ 				}
 			})(column);
 			_option.fields[column.id] = single;
 		}
@@ -335,18 +348,37 @@ module.exports = {
 				}
 			});
 		});
-		
+		function getSingleRowData(parent){
+			var singleData = {};
+			parent.find('td').each(function(){
+				var id = $(this).attr('class');
+				var column = null;
+				for(var i = 0 ; i != defaultOption.column.length; ++i ){
+					var curcolumn = defaultOption.column[i];
+					if( curcolumn.id != id )
+						continue;
+					column = curcolumn;
+					break;
+				}
+				if( column == null )
+					return;
+				var columnValue;
+				if( column.type == 'image'){
+					columnValue = $(this).find('img').attr('src');
+				}else{
+					columnValue = $(this).text();
+				}
+				singleData[id] = columnValue;
+			});
+			return singleData;
+		}
 		return {
 			getCheckData:function(){
 				var target = $('#'+defaultOption.id+' .gri_td_checkbox:checked');
 				var data = [];
 				target.each(function(){
 					var parent = $(this).parent().parent();
-					var singleData = {};
-					parent.find('td').each(function(){
-						singleData[$(this).attr('class')] = $(this).text();
-					});
-					data.push(singleData);
+					data.push(getSingleRowData(parent));
 				});
 				return data;
 			}
