@@ -130,33 +130,25 @@ $.security = {
 		var digits = string.match(/\d+/g);
 		for( var i = 0 ; i != digits.length ; ++i )
 			digits[i] = parseInt(digits[i]);
-		var date = new Date(0,0,0,0,0,0);
+		var data = {
+			year:0,
+			month:0,
+			day:0,
+			hour:0,
+			minute:0,
+			second:0
+		};
+
 		//分析匹配规则
 		var o = {
-			'y+':function(value){
-				date.setFullYear(value);
-			},
-			'M+':function(value){
-				date.setMonth(value-1);
-			},
-			"d+" : function(value){
-				date.setDate(value);
-			},
-			"h+" : function(value){
-				date.setHours(value);
-			},
-			"m+" : function(value){
-				date.setMinutes(value);
-			},
-			"s+" : function(value){
-				date.setSeconds(value);
-			},
-			"S" : function(value){
-				date.setMilliseconds(value);
-			}
+			'y+':'year',
+			'M+':'month',
+			"d+" :'day',
+			"h+" :'hour',
+			"m+" :'minute',
+			"s+" : 'second'
 		};
-		
-		var finder = [];
+		finder = [];
 		for( var i in o ){
 			var temp = format.match(i);
 			if( temp == null )
@@ -172,10 +164,16 @@ $.security = {
 		//填充数据
 		for( var i = 0 ; i != finder.length ; ++i ){
 			var item = finder[i];
-			item.rule(digits[i]);
+			data[item.rule] = digits[i];
 		}
-		return date;
-		
+		return new Date(
+			data.year,
+			data.month-1,
+			data.day,
+			data.hour,
+			data.minute,
+			data.second
+		);
 	}
 })();
 //加入动态添加样式表扩展
