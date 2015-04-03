@@ -94,10 +94,12 @@ module.exports = {
 						setSingleData(tr,data);
 					},
 					moveUp:function(){
-
+						var prev = tr.prev();
+						tr.insertBefore(prev);
 					},
 					moveDown:function(){
-
+						var next = tr.next();
+						next.insertBefore(tr);
 					}
 				};
 				next(data,operation);
