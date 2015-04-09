@@ -205,8 +205,15 @@ module.exports = {
 			//挂载事件
 			addEvent();
 		}
+		function preaddDataAndRefreshEvent(data){
+			//添加数据
+			$('#'+defaultOption.id).find('tbody').prepend(addData(data));
+			//挂载事件
+			addEvent();
+		}
 		showData(defaultOption.data);
 		return {
+			preadd:preaddDataAndRefreshEvent,
 			add:addDataAndRefreshEvent,
 			get:getAllData,
 			clear:clearAllData,
