@@ -13,6 +13,10 @@ return {
 		//生成dialogId
 		defaultOption.dialogId = $.uniqueNum();
 		defaultOption.url = defaultOption.url;
+		if( defaultOption.url.indexOf('?') == -1 )
+			defaultOption.url += '?t='+new Date().getTime();
+		else
+			defaultOption.url += '&t='+new Date().getTime();
 		//构建基本框架
 		var div = $(
 			'<div class="background" id="'+defaultOption.dialogId+'">'+
@@ -128,7 +132,7 @@ return {
 			'border-radius':'2px',
 		});
 		div.find(".tip").text(defaultOption.title);
-		div.find("iframe").attr('src',defaultOption.url+'?t='+new Date().getTime());
+		div.find("iframe").attr('src',defaultOption.url);
 		div.find("iframe").attr('frameborder',"no");
 		function whenOperation(state){
 			return operation = {
