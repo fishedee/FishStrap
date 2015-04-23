@@ -440,6 +440,21 @@ $.addCssToHead = function(str_css) {
 		}
 	};
 })($);
+//加入算法扩展
+(function($){
+	$.algo = {
+		hashCode:function(str){
+			var hash = 0;
+			if (str.length == 0) return hash;
+			for (i = 0; i < str.length; i++) {
+				char = str.charCodeAt(i);
+				hash = ((hash<<5)-hash)+char;
+				hash = hash & hash; // Convert to 32bit integer
+			}
+			return hash;
+		}
+	}
+}($));
 //加入cookie扩展
 (function($){
 	$.cookie = function(name, value, options) {
