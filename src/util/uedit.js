@@ -70,7 +70,7 @@ function replaceQQVideo(content,articleWith){
 	return content;
 }
 function replaceImage(content,articleWith){
-	var imageRegex = /<img(.*?)\/>/ig;
+	var imageRegex = /<img(.*?)\/?>/ig;
 	var imageReplace = '<img $1 style="width:'+articleWith+'px"/>';
 	content = content.replace(imageRegex,imageReplace);
 	return content;
