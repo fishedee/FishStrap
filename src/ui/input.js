@@ -26,7 +26,7 @@ module.exports = {
 				div += '<span>&nbsp;'+field.name+'：</span>' + '<input type="text" name="'+field.id+'" class="input-small"/>';
 			}else if(field.type == 'time'){
 				div += '<span>&nbsp;'+field.name+'：</span>' + '<input type="text" name="'+field.id+'" class="time input-small"/>';
-			}else if( field.type == 'enum'){
+			}else if( field.type == 'enum' ){
 				var option = "";
 				if( typeof field.map[""] != 'undefined')
 					option += '<option value="">'+field.map[""]+'</option>';

@@ -45,11 +45,16 @@ module.exports = {
 			for( var j = 0 ; j != defaultOption.column.length ; ++j ){
 				var column = defaultOption.column[j];
 				if( column.id == param ){
-					columnInfo = column;
+					columnInfo = _.clone(column);
 					break;
 				}
 			}
 			if( columnInfo.type == 'enum'){
+				columnInfo.map = $.extend({
+					"":"请选择"
+				},columnInfo.map);
+			}else if( columnInfo.type == 'check'){
+				columnInfo.type = 'enum';
 				columnInfo.map = $.extend({
 					"":"请选择"
 				},columnInfo.map);

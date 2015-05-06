@@ -282,6 +282,17 @@ module.exports = {
 							return column.map[data];
 						}
 					};
+				}else if( column.type == 'check' ){
+					single = {
+						thText:column.name,
+						format:function(data){
+							var result = [];
+							for( var i = 0 ; i != data.length ; ++i ){
+								result.push(column.map[data[i]]);
+							}
+							return result.join(',');
+						}
+					};
 				}else if( column.type == 'image'){		
 					single = {
 						thText:column.name,		
