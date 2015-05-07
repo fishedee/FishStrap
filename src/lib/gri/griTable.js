@@ -1112,6 +1112,13 @@
             var paramStr = 'pageIndex=' + _pageFrom + "&pageSize=" + _this.page.size + "&orderField=" + _this.page.orderField + "&orderType=" + _this.page.orderType + "&t=" + Math.random();
             var sendUrl = _this.page.url;
 
+            if( _this.options.callbackJson ){
+                _this.options.callbackJson({
+                    pageIndex:_pageFrom,
+                    pageSize:_this.page.size
+                });
+            }
+
             if (_this.page.url.indexOf('?') > 0) {
                 sendUrl = sendUrl + '&' + paramStr;
             } else {

@@ -228,6 +228,9 @@ module.exports = {
 			operate:[],
 			checkAll:false,
 			url:null,
+			pageIndex:0,
+			pageSize:10,
+			nextPage:undefined
 		};
 		for( var i in option )
 			defaultOption[i] = option[i];
@@ -239,7 +242,8 @@ module.exports = {
 		_option.key_index   = '_id';
 		_option.order_field = '_id';
 		_option.order_type  = 'asc';
-		_option.page_size   = 10;
+		_option.page_size   = defaultOption.pageSize;
+		_option.index = Math.floor(defaultOption.pageIndex/defaultOption.pageSize);
 		_option.container_class = "mod-basic box-table";
 		_option.table_class = "mod_table";
 		_option.fields      = '';
@@ -252,7 +256,9 @@ module.exports = {
 		//拼接url
 		var paramStr = "";
 		for(var i in defaultOption.params) {
-			if( $.trim(defaultOption.params[i]) != "")
+			if( $.trim(defaultOption.params[i]) != "" &&
+				i != 'pageIndex' &&
+				i != 'pageSize')
 				paramStr += (i+"="+encodeURIComponent($.trim(defaultOption.params[i])) + "&");
 		}
 		
@@ -319,7 +325,7 @@ module.exports = {
 			};
 		}
 		//GRITABLE
-		$.get(sendUrl+"&pageIndex=0&pageSize=10", {}, function (result) {
+		$.get(sendUrl+"&pageIndex="+defaultOption.pageIndex+"&pageSize="+defaultOption.pageSize, {}, function (result) {
 			result = $.JSON.parse(result);
 			if( result.code != 0 ){
 				dialog.message(result.msg);
@@ -343,13 +349,14 @@ module.exports = {
 					ifRealPage: _option.ifRealPage,
 					size: _option.page_size,
 					rowCount: result.data.count,
-					index: 0,
+					index: _option.index,
 					url:sendUrl
 				},
 				cssSetting:{
 					containerClass: _option.container_class,
 					tableClass: _option.table_class
 				},
+				callbackJson:defaultOption.nextPage,
 				callback: function(data){
 					for( var i = 0 ; i != defaultOption.operate.length; ++i ){
 						(function(i){

@@ -28,14 +28,24 @@ module.exports = {
 		target.empty();
 		target.append(div);
 		$.console.log($.JSON.stringify(option.column));
+
+		//获取location信息
+		var locationInfo = $.url.toInfo(location.href).search;
 		//生成staticTable框架
 		var tableOperation = table.staticTable({
 			id:tableId,
-			params:defaultOption.params,
+			params:$.url.toInfo(location.href).search,
 			column:defaultOption.column,
 			operate:defaultOption.operate,
 			checkAll:defaultOption.checkAll,
-			url:defaultOption.url
+			url:defaultOption.url,
+			pageIndex:locationInfo.pageIndex || 0,
+			pageSize:locationInfo.pageSize || 10,
+			nextPage:function(data){
+				var urlInfo = $.url.toInfo(location.href);
+				urlInfo.search = $.extend(urlInfo.search,data);
+				location.href = $.url.fromInfo(urlInfo);
+			}
 		});
 		//生成flowInput框架
 		var field = [];
@@ -64,15 +74,12 @@ module.exports = {
 		input.flowInput({
 			id:formId,
 			field:field,
+			value:locationInfo,
 			submit:function(data){
-				table.staticTable({
-					id:tableId,
-					params:$.extend(defaultOption.params,data),
-					column:defaultOption.column,
-					operate:defaultOption.operate,
-					checkAll:defaultOption.checkAll,
-					url:defaultOption.url
-				});
+				var urlInfo = $.url.toInfo(location.href);
+				urlInfo.search = $.extend(urlInfo.search,data);
+				urlInfo.search.pageIndex = 0;
+				location.href = $.url.fromInfo(urlInfo);
 			}
 		});
 		//生成按钮框架

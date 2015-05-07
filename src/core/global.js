@@ -498,6 +498,24 @@ $.addCssToHead = function(str_css) {
 })($);
 //加入URL扩展
 (function($){
+	function splitInfo(str){
+		var search = str.split('&');
+		var result = {};
+		for( var i = 0 ; i != search.length ; ++i ){
+			var index = search[i].split('=');
+			if( index.length != 2 )
+				continue;
+			result[ index[0] ] = decodeURIComponent(index[1]);
+		}
+		return result;
+	}
+	function combileInfo(array){
+		var result = [];
+		for( var i in array ){
+			result.push( i + '=' + encodeURIComponent(array[i]) );
+		}
+		return result.join('&');
+	}
 	$.url = {
 		buildQueryUrl:function(url,urlArgv){
 			for( var i in urlArgv ){
@@ -508,6 +526,54 @@ $.addCssToHead = function(str_css) {
 				url += i + '='+ encodeURIComponent(urlArgv[i]);
 			}
 			return encodeURI(url);
+		},
+		toInfo:function(url){
+			//正则提取
+			url = decodeURI(url);
+			var regex = /^((?:https|http):)\/\/([a-zA-Z0-9.]+)(?::([0-9]+))?(\/[^?#]*)?(\?[^#]*)?(#.*)?$/;
+			var regexInfo = regex.exec(url);
+
+			//分析各部分数据
+			var info = {
+				protocol:regexInfo[1],
+				hostname:regexInfo[2],
+				port:regexInfo[3],
+				pathname:regexInfo[4],
+				search:regexInfo[5],
+				hash:regexInfo[6]
+			}
+
+			if( info.search ){
+				info.search = splitInfo( info.search.substr(1) );
+			}else{
+				info.search = {};
+			}
+
+			if( info.hash ){
+				info.hash = splitInfo( info.hash.substr(1) );
+			}else{
+				info.hash = {};
+			}
+			
+			return info;
+		},
+		fromInfo:function(info){
+			var url = info.protocol+'//'+info.hostname;
+
+			if( info.port ){
+				url += ':'+info.port;
+			}
+				
+			url += info.pathname;
+
+			if( info.search ){
+				url += '?'+combileInfo(info.search);
+			}
+				
+			if( info.hash ){
+				url += '#'+combileInfo(info.hash);
+			}
+			return url;
 		}
 	};
 }($));

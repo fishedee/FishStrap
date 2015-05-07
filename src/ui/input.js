@@ -11,6 +11,7 @@ module.exports = {
 		var defaultOption = {
 			id:'',
 			field:[],
+			value:{},
 			submit:function(){
 			},
 		};
@@ -52,6 +53,20 @@ module.exports = {
 					format: 'Y-m-d',
 					closeOnDateSelect:true
 				});
+			}
+		}
+		//挂载默认值
+		for( var i = 0 ; i != defaultOption.field.length ; ++i ){
+			var field = defaultOption.field[i];
+			var data = defaultOption.value[field.id];
+			if( !data )
+				continue;
+			if( field.type == 'text'){
+				$('#'+defaultOption.id).find('input[name='+field.id+']').val(data);
+			}else if( field.type == 'time'){
+				$('#'+defaultOption.id).find('input[name='+field.id+']').val(data);
+			}else if( field.type == 'enum'){
+				$('#'+defaultOption.id).find('select[name='+field.id+']').val(data);
 			}
 		}
 		//挂载事件
