@@ -2,6 +2,7 @@
 * @require ../lib/gri/gri.css
 */
 var $ = require('../core/global.js');
+var dialog = require('../ui/dialog.js');
 return {
 	use:function( option ){
 		//处理Option
@@ -105,9 +106,18 @@ return {
 		});
 		div.find('.submit').click(function(){
 			var data = {
-				name:$('input[name=name]').val(),
-				password:$('input[name=password]').val(),
+				name:$.trim($('input[name=name]').val()),
+				password:$.trim($('input[name=password]').val()),
 			};
+			if( data.name == ''){
+				dialog.message('请输入帐号');
+				return;
+			}
+			if( data.password == ''){
+				dialog.message('请输入密码');
+				return;
+			}
+				
 			option.login(data);
 		});
 		for( var i = 0 ; i != defaultOption.button.length ; ++i ){
