@@ -637,7 +637,6 @@ $.addCssToHead = function(str_css) {
 			if( callback ){
 				callback(msgs);
 			}
-			alert(msgs);
 		}
 	}
 	$.debug = {
