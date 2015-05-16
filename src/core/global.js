@@ -1,11 +1,7 @@
-/*
-* 依赖jquery.js与underscore.js
-* @require ../lib/underscore.js
-* @require ../lib/jquery.js
-*/
+//依赖jquery.js与underscore.js
+var $ = require('../module/jquery.js');
+var _ = require('../module/underscore.js');
 //加入格式扩展
-$ = window['jQuery'];
-_ = window._;
 $.format = {
 	intval:function(){
 		var value = arguments[0] ? arguments[0] : 0;
