@@ -13,6 +13,7 @@
 *@require gri.css
 */
 GRI = window.GRI || {};
+$ = require('../../module/jquery.js');
 
 /**
  * @namespace GRI JS框架工具类型，里面会累积一下大家常用的工具类函数和对象方法
