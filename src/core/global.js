@@ -611,32 +611,4 @@ $.addCssToHead = function(str_css) {
 		}
 	};
 })($);
-//调试模式
-(function(){
-	function enable(callback){
-		window.onerror = function(errorMessage, scriptURI, lineNumber,columnNumber,error) {
-			var stack = '';
-			var msgs = [];
-			var userAgent = '';
-			if( error.stack )
-				stack = error.stack;
-			userAgent = navigator.userAgent;
-			
-			msgs.push("额，代码有错。。。");
-			msgs.push("\n错误信息：" , errorMessage);
-			msgs.push("\n出错文件：" , scriptURI);
-			msgs.push("\n出错位置：" , lineNumber + '行，' + columnNumber + '列');
-			msgs.push("\n调用栈："+stack);
-			msgs.push("\n客户端："+userAgent);
-			msgs.push("\n地址："+location.href);
-			msgs = msgs.join('');
-			if( callback ){
-				callback(msgs);
-			}
-		}
-	}
-	$.debug = {
-		enable:enable
-	};
-})();
 return $;

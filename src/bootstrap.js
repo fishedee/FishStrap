@@ -1,43 +1,304 @@
 /**
- * file: mod.js
- * ver: 1.0.3
- * auth: zhangjiachen@baidu.com
- * update: 11:48 2013/7/10
+ * file: boostrap.js
+ * ver: 1.0.0
+ * auth: 306766045@qq.com
  */
 var require, define;
 
 (function(self) {
-    var head = document.getElementsByTagName('head')[0],
-        loadingMap = {},
+    var util = {};
+
+    //网络工具
+    (function(){
+        function post(url,data){
+            var xmlhttp=null;
+            if (window.XMLHttpRequest){// code for all new browsers
+                xmlhttp=new XMLHttpRequest();
+            }else if (window.ActiveXObject){
+                 xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            if( xmlhttp == null )
+                return;
+            xmlhttp.open("POST",url,true);
+            xmlhttp.send(data);
+        }
+        util.post = post;
+    })(util);
+
+    //载入显示工具条
+    (function(){
+        var progressBar = null;
+        function begin(){
+            var element = document.createElement('div');
+            element.innerHTML = 
+                '<div id="bootstrap_progressbar" style="width:80%;margin:0 auto;margin-top:50px;">'+
+                   '<div class="bar" style="height:30px;border:1px solid #29d;padding:10px 10px;border-radius:10px;overflow:hidden;">'+
+                        '<div class="innerbar" style="height:100%;width:0%;background:#29d;border-radius:5px;transition:width 1s;"></div>'+
+                    '</div>'+
+                    '<div class="number" style="text-align:right;font-size:18px;color:#29d;margin-top:5px;">0%</div>'+
+                   '<div class="message" style="font-size:14px;color:#29d;"></div>'+
+                '</div>';
+            progressBar = element.children[0];
+            document.body.appendChild(progressBar);
+        }
+        function update(data){
+            progressBar.children[0].children[0].style.width = data+'%';
+            progressBar.children[1].innerText = data + '%';
+        }
+        function end(){
+            document.body.removeChild(progressBar);
+            progressBar = null;
+        }
+        function message(msg){
+            if( progressBar == null )
+                return;
+            msg = msg.replace(/\n/g,'<br/>');
+            progressBar.children[2].innerHTML = progressBar.children[2].innerHTML + msg;
+        }
+        util.progress = {
+            begin:begin,
+            update:update,
+            end:end,
+            message:message
+        };
+    })(util);
+
+    //本地存储工具
+    (function(){
+        function set(name,value){
+            if( window.localStorage)
+                localStorage.setItem(name,value);
+        }
+
+        function get(name){
+            if( window.localStorage )
+                return localStorage.getItem(name);
+            else
+                return null;
+        }
+
+        function clear(){
+            if( window.localStorage )
+                localStorage.clear();
+        }
+
+        function saveResource(name,version,resource){
+            var data = {
+                version:version,
+                file:resource
+            };
+            set( name , JSON.stringify(data) );
+        }
+
+        function loadResource(name,version){
+             var currentResource = get(name);
+
+            //判断是否有资源
+            if( currentResource == null )
+                return null;
+
+            //判断资源版本是否正确
+            currentResource = JSON.parse(currentResource);
+            if( currentResource.version ==  version )
+                return currentResource.file;
+            else
+                return null;
+        }
+
+        util.localResource = {
+            save:saveResource,
+            load:loadResource
+        };
+
+    })(util);
+
+    //动态加载脚本工具
+    (function(){
+        var doc = document
+        var head = doc.head || doc.getElementsByTagName("head")[0] || doc.documentElement
+        var baseElement = head.getElementsByTagName("base")[0]
+
+        var currentlyAddingScript
+
+        function request(url, callback, charset, crossorigin) {
+            var node = doc.createElement("script")
+
+            if (charset) {
+                node.charset = charset
+            }
+
+            if (crossorigin) {
+                node.setAttribute("crossorigin", crossorigin)
+            }
+
+            addOnload(node, callback, url)
+
+            node.async = true
+            node.src = url
+
+            // For some cache cases in IE 6-8, the script executes IMMEDIATELY after
+            // the end of the insert execution, so use `currentlyAddingScript` to
+            // hold current node, for deriving url in `define` call
+            currentlyAddingScript = node
+
+            // ref: #185 & http://dev.jquery.com/ticket/2709
+            baseElement ?
+                head.insertBefore(node, baseElement) :
+                head.appendChild(node)
+
+            currentlyAddingScript = null;
+
+            function addOnload(node, callback, url) {
+                var supportOnload = "onload" in node
+
+                if (supportOnload) {
+                  node.onload = onload
+                  node.onerror = function() {
+                    onload(true)
+                  }
+                }
+                else {
+                  node.onreadystatechange = function() {
+
+                    if (/loaded|complete/.test(node.readyState)) {
+                        onload()
+                    }
+                  }
+                }
+            }
+
+            function onload(error) {
+                // Ensure only run once and handle memory leak in IE
+                node.onload = node.onerror = node.onreadystatechange = null
+
+                // Dereference the node
+                node = null;
+
+                callback(error)
+            }
+        }
+
+        util.request = request ;
+
+    })(util);
+
+    //捕捉异常
+    var configMap = {};
+    config = function(userOption){
+        var option = {
+            errorReportUrl:'',
+            version:0,
+            useCache:true,
+        };
+        configMap = {
+            onStart:function(){
+                util.progress.begin();
+            },
+            onProgress:function(progress){
+                util.progress.update(progress);
+            },
+            onError:function(error){
+                var msgs = '';
+                msgs += "额，代码有错。。。";
+                msgs += "\n错误信息："+error;
+                msgs += "\n客户端："+navigator.userAgent;
+                msgs += "\n代码版本："+option.version;
+                msgs += "\n网页地址："+location.href;
+                msgs += "\n\n";
+
+                console.log(msgs);
+
+                if(option.errorReportUrl != '')
+                    util.post(option.errorReportUrl,msgs);
+
+                util.progress.message(msgs);
+            },
+            onLoad:function(){
+                util.progress.end();
+            },
+            isUseCache:function(){
+                return option.useCache;
+            }
+        };
+        for( var i in userOption )
+            option[i] = userOption[i];
+    }
+
+    config({});
+
+    window.onerror = function(errorMessage, scriptURI, lineNumber,columnNumber,error) {
+        var stack = '';
+        var msgs = [];
+        if( error.stack )
+            stack = error.stack;
+      
+        msgs.push(errorMessage);
+        msgs.push("\n出错文件：" , scriptURI);
+        msgs.push("\n出错位置：" , lineNumber + '行，' + columnNumber + '列');
+        msgs.push("\n调用栈："+stack);
+        msgs = msgs.join('');
+
+        configMap.onError(msgs);
+    }
+
+    //加载器代码
+    var loadingMap = {},
         factoryMap = {},
         modulesMap = {},
         scriptsMap = {},
-        resMap, pkgMap;
-
+        resMap = {}, 
+        pkgMap = {};
 
     function loadScript(id, callback) {
         var queue = loadingMap[id] || (loadingMap[id] = []);
         queue.push(callback);
 
-        //
-        // load this script
-        //
         var res = resMap[id] || {};
         var url = res.pkg
-                    ? pkgMap[res.pkg].url
-                    : (res.url || id);
+                ? pkgMap[res.pkg].url
+                : (res.url || id);
 
-        if (! (url in scriptsMap))  {
-            scriptsMap[url] = true;
-
-            var script = document.createElement('script');
-            script.type = 'text/javascript';
-            script.src = url;
-            head.appendChild(script);
+        var resource = util.localResource.load(id,url);
+        if( resource == null || configMap.isUseCache() === false ){
+            //
+            // load this script
+            //
+            if (! (url in scriptsMap))  {
+                scriptsMap[url] = true;
+                util.request(url,function(error){
+                    if( error === true ){
+                        configMap.onError('加载url '+url+'失败（网路错误）');
+                        return;
+                    }
+                    if( factoryMap.hasOwnProperty(id) === false ){
+                        configMap.onError('加载url '+url+'失败');
+                        return;
+                    }
+                },'utf-8',true);
+            }
+        }else{
+            //
+            // load from localStorage
+            //
+            setTimeout(function(){
+                eval( 'define("'+id+'",'+resource +')');
+            },1);
         }
     }
 
     define = function(id, factory) {
+        if( Object.keys(resMap).length == 0 ){
+            configMap.onError('未加载resMap时试图加载'+id);
+            return;
+        }
+        var res = resMap[id] || {};
+        var url = res.pkg
+                ? pkgMap[res.pkg].url
+                : (res.url || id);
+
+        if( configMap.isUseCache() )
+            util.localResource.save(id,url,factory.toString());
+
         factoryMap[id] = factory;
 
         var queue = loadingMap[id];
@@ -62,7 +323,7 @@ var require, define;
         //
         var factory = factoryMap[id];
         if (!factory) {
-            throw Error('Cannot find module `' + id + '`');
+           configMap.onError('Cannot find module `' + id + '`');
         }
 
         mod = modulesMap[id] = {
@@ -116,7 +377,10 @@ var require, define;
         }
 
         function updateNeed() {
+            var progress = 1 - (needNum)/Object.keys(needMap).length;
+            configMap.onProgress(Math.ceil(progress*100));
             if (0 == needNum--) {
+                configMap.onLoad();
                 var i, n, args = [];
                 for(i = 0, n = names.length; i < n; ++i) {
                     args[i] = require(names[i]);
@@ -135,5 +399,7 @@ var require, define;
     };
 
     require.alias = function(id) {return id};
+
+    configMap.onStart();
 
 })(this);
