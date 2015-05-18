@@ -447,7 +447,7 @@ module.exports = {
 		var fileId = $.uniqueNum();
 		if(defaultOption.accept)
 			defaultOption.type = 'accept="image/*"';
-		div = '<input id="'+fileId+'" type="file" name="'+defaultOption.field+ '" style="opacity:0;display:block;position:absolute;top:0px;bottom:0px;left:0px;right:0px;width:100%;height:100%;z-index:9;font-size:1000px;" accept="image/*">';
+		div = '<input id="'+fileId+'" type="file" name="'+defaultOption.field+ '" style="opacity:0;display:block;position:absolute;top:0px;bottom:0px;left:0px;right:0px;width:100%;height:100%;" accept="image/*">';
 		div = $(div);
 		$('#'+defaultOption.target).css('overflow','hidden');
 		$('#'+defaultOption.target).css('position','relative');
