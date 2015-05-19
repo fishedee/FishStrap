@@ -31,23 +31,24 @@ var require, define;
         function begin(){
             var element = document.createElement('div');
             element.innerHTML = 
-                '<div id="bootstrap_progressbar" style="width:80%;margin:0 auto;margin-top:50px;">'+
-                   '<div class="bar" style="height:30px;border:1px solid #29d;padding:10px 10px;border-radius:10px;overflow:hidden;">'+
-                        '<div class="innerbar" style="height:100%;width:0%;background:#29d;border-radius:5px;transition:width 1s;"></div>'+
+                '<div id="bootstrap_progressbar" style="position:fixed;top:0px;left:0px;right:0px;width:100%;z-index:9;">'+
+                   '<div class="bar" style="height:3px;width:100%;background:'+configMap.progressColor()+';-webkit-transform:translate(-100%,0);transform:translate(-100%,0);-webkit-transition:-webkit-transform 1s;transition:transform 1s">'+
                     '</div>'+
-                    '<div class="number" style="text-align:right;font-size:18px;color:#29d;margin-top:5px;">0%</div>'+
-                   '<div class="message" style="font-size:14px;color:#29d;"></div>'+
+                    '<div class="number" style="text-align:right;font-size:18px;color:'+configMap.progressColor()+';margin-top:5px;">0%</div>'+
+                   '<div class="message" style="margin-left:10%;font-size:14px;color:'+configMap.progressColor()+';width:80%;"></div>'+
                 '</div>';
             progressBar = element.children[0];
             document.body.appendChild(progressBar);
         }
         function update(data){
-            progressBar.children[0].children[0].style.width = data+'%';
+            var pro = data - 100;
+            progressBar.children[0].style['-webkit-transform'] = 'translate(' + pro + '%,0)';
+            progressBar.children[0].style.transform = 'translate(' + pro + '%,0)';
             progressBar.children[1].innerText = data + '%';
         }
         function end(){
             document.body.removeChild(progressBar);
-            progressBar = null;
+            progressBar = null;   
         }
         function message(msg){
             if( progressBar == null )
@@ -189,24 +190,43 @@ var require, define;
             errorReportUrl:'',
             version:0,
             useCache:true,
+            browserCheck:function(){
+                var userAgent = navigator.userAgent;
+                var ie = userAgent.match(/MSIE ([\d.]+)/);
+                if( ie && ie[1] < 9 )
+                    return '\n请使用360，QQ或IE9以上的浏览器';
+                return true;
+            },
+            progressColor:'#f27373'
         };
         configMap = {
-            onStart:function(){
+            onBegin:function(){
                 util.progress.begin();
+            },
+            onStart:function(){
+                var result = option.browserCheck();
+                if( result !== true ){
+                    configMap.onError(
+                        '抱歉，不支持该浏览器'+
+                        '\n'+result
+                    );
+                    return false;
+                }
+                return true;
             },
             onProgress:function(progress){
                 util.progress.update(progress);
             },
             onError:function(error){
                 var msgs = '';
-                msgs += "额，代码有错。。。";
                 msgs += "\n错误信息："+error;
                 msgs += "\n客户端："+navigator.userAgent;
                 msgs += "\n代码版本："+option.version;
                 msgs += "\n网页地址："+location.href;
                 msgs += "\n\n";
 
-                console.log(msgs);
+                if( console )
+                    console.log(msgs);
 
                 if(option.errorReportUrl != '')
                     util.post(option.errorReportUrl,msgs);
@@ -218,6 +238,9 @@ var require, define;
             },
             isUseCache:function(){
                 return option.useCache;
+            },
+            progressColor:function(){
+                return option.progressColor;
             }
         };
         for( var i in userOption )
@@ -225,7 +248,7 @@ var require, define;
     }
 
     config({});
-
+    
     window.onerror = function(errorMessage, scriptURI, lineNumber,columnNumber,error) {
         var stack = '';
         var msgs = [];
@@ -237,6 +260,8 @@ var require, define;
         msgs.push("\n出错位置：" , lineNumber + '行，' + columnNumber + '列');
         msgs.push("\n调用栈："+stack);
         msgs = msgs.join('');
+
+        alert(msgs);
 
         configMap.onError(msgs);
     }
@@ -344,6 +369,9 @@ var require, define;
     };
 
     require.async = function(names, callback) {
+        if( configMap.onStart() == false )
+            return;
+
         if (typeof names == 'string') {
             names = [names];
         }
@@ -400,6 +428,6 @@ var require, define;
 
     require.alias = function(id) {return id};
 
-    configMap.onStart();
+    configMap.onBegin();
 
-})(this);
+})(window);
