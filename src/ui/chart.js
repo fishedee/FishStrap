@@ -379,6 +379,7 @@ return {
 		};
 		for( var i in option )
 			defaultOption[i] = option[i];
+
 		//获取xAxixs
 		var xAxises = [];
 		var datas = {};
@@ -389,12 +390,13 @@ return {
 			datas[xAxis] = defaultOption.data[i][defaultOption.yAxis];
 		}
 		var series = [];
-		for( var i = 0 ; i != datas.length ; ++i ){
+		for( var i in  datas ){
 			series.push({
 				value:datas[i],
 				name:i,
 			});
 		}
+
 		//绘图
 		var myChart = echarts.init($('#'+defaultOption.id)[0]); 
 		option = {
