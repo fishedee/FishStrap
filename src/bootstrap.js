@@ -261,8 +261,6 @@ var require, define;
         msgs.push("\n调用栈："+stack);
         msgs = msgs.join('');
 
-        alert(msgs);
-
         configMap.onError(msgs);
     }
 
