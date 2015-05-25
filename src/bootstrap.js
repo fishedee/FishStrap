@@ -10,7 +10,25 @@ var require, define;
 
     //网络工具
     (function(){
-        function post(url,data){
+        function ajax(inOption){
+            //处理option
+            var myOption = {
+                url:'',
+                type:'get',
+                data:'',
+                cache:false,
+                async:true,
+                success:function(){
+
+                },
+                error:function(){
+
+                }
+            }
+            for( var i in inOption )
+                if( typeof(inOption[i]) != 'undefined' )
+                    myOption[i] = inOption[i];
+            //发出请求
             var xmlhttp=null;
             if (window.XMLHttpRequest){// code for all new browsers
                 xmlhttp=new XMLHttpRequest();
@@ -19,9 +37,55 @@ var require, define;
             }
             if( xmlhttp == null )
                 return;
-            xmlhttp.open("POST",url,true);
-            xmlhttp.send(data);
+            if( myOption.cache === false ){
+                if( myOption.url.indexOf('?') == -1 )
+                    myOption.url += '?t='+new Date().getTime();
+                else
+                    myOption.url += '&t='+new Date().getTime();
+            }
+            xmlhttp.onreadystatechange = function(){
+                if( xmlhttp.readyState != 4 ){
+                    return;
+                }
+                if( xmlhttp.status == 200 ){
+                    myOption.success(xmlhttp.responseText);
+                }else{
+                    myOption.error(xmlhttp);
+                }
+            }
+            xmlhttp.open(
+                myOption.type.toUpperCase(),
+                myOption.url,
+                myOption.async
+            );
+            if( myOption.type == 'post'){
+                xmlhttp.send(myOption.data);
+            }else{
+                xmlhttp.send(null);
+            }
+                
+
         }
+        function post(url,data,success,error){
+            ajax({
+                url:url,
+                type:'post',
+                data:data,
+                success:success,
+                error:error
+            });
+        }
+        function get(url,data,success,error){
+            ajax({
+                url:url,
+                type:'get',
+                data:data,
+                success:success,
+                error:error
+            });
+        }
+        util.ajax = ajax;
+        util.get = get;
         util.post = post;
     })(util);
 
@@ -272,6 +336,18 @@ var require, define;
         resMap = {}, 
         pkgMap = {};
 
+
+    function evalScript(id,resource){
+        try{
+            eval(resource);
+        }catch(exception){
+            configMap.onError(
+                '运行'+id+'代码'+
+                '\n错误名字:'+exception.name+
+                '\n错误信息:'+exception.message
+            );
+        }
+    }
     function loadScript(id, callback) {
         var queue = loadingMap[id] || (loadingMap[id] = []);
         queue.push(callback);
@@ -288,24 +364,28 @@ var require, define;
             //
             if (! (url in scriptsMap))  {
                 scriptsMap[url] = true;
-                util.request(url,function(error){
-                    if( error === true ){
-                        configMap.onError('加载url '+url+'失败（网路错误）');
-                        return;
+                util.get(
+                    url,
+                    '',
+                    function(result){
+                        //success状态
+                        evalScript(id,result);
+                    },
+                    function(xmlhttp){
+                        //error状态
+                        configMap.onError(
+                            '加载url '+url+'失败（网路错误）'+
+                            '\n状态码:'+xmlhttp.status+
+                            '\n状态描述:'+xmlhttp.statusText
+                        );
                     }
-                    if( factoryMap.hasOwnProperty(id) === false ){
-                        configMap.onError('加载url '+url+'失败');
-                        return;
-                    }
-                },'utf-8',true);
+                );
             }
         }else{
             //
             // load from localStorage
             //
-            setTimeout(function(){
-                eval( 'define("'+id+'",'+resource +')');
-            },1);
+            evalScript(id,'define("'+id+'",'+resource +')');
         }
     }
 
