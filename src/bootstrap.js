@@ -3,9 +3,7 @@
  * ver: 1.0.0
  * auth: 306766045@qq.com
  */
-var require, define;
-
-(function(self) {
+(function() {
     var util = {};
 
     //网络工具
@@ -339,7 +337,9 @@ var require, define;
 
     function evalScript(id,resource){
         try{
-            eval(resource);
+            with(window){
+                eval(resource);
+            }
         }catch(exception){
             configMap.onError(
                 '运行'+id+'代码'+
@@ -491,7 +491,7 @@ var require, define;
                 for(i = 0, n = names.length; i < n; ++i) {
                     args[i] = require(names[i]);
                 }
-                callback && callback.apply(self, args);
+                callback && callback.apply(window, args);
             }
         }
         
@@ -508,4 +508,8 @@ var require, define;
 
     configMap.onBegin();
 
-})(window);
+    window.require = require;
+    window.define = define;
+    window.config = config;
+
+})();
