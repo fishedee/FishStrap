@@ -576,6 +576,12 @@ $.addCssToHead = function(str_css) {
 //加入地址栏扩展
 (function($){
 	$.location = {
+		getSegment:function(index){
+			var pathname = location.pathname.split('/');
+			if( index + 1 >= pathname.length || index + 1 < 0 )
+				return null;
+			return pathname[index+1];
+		},
 		getQueryArgv:function(name){
 			var reg = new RegExp("(^|[?&])" + name + "=([^&]*)(&|$)", "i");
 			var r = decodeURI(window.location.search).match(reg);

@@ -334,19 +334,11 @@
         resMap = {}, 
         pkgMap = {};
 
-
     function evalScript(id,resource){
-        try{
-            with(window){
-                eval(resource);
-            }
-        }catch(exception){
-            configMap.onError(
-                '运行'+id+'代码'+
-                '\n错误名字:'+exception.name+
-                '\n错误信息:'+exception.message
-            );
-        }
+        var script = document.createElement("script");
+        script.language = "javascript";
+        script.text = resource;
+        document.body.appendChild(script);
     }
     function loadScript(id, callback) {
         var queue = loadingMap[id] || (loadingMap[id] = []);
