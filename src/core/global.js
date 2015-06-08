@@ -41,33 +41,16 @@ $.log = {
 	
 };
 //加入console扩展
-$.console = {
-	log:function(msg){
-		if( window.console )
-			window.console.log('log: '+msg);
-	},
-	fatal:function(msg){
-		if( window.console )
-			window.console.log('fatal: '+msg);
-	},
-	error:function(msg){
-		if( window.console )
-			window.console.log('error: '+msg);
-	},
-	warn:function(msg){
-		if( window.console )
-			window.console.log('warn: '+msg);
-	},
-	info:function(msg){
-		if( window.console )
-			window.console.log('info: '+msg);
-	},
-	debug:function(msg){
-		if( window.console )
-			window.console.log('debug: '+msg);
-	},
-	
-};
+if( typeof window.console != 'object')
+	window.console = {
+		log:function(msg){
+
+		},
+		warn:function(msg){
+
+		}
+	}
+$.console = window.console;
 //加入自动加时间戳扩展
 $._ajax = $.ajax;
 $.ajax = function(opt){
@@ -76,6 +59,7 @@ $.ajax = function(opt){
 		opt.url = opt.url +'?t='+timestamp;
 	else
 		opt.url = opt.url +'&t='+timestamp;
+	opt.dataType = 'text';
 	opt.cache = false;
 	$._ajax(opt);
 };
