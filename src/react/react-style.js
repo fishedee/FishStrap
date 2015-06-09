@@ -27,7 +27,8 @@ var prefixesProperties = {
 	'animationTimingFunction':'',
 	'animationPlayState':'',
 	'animationFillMode':'',
-	'appearance':''
+	'appearance':'',
+	'overflowScrolling':''
 }
 
 function transformSingleObjectToCss(value,originKey){
