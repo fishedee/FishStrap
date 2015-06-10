@@ -204,7 +204,6 @@
                         continue;
                     if( key.substring(0,resourcePrefix.length) == resourcePrefix )
                         continue;
-                    console.log('old '+key);
                     window.localStorage.removeItem(key);
                 }
             }
@@ -213,7 +212,6 @@
         function clearOldResource(){
             var allKey = getAllKey();
             for( var i = 0 ; i != allKey.length ; ++i ){
-                console.log('allKey '+allKey[i]);
                 if( loadedResource.hasOwnProperty(allKey[i]) === false )
                     set(allKey[i],'');
             }
