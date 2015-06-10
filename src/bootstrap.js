@@ -128,29 +128,56 @@
 
     //本地存储工具
     (function(){
+        var resourcePrefix = 'bootstrap:';
+        var loadedResource = {};
         function set(name,value){
-            if( window.localStorage)
-                localStorage.setItem(name,value);
+            try{
+                if( window.localStorage){
+                    if( value != ''){
+                        localStorage.setItem(resourcePrefix+name,value);
+                    }else{
+                        localStorage.removeItem(resourcePrefix+name);
+                    }  
+                    return true;
+                }else{
+                    return false;
+                }  
+            }catch(e){
+                return false;
+            }
         }
 
         function get(name){
             if( window.localStorage )
-                return localStorage.getItem(name);
+                return localStorage.getItem(resourcePrefix+name);
             else
                 return null;
         }
 
-        function clear(){
-            if( window.localStorage )
-                localStorage.clear();
+        function getAllKey(name){
+            var result = [];
+            if( window.localStorage ){
+                for( var i = 0 ; i < window.localStorage.length ; ++i ){
+                    var key = window.localStorage.key(i);
+                    if( key.substring(0,resourcePrefix.length) != resourcePrefix )
+                        continue;
+                    result.push( key.substring(resourcePrefix.length) );
+                }
+            }
+            return result;
         }
 
         function saveResource(name,version,resource){
+            if( loadedResource.hasOwnProperty(name) &&
+                loadedResource[name] == version )
+                return;
             var data = {
                 version:version,
                 file:resource
             };
-            set( name , JSON.stringify(data) );
+            var isSet = set( name , JSON.stringify(data) );
+            if( isSet )
+                loadedResource[name] = version;
         }
 
         function loadResource(name,version){
@@ -162,86 +189,43 @@
 
             //判断资源版本是否正确
             currentResource = JSON.parse(currentResource);
-            if( currentResource.version ==  version )
+            if( currentResource.version ==  version ){
+                loadedResource[name] = version;
                 return currentResource.file;
-            else
-                return null;
+            }
+            return null;
         }
+
+        function clearOldFormatResource(){
+            if( window.localStorage ){
+                for( var i = 0 ; i < window.localStorage.length ; ++i ){
+                    var key = window.localStorage.key(i);
+                    if( key.substring(0,2) == 'Hm')
+                        continue;
+                    if( key.substring(0,resourcePrefix.length) == resourcePrefix )
+                        continue;
+                    console.log('old '+key);
+                    window.localStorage.removeItem(key);
+                }
+            }
+        }
+
+        function clearOldResource(){
+            var allKey = getAllKey();
+            for( var i = 0 ; i != allKey.length ; ++i ){
+                console.log('allKey '+allKey[i]);
+                if( loadedResource.hasOwnProperty(allKey[i]) === false )
+                    set(allKey[i],'');
+            }
+        }
+
+        clearOldFormatResource();
 
         util.localResource = {
             save:saveResource,
-            load:loadResource
+            load:loadResource,
+            clear:clearOldResource
         };
-
-    })(util);
-
-    //动态加载脚本工具
-    (function(){
-        var doc = document
-        var head = doc.head || doc.getElementsByTagName("head")[0] || doc.documentElement
-        var baseElement = head.getElementsByTagName("base")[0]
-
-        var currentlyAddingScript
-
-        function request(url, callback, charset, crossorigin) {
-            var node = doc.createElement("script")
-
-            if (charset) {
-                node.charset = charset
-            }
-
-            if (crossorigin) {
-                node.setAttribute("crossorigin", crossorigin)
-            }
-
-            addOnload(node, callback, url)
-
-            node.async = true
-            node.src = url
-
-            // For some cache cases in IE 6-8, the script executes IMMEDIATELY after
-            // the end of the insert execution, so use `currentlyAddingScript` to
-            // hold current node, for deriving url in `define` call
-            currentlyAddingScript = node
-
-            // ref: #185 & http://dev.jquery.com/ticket/2709
-            baseElement ?
-                head.insertBefore(node, baseElement) :
-                head.appendChild(node)
-
-            currentlyAddingScript = null;
-
-            function addOnload(node, callback, url) {
-                var supportOnload = "onload" in node
-
-                if (supportOnload) {
-                  node.onload = onload
-                  node.onerror = function() {
-                    onload(true)
-                  }
-                }
-                else {
-                  node.onreadystatechange = function() {
-
-                    if (/loaded|complete/.test(node.readyState)) {
-                        onload()
-                    }
-                  }
-                }
-            }
-
-            function onload(error) {
-                // Ensure only run once and handle memory leak in IE
-                node.onload = node.onerror = node.onreadystatechange = null
-
-                // Dereference the node
-                node = null;
-
-                callback(error)
-            }
-        }
-
-        util.request = request ;
 
     })(util);
 
@@ -478,6 +462,7 @@
             var progress = 1 - (needNum)/Object.keys(needMap).length;
             configMap.onProgress(Math.ceil(progress*100));
             if (0 == needNum--) {
+                util.localResource.clear();
                 configMap.onLoad();
                 var i, n, args = [];
                 for(i = 0, n = names.length; i < n; ++i) {
