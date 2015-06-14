@@ -41,6 +41,8 @@
                 else
                     myOption.url += '&t='+new Date().getTime();
             }
+            if( configMap.getOrigin() != '')
+                myOption.url = 'http://'+configMap.getOrigin()+myOption.url;
             xmlhttp.onreadystatechange = function(){
                 if( xmlhttp.readyState != 4 ){
                     return;
@@ -231,6 +233,7 @@
     var configMap = {};
     config = function(userOption){
         var option = {
+            origin:'',
             errorReportUrl:'',
             version:0,
             useCache:true,
@@ -285,6 +288,9 @@
             },
             progressColor:function(){
                 return option.progressColor;
+            },
+            getOrigin:function(){
+                return option.origin;
             }
         };
         for( var i in userOption )
@@ -328,8 +334,8 @@
 
         var res = resMap[id] || {};
         var url = res.pkg
-                ? pkgMap[res.pkg].url
-                : (res.url || id);
+                ? pkgMap[res.pkg].uri
+                : (res.uri || id);
 
         var resource = util.localResource.load(id,url);
         if( resource == null || configMap.isUseCache() === false ){
@@ -370,8 +376,8 @@
         }
         var res = resMap[id] || {};
         var url = res.pkg
-                ? pkgMap[res.pkg].url
-                : (res.url || id);
+                ? pkgMap[res.pkg].uri
+                : (res.uri || id);
 
         if( configMap.isUseCache() )
             util.localResource.save(id,url,factory.toString());
@@ -435,6 +441,27 @@
         var needMap = {};
         var needNum = 0;
 
+        function getResourceDepend(next){
+            util.get(
+                '/map.json',
+                '',
+                function(result){
+                    //success状态
+                    var result = JSON.parse(result);
+                    require.resourceMap(result);
+                    next();
+                },
+                function(xmlhttp){
+                    //error状态
+                    configMap.onError(
+                        '加载map.json失败（网路错误）'+
+                        '\n状态码:'+xmlhttp.status+
+                        '\n状态描述:'+xmlhttp.statusText
+                    );
+                }
+            );
+        }
+
         function findNeed(depArr) {
             for(var i = depArr.length - 1; i >= 0; --i) {
                 //
@@ -470,8 +497,10 @@
             }
         }
         
-        findNeed(names);
-        updateNeed();
+        getResourceDepend(function(){
+            findNeed(names);
+            updateNeed();
+        });
     };
 
     require.resourceMap = function(obj) {
