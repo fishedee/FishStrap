@@ -52,7 +52,7 @@ module.exports = {
 		if ($.os.android) {
 			var MQQBrowser = navigator.userAgent.match(/MQQBrowser\/([^\s]+)/);
 			if (!MQQBrowser || MQQBrowser && MQQBrowser[1] < '5.2') {
-				if ($.os.version.toString().indexOf('4.4') === 0 || $.os.version.toString() <= '2.1') {
+				if ( $.os.version.toString() <= '2.1') {
 					defaultOption.onFail('您的安卓手机系统暂不支持上传功能，请下载最新版的QQ浏览器');
 					return;
 				}
