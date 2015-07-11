@@ -2,6 +2,7 @@ var $ = require('../core/global.js');
 var html5 = require('../core/html5.js');
 var imageCompresser = require('./imageCompresser.js');
 var jpegMeta = require('./jpegMeta.js').JpegMeta;
+var wxSdk = require('fishstrap/module/jweixin.js');
 module.exports = {
 	_checkFileSize:function( file , defaultOption , nextStep ){
 		function checkMaxSize(size){
@@ -363,6 +364,102 @@ module.exports = {
 				});
 			});
 		});
+	},
+	wxImage:function(defaultOption){
+		var currentLocalId = null;
+		var currentServerId = null;
+		function chooseImage(next){
+			wxSdk.chooseImage({
+				success: function (res) {
+			        var localIds = res.localIds;
+			        if( localIds.length == 0 )
+			        	return;
+			        currentLocalId = localIds[0];
+			        defaultOption.onOpen(currentLocalId);
+			        defaultOption.onProgress(0);
+			        next();
+			    }
+			});
+		}
+		function uploadImageToWeixin(next){
+			wx.uploadImage({
+			    localId:currentLocalId,
+			    isShowProgressTips: 1,
+			    success: function (res) {
+			      	currentServerId = res.serverId;
+			      	next();
+			    },
+			    fail:function(){
+			    	defaultOption.onFail('上传图片到微信服务器失败');
+			    }
+			});
+		}
+		function uploadImageToServer(next){
+			//构造数据
+			var formData = new FormData();
+			formData.append('data', currentServerId);
+			//提交表单
+			var progress = function(e) {
+				if(e.lengthComputable){
+					var progress = Math.ceil(100 * (e.loaded / e.total));
+					defaultOption.onProgress(progress);
+				}
+			}
+			var complete = function(e) {
+				defaultOption.onSuccess(e.target.response);
+			}
+			var failed = function() {
+				defaultOption.onFail('下载微信图片断开，请稍后重新操作');
+			}
+			var abort = function() {
+				defaultOption.onFail('上传已取消');
+			}
+			var httpReuqest = new XMLHttpRequest();
+			if( httpReuqest.upload ){
+				httpReuqest.upload.addEventListener('progress',progress, false);
+			}
+			httpReuqest.open("POST", defaultOption.url + '?t=' + Date.now(),true);
+			httpReuqest.addEventListener('progress',progress, false);
+			httpReuqest.addEventListener("load", complete, false);
+			httpReuqest.addEventListener("abort", abort, false);
+			httpReuqest.addEventListener("error", failed, false);
+			httpReuqest.send(formData);
+		}
+		function go(){
+			chooseImage(function(){
+				uploadImageToWeixin(function(){
+					uploadImageToServer();
+				});
+			});
+		}
+		$('#'+defaultOption.target).click(go);
+	},
+	imageV3:function( option ){
+		//初始化option
+		var defaultOption = {
+			url:'',
+			field:'',
+			target:'',
+			width:null,
+			height:null,
+			quality:0.8,
+			onOpen:function(data){
+			},
+			onProgress:function(data){
+			},
+			onSuccess:function(){
+			},
+			onFail:function(msg){
+			},
+		};
+		defaultOption = $.extend(defaultOption,option);
+		//处理
+		if( $.os.wx ){
+			return this.wxImage(defaultOption);
+		}else{
+			return this.image( defaultOption );
+		}
+
 	},
 	imageV2:function( option ){
 		//初始化option
