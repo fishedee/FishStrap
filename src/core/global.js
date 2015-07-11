@@ -561,24 +561,27 @@ $.addCssToHead = function(str_css) {
 (function($){
 	$.location = {
 		getSegment:function(index){
-			var pathname = location.pathname.split('/');
+			var url = this.getUrl();
+			var pathname = $.url.toInfo(url).pathname.split('/');
 			if( index + 1 >= pathname.length || index + 1 < 0 )
 				return null;
 			return pathname[index+1];
 		},
 		getQueryArgv:function(name){
-			var reg = new RegExp("(^|[?&])" + name + "=([^&]*)(&|$)", "i");
-			var r = decodeURI(window.location.search).match(reg);
-			if (r != null) 
-				return decodeURIComponent(r[2]);
-			return null;
+			var url = this.getUrl();
+			var search = $.url.toInfo(url).search;
+			if( search[name] )
+				return search[name];
+			else
+				return null; 
 		},
 		getHashArgv:function( name ){
-			var reg = new RegExp("(^|[#&])" + name + "=([^&]*)(&|$)", "i");
-			var r = decodeURI(window.location.hash).match(reg);
-			if (r != null) 
-				return decodeURIComponent(r[2]); 
-			return null;
+			var url = this.getUrl();
+			var hash = $.url.toInfo(url).hash;
+			if( hash[name] )
+				return hash[name];
+			else
+				return null; 
 		},
 		setHashArgv:function(argv){
 			var hash = '';
@@ -597,7 +600,11 @@ $.addCssToHead = function(str_css) {
 			history.go(-1);
 		},
 		getUrl:function(){
-			return window.location;
+			if( arguments.length >= 2 )
+				var url = arguments[1];
+			else
+				var url = window.location.href;
+			return url;
 		}
 	};
 })($);
