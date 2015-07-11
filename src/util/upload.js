@@ -365,7 +365,7 @@ module.exports = {
 			});
 		});
 	},
-	wxImage:function(defaultOption){
+	_wxImage:function(defaultOption){
 		var currentLocalId = null;
 		var currentServerId = null;
 		function chooseImage(next){
@@ -382,7 +382,7 @@ module.exports = {
 			});
 		}
 		function uploadImageToWeixin(next){
-			wx.uploadImage({
+			wxSdk.uploadImage({
 			    localId:currentLocalId,
 			    isShowProgressTips: 1,
 			    success: function (res) {
@@ -455,7 +455,7 @@ module.exports = {
 		defaultOption = $.extend(defaultOption,option);
 		//处理
 		if( $.os.wx ){
-			return this.wxImage(defaultOption);
+			return this._wxImage(defaultOption);
 		}else{
 			return this.image( defaultOption );
 		}
