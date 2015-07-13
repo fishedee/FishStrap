@@ -426,6 +426,10 @@ module.exports = {
 			httpReuqest.send(formData);
 		}
 		function go(){
+			if ($.os.wxVersion.toString() < '6.1' ) {
+				alert('您的微信版本过低，微信上传图功能将不能正常使用，请升级微信至6.1及以上');
+				return;
+			}
 			chooseImage(function(){
 				uploadImageToWeixin(function(){
 					uploadImageToServer();
