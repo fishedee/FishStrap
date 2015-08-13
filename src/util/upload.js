@@ -2,7 +2,7 @@ var $ = require('../core/global.js');
 var html5 = require('../core/html5.js');
 var imageCompresser = require('./imageCompresser.js');
 var jpegMeta = require('./jpegMeta.js').JpegMeta;
-var wxSdk = require('/fishstrap/module/jweixin.js');
+var wxSdk = require('../module/jweixin.js');
 module.exports = {
 	_checkFileSize:function( file , defaultOption , nextStep ){
 		function checkMaxSize(size){
