@@ -510,7 +510,7 @@ $.addCssToHead = function(str_css) {
 		toInfo:function(url){
 			//正则提取
 			url = decodeURI(url);
-			var regex = /^((?:https|http|file|ftp):)\/\/([a-zA-Z0-9.]*)(?::([0-9]+))?(\/[^?#]*)?(\?[^#]*)?(#.*)?$/;
+			var regex = /^((?:https|http|file|ftp):)\/\/([a-zA-Z0-9.]*)(?::([0-9]+))?(?:\/*(\/[^?#]*))?(\?[^#]*)?(#.*)?$/;
 			var regexInfo = regex.exec(url);
 
 			//分析各部分数据
