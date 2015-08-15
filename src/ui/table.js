@@ -399,6 +399,59 @@ module.exports = {
 			});
 			return singleData;
 		}
+		function getAllData(next){
+			$.get(sendUrl,{},function(data){
+				data = $.JSON.parse(data);
+				if( data.code != 0 ){
+					dialog.message(data.msg);
+					return;
+				}
+				next(data.data.data);
+			});
+		}
+		function getCurrentData(next){
+			$.get(sendUrl+"&pageIndex="+defaultOption.pageIndex+"&pageSize="+defaultOption.pageSize,{},function(data){
+				data = $.JSON.parse(data);
+				if( data.code != 0 ){
+					dialog.message(data.msg);
+					return;
+				}
+				next(data.data.data);
+			});
+		}
+		function exportToExcel(title,data){
+			var excelData = [];
+
+			//列名
+			var single = [];
+			for( var i in _option.fields ){
+				single.push( _option.fields[i].thText );
+			}
+			excelData.push(single);
+
+			//列数据
+			for( var i in data ){
+				var single = [];
+				for( var j in _option.fields ){
+					single.push( data[i][j] );
+				}
+				excelData.push(single);
+			}
+			
+			//导出
+			var excelFormId = 'excel-form'+$.uniqueNum();
+			var excelUrl = '/excel/exportFromUser';
+			var form = 
+			'<form action="'+excelUrl+'" method="post" style="display:none">'+
+				'<input type="text" name="title" class="input-small"/>'+
+				'<input type="text" name="data" class="input-small"/>'+
+			'</form>';
+			form = $(form);
+			$('body').append(form);
+			form.find('[name=title]').val(title);
+			form.find('[name=data]').val(JSON.stringify(excelData));
+			form.submit();
+		}
 		return {
 			getCheckData:function(){
 				var target = $('#'+defaultOption.id+' .gri_td_checkbox:checked');
@@ -408,7 +461,17 @@ module.exports = {
 					data.push(getSingleRowData(parent));
 				});
 				return data;
-			}
+			},
+			exportAllDataToExcel:function(title){
+				getAllData(function(data){
+					exportToExcel(title,data);
+				});
+			},
+			exportCurrentDataToExcel:function(title){
+				getCurrentData(function(data){
+					exportToExcel(title,data);
+				});
+			},
 		};
 	},
 	
