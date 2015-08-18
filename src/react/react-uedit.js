@@ -1,4 +1,4 @@
-var uedit = require('/fishstrap/util/uedit.js');
+var uedit = require('../util/uedit.js');
 var StyleSheet = require('react-style.js');
 module.exports =  React.createClass({
 	mixins: [React.addons.PureRenderMixin],

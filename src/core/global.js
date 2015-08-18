@@ -483,9 +483,11 @@ $.addCssToHead = function(str_css) {
 		var result = {};
 		for( var i = 0 ; i != search.length ; ++i ){
 			var index = search[i].split('=');
-			if( index.length != 2 )
-				continue;
-			result[ index[0] ] = decodeURIComponent(index[1]);
+			if( index.length != 2 ){
+				result[search[i]] = '';
+			}else{
+				result[ index[0] ] = decodeURIComponent(index[1]);
+			}
 		}
 		return result;
 	}
