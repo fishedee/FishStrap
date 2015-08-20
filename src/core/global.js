@@ -20,26 +20,6 @@ $.format = {
 		return value;
 	}
 };
-//加入log扩展
-$.log = {
-	fatal:function(msg){
-		if( window.console )
-			window.console.log('fatal: '+msg);
-	},
-	error:function(msg){
-		if( window.console )
-			window.console.log('error: '+msg);
-	},
-	info:function(msg){
-		if( window.console )
-			window.console.log('info: '+msg);
-	},
-	debug:function(msg){
-		if( window.console )
-			window.console.log('debug: '+msg);
-	},
-	
-};
 //加入console扩展
 if( typeof window.console != 'object')
 	window.console = {
@@ -47,6 +27,9 @@ if( typeof window.console != 'object')
 
 		},
 		warn:function(msg){
+
+		},
+		error:function(msg){
 
 		}
 	}
@@ -510,10 +493,33 @@ $.addCssToHead = function(str_css) {
 			return encodeURI(url);
 		},
 		toInfo:function(url){
+			if( typeof(url) != 'string' ){
+				console.error('$.url.toInfo not string!!');
+				console.error(url);
+				return {
+					protocol:null,
+					hostname:null,
+					port:null,
+					pathname:null,
+					search:null,
+					hash:null
+				};
+			}
 			//正则提取
 			url = decodeURI(url);
 			var regex = /^((?:https|http|file|ftp):)\/\/([a-zA-Z0-9.]*)(?::([0-9]+))?(?:\/*(\/[^?#]*))?(\?[^#]*)?(#.*)?$/;
 			var regexInfo = regex.exec(url);
+
+			if( !regexInfo ){
+				return {
+					protocol:null,
+					hostname:null,
+					port:null,
+					pathname:null,
+					search:null,
+					hash:null
+				};
+			}
 
 			//分析各部分数据
 			var info = {

@@ -236,7 +236,7 @@
             origin:'',
             errorReportUrl:'',
             version:0,
-            useCache:true,
+            debug:false,
             browserCheck:function(){
                 var userAgent = navigator.userAgent;
                 var ie = userAgent.match(/MSIE ([\d.]+)/);
@@ -284,7 +284,10 @@
                 util.progress.end();
             },
             isUseCache:function(){
-                return option.useCache;
+                return option.debug?false:true;
+            },
+            isUseAjaxGet:function(){
+                return option.debug?false:true;
             },
             progressColor:function(){
                 return option.progressColor;
@@ -328,6 +331,12 @@
         script.text = resource;
         document.body.appendChild(script);
     }
+    function evalScriptWithUrl(url){
+        var script = document.createElement("script");
+        script.language = "javascript";
+        script.src = url;
+        document.body.appendChild(script);
+    }
     function loadScript(id, callback) {
         var queue = loadingMap[id] || (loadingMap[id] = []);
         queue.push(callback);
@@ -344,22 +353,26 @@
             //
             if (! (url in scriptsMap))  {
                 scriptsMap[url] = true;
-                util.get(
-                    url,
-                    '',
-                    function(result){
-                        //success状态
-                        evalScript(id,result);
-                    },
-                    function(xmlhttp){
-                        //error状态
-                        configMap.onError(
-                            '加载url '+url+'失败（网路错误）'+
-                            '\n状态码:'+xmlhttp.status+
-                            '\n状态描述:'+xmlhttp.statusText
-                        );
-                    }
-                );
+                if( configMap.isUseAjaxGet() ){
+                    util.get(
+                        url,
+                        '',
+                        function(result){
+                            //success状态
+                            evalScript(id,result);
+                        },
+                        function(xmlhttp){
+                            //error状态
+                            configMap.onError(
+                                '加载url '+url+'失败（网路错误）'+
+                                '\n状态码:'+xmlhttp.status+
+                                '\n状态描述:'+xmlhttp.statusText
+                            );
+                        }
+                    );
+                }else{
+                    evalScriptWithUrl(url);
+                }
             }
         }else{
             //

@@ -13,6 +13,7 @@ module.exports =  React.createClass({
 		dom.attr('width',width);
 		dom.attr('height',height);
 		dom.lazyload({
+			threshold : 200,
 			effect : "fadeIn"
 		});
 	},
