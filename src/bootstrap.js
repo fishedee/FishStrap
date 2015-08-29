@@ -289,6 +289,9 @@
             isUseAjaxGet:function(){
                 return option.debug?false:true;
             },
+            isUseWenire:function(){
+                return option.debug?true:false;
+            },
             progressColor:function(){
                 return option.progressColor;
             },
@@ -298,6 +301,8 @@
         };
         for( var i in userOption )
             option[i] = userOption[i];
+        if( configMap.isUseWenire() )
+            evalScriptWithUrl('//'+location.host+':9999/target/target-script-min.js#anonymous');
     }
 
     config({});
@@ -305,7 +310,7 @@
     window.onerror = function(errorMessage, scriptURI, lineNumber,columnNumber,error) {
         var stack = '';
         var msgs = [];
-        if( error.stack )
+        if( error && error.stack )
             stack = error.stack;
       
         msgs.push(errorMessage);
