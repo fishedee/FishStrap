@@ -52,7 +52,7 @@ module.exports = {
 		var ue = UE.getEditor(editorId, {
 			serverUrl:defaultOption.url,
 			autoHeightEnabled: true,
-			toolbars: [['fullscreen','simpleupload']],
+			toolbars: [['fullscreen','source','simpleupload']],
 		});
 		//计算editor的函数
 		return {

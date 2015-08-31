@@ -236,7 +236,7 @@
             origin:'',
             errorReportUrl:'',
             version:0,
-            debug:false,
+            useCache:true,
             browserCheck:function(){
                 var userAgent = navigator.userAgent;
                 var ie = userAgent.match(/MSIE ([\d.]+)/);
@@ -284,13 +284,13 @@
                 util.progress.end();
             },
             isUseCache:function(){
-                return option.debug?false:true;
+                return option.useCache?true:false;
             },
             isUseAjaxGet:function(){
-                return option.debug?false:true;
+                return option.useCache?true:false;
             },
             isUseWenire:function(){
-                return option.debug?true:false;
+                return option.useCache?false:true;
             },
             progressColor:function(){
                 return option.progressColor;
