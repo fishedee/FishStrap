@@ -1,4 +1,3 @@
-var LazyLoad = require('../util/jqueryLazyLoad.js');
 module.exports =  React.createClass({
 	propTypes: {
 		requireSrc      : React.PropTypes.number,
@@ -9,13 +8,14 @@ module.exports =  React.createClass({
 		var scale = this.props.scale;
 		var width = dom.width();
 		var height = width*scale;
-		dom.attr('data-original',src);
+		dom.attr('src','data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC');
 		dom.attr('width',width);
 		dom.attr('height',height);
-		dom.lazyload({
-			threshold : 200,
-			effect : "fadeIn"
-		});
+		var img = new Image();  
+	    img.onload = function(){
+	    	dom.attr('src',src);
+	    };
+	    img.src = src;
     },
 	componentDidMount: function(){
 		this.updateImage( this.props.src );
