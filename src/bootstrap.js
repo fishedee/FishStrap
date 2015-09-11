@@ -292,6 +292,9 @@
             isUseWenire:function(){
                 return option.useCache?false:true;
             },
+            isLogLoading:function(){
+                return option.useCache?false:true;
+            },
             progressColor:function(){
                 return option.progressColor;
             },
@@ -504,6 +507,14 @@
         function updateNeed() {
             var progress = 1 - (needNum)/Object.keys(needMap).length;
             configMap.onProgress(Math.ceil(progress*100));
+            if( configMap.isLogLoading() ){
+                var result = [];
+                for( var i in needMap )
+                    if( i in factoryMap == false )
+                        result.push(i);
+                console.log(result);
+            }
+
             if (0 == needNum--) {
                 util.localResource.clear();
                 configMap.onLoad();
