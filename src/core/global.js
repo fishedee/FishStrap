@@ -463,23 +463,43 @@ $.addCssToHead = function(str_css) {
 (function($){
 	function splitInfo(str){
 		var search = str.split('&');
-		var result = {};
+		var result = [];
 		for( var i = 0 ; i != search.length ; ++i ){
+			if( search[i] == '')
+				continue;
+
 			var index = search[i].split('=');
 			if( index.length != 2 ){
-				result[search[i]] = '';
+				result[search[i]] = null;
 			}else{
 				result[ index[0] ] = decodeURIComponent(index[1]);
 			}
 		}
 		return result;
 	}
+	function splitPathInfo(str){
+		var search = str.split('/');
+		var result = [];
+		for( var i = 0 ; i != search.length ; ++i ){
+			if( search[i] == '')
+				continue;
+
+			result.push( search[i] );
+		}
+		return result;
+	}
 	function combileInfo(array){
 		var result = [];
 		for( var i in array ){
-			result.push( i + '=' + encodeURIComponent(array[i]) );
+			if( array[i] == null )
+				result.push(array[i]);
+			else
+				result.push( i + '=' + encodeURIComponent(array[i]) );
 		}
 		return result.join('&');
+	}
+	function combinePathInfo(array){
+		return array.join('/');
 	}
 	$.url = {
 		buildQueryUrl:function(url,urlArgv){
@@ -497,27 +517,33 @@ $.addCssToHead = function(str_css) {
 				console.error('$.url.toInfo not string!!');
 				console.error(url);
 				return {
-					protocol:null,
-					hostname:null,
-					port:null,
-					pathname:null,
-					search:null,
-					hash:null
+					protocol:'',
+					hostname:'',
+					port:'',
+					pathname:[],
+					originpathname:'/',
+					search:{},
+					originsearch:'',
+					hash:{},
+					originhash:''
 				};
 			}
 			//正则提取
 			url = decodeURI(url);
-			var regex = /^((?:https|http|file|ftp):)\/\/([a-zA-Z0-9.]*)(?::([0-9]+))?(?:\/*(\/[^?#]*))?(\?[^#]*)?(#.*)?$/;
+			var regex = /^(?:([a-zA-Z]+):\/\/)?([^?#\/:]*)?(?::([0-9]+))?(?:(\/[^?#]*))?(\?[^#]*)?(#.*)?$/;
 			var regexInfo = regex.exec(url);
 
 			if( !regexInfo ){
 				return {
-					protocol:null,
-					hostname:null,
-					port:null,
-					pathname:null,
-					search:null,
-					hash:null
+					protocol:'',
+					hostname:'',
+					port:'',
+					pathname:[],
+					originpathname:'/',
+					search:{},
+					originsearch:'',
+					hash:{},
+					originhash:''
 				};
 			}
 
@@ -531,28 +557,57 @@ $.addCssToHead = function(str_css) {
 				hash:regexInfo[6]
 			}
 
+			if( !info.protocol ){
+				info.protocol = '';
+			}
+
+			if( !info.hostname ){
+				info.hostname = '';
+			}
+
+			if( !info.port ){
+				info.port = '';
+			}
+
+			if( info.pathname ){
+				info.pathname = splitPathInfo( info.pathname );
+				info.originpathname = '/'+combinePathInfo(info.pathname);
+			}else{
+				info.pathname = [];
+				info.originpathname = '/';
+			}
+
 			if( info.search ){
 				info.search = splitInfo( info.search.substr(1) );
+				info.originsearch = '?'+combileInfo(info.search);
 			}else{
 				info.search = {};
+				info.originsearch = '';
 			}
 
 			if( info.hash ){
 				info.hash = splitInfo( info.hash.substr(1) );
+				info.originhash = '#'+combileInfo(info.hash);
 			}else{
 				info.hash = {};
+				info.originhash = '';
 			}
-			
 			return info;
 		},
 		fromInfo:function(info){
-			var url = info.protocol+'//'+info.hostname;
+			var url = '';
+
+			if( info.protocol && info.hostname ){
+				url += info.protocol+'://'+info.hostname;
+			}
 
 			if( info.port ){
 				url += ':'+info.port;
 			}
-				
-			url += info.pathname;
+
+			if( info.pathname.length != 0 ){
+				url += '/'+combinePathInfo(info.pathname);
+			}
 
 			if( info.search ){
 				url += '?'+combileInfo(info.search);
@@ -570,10 +625,10 @@ $.addCssToHead = function(str_css) {
 	$.location = {
 		getSegment:function(index){
 			var url = this.getUrl();
-			var pathname = $.url.toInfo(url).pathname.split('/');
-			if( index + 1 >= pathname.length || index + 1 < 0 )
+			var pathname = $.url.toInfo(url).pathname;
+			if( index >= pathname.length || index < 0 )
 				return null;
-			return pathname[index+1];
+			return pathname[index];
 		},
 		getQueryArgv:function(name){
 			var url = this.getUrl();
