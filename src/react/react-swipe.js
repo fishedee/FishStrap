@@ -34,7 +34,7 @@ module.exports = React.createClass({
 		this.swipe = Swipe(React.findDOMNode(this), this.props);
     },
     componentDidUpdate: function (prevProps,propsState) {
-    	if( prevProps.children.length != this.props.children.length ){
+    	if( prevProps.children.size != this.props.children.size ){
     		this.swipe.kill();
     		delete this.swipe;
     		this.swipe = Swipe(React.findDOMNode(this), this.props);
