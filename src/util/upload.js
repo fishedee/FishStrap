@@ -365,6 +365,58 @@ module.exports = {
 			});
 		});
 	},
+	_cordovaImage:function(defaultOption){
+		function chooseImage(next){
+			window.imagePicker.getPictures(
+			    function(results) {
+			    	if( results.length == 0 ){
+			    		defaultOption.onFail('请选择图片上传噢');
+			    		return;
+			    	}
+			        next(results[0]);
+			    }, function (error) {
+			    	defaultOption.onFail(error);
+			    },{
+			        maximumImagesCount: 1,
+			        width: defaultOption.width
+			    }
+			);
+		}
+		function uploadImageToServer(fileURL){
+			var success = function (r) {
+				if( r.responseCode != 200 ){
+					defaultOption.onFail('上传图片到服务器失败，错误码为：'+r.responseCode);
+					return;
+				}
+				defaultOption.onSuccess(r.response);
+			}
+
+			var fail = function (error) {
+				defaultOption.onFail('上传图片到服务器失败 '+ error.code);
+			}
+
+			var options = new window.FileUploadOptions();
+			options.fileKey = "data";
+			options.fileName = fileURL.substr(fileURL.lastIndexOf('/') + 1);
+			options.mimeType = "text/plain";
+
+			var fileTransfer = new window.FileTransfer();
+			fileTransfer.onprogress = function(progressEvent) {
+			    if (progressEvent.lengthComputable) {
+			    	var precent =  Math.ceil(100 * (progressEvent.loaded / progressEvent.total));
+			    	defaultOption.onProgress(precent);
+			    }
+			};
+			fileTransfer.upload(fileURL, encodeURI(defaultOption.url), success, fail, options);
+		}
+		function go(){
+			defaultOption.onOpen();
+			chooseImage(function(url){
+				uploadImageToServer(url);
+			});
+		}
+		$('#'+defaultOption.target).click(go);
+	},
 	_wxImage:function(defaultOption){
 		var currentLocalId = null;
 		var currentServerId = null;
@@ -460,6 +512,8 @@ module.exports = {
 		//处理
 		if( $.os.wx ){
 			return this._wxImage(defaultOption);
+		}else if( window.imagePicker ){
+			return this._cordovaImage(defaultOption);
 		}else{
 			return this.image( defaultOption );
 		}
