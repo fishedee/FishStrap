@@ -9969,6 +9969,19 @@ var ReactDefaultPerf = {
       time: totalTime,
       args: args
     });
+    // What I added:
+    // parse react ids from markup
+    var created = 
+      ReactDefaultPerf
+        ._allMeasurements[ReactDefaultPerf._allMeasurements.length - 1]
+        .created;
+    if (args.markup !== undefined && fnName === 'INSERT_MARKUP') {
+      var split = args.markup.split('data-reactid="');
+      for (var i = 1; i < split.length; i++) {
+        var split_id = split[i].substring(0, split[i].indexOf('"'));
+        created[split_id] = true;
+      }
+    } 
   },
 
   measure: function(moduleName, fnName, func) {
@@ -9989,6 +10002,7 @@ var ReactDefaultPerf = {
           render: {},
           counts: {},
           writes: {},
+          created: [],
           displayNames: {},
           totalTime: 0
         });
@@ -10113,7 +10127,7 @@ module.exports = ReactDefaultPerf;
 var assign = _dereq_(29);
 
 // Don't try to save users less than 1.2ms (a number I made up)
-var DONT_CARE_THRESHOLD = 1.2;
+var DONT_CARE_THRESHOLD = 0;
 var DOM_OPERATION_TYPES = {
   '_mountImageIntoNode': 'set innerHTML',
   INSERT_MARKUP: 'set innerHTML',
@@ -10287,6 +10301,11 @@ function getUnchangedComponents(measurement) {
         isDirty = true;
         break;
       }
+    }
+     // What I added:
+    // check if component newly created
+    if (measurement.created[id]) {
+      isDirty = true;
     }
     if (!isDirty && measurement.counts[id] > 0) {
       cleanComponents[id] = true;
