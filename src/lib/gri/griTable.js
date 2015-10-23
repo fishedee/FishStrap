@@ -1059,7 +1059,7 @@
                 var sltRowNumSpan = document.createElement("span");
                 sltRowNumSpan.className = 'gri_datatable_pg_rowcount';
                 sltRowNumSpan.innerHTML = "<select class='gri_datatable_rownum ipt_show '>" +
-                    "<option value='5'>5</option><option value='10'>10</option><option value='15'>15</option><option value='20'>20</option><option value='30'>30</option><option value='50'>50</option><option value='80'>80</option><option value='100'>100</option><option value='200'>200</option>" +
+                    "<option value='5'>5</option><option value='10'>10</option><option value='15'>15</option><option value='20'>20</option><option value='30'>30</option><option value='50'>50</option><option value='80'>80</option><option value='100'>100</option><option value='200'>200</option><option value='1000'>1000</option><option value='5000'>5000</option>" +
                     "</select> 条";
 
                 spanTotal.appendChild(sltRowNumSpan);
