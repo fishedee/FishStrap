@@ -343,9 +343,9 @@ module.exports = {
 				return;
 			var result;
 			if(this.contentWindow){
-				result = $(this.contentWindow.document.body).html();
+				result = $(this.contentWindow.document.body).text();
 			}else{
-				result = $(this.contentDocument.document.body).html();
+				result = $(this.contentDocument.document.body).text();
 			}
 			clearInterval(defaultOption._progressInterval);
 			defaultOption.onProgress(100);
@@ -512,8 +512,11 @@ module.exports = {
 		//处理
 		if( $.os.wx ){
 			return this._wxImage(defaultOption);
-		}else if( window.imagePicker ){
-			return this._cordovaImage(defaultOption);
+		}else if( $.os.crosswalk ){
+			defaultOption.type = 'png|jpg|jpeg|gif|bmp';
+			defaultOption.accept = 'image/*';
+			defaultOption.maxSize = 1024*1024*8;
+			return this.file( defaultOption );
 		}else{
 			return this.image( defaultOption );
 		}
