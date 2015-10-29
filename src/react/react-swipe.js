@@ -1,5 +1,8 @@
 var Swipe = require('../module/swipe.js');
 
+var width = $(window).width();
+if( width >= 600 )
+  width = 600
 var styles = {
 	container: {
 		overflow: 'hidden',
@@ -12,7 +15,7 @@ var styles = {
 	},
 	child: {
 		float: 'left',
-		width: $(window).width()+'px',
+		width: width +'px',
 		position: 'relative'
 	}
 };
