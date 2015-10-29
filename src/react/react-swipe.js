@@ -12,7 +12,7 @@ var styles = {
 	},
 	child: {
 		float: 'left',
-		width: '100%',
+		width: $(window).width()+'px',
 		position: 'relative'
 	}
 };
