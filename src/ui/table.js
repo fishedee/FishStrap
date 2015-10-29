@@ -399,57 +399,21 @@ module.exports = {
 			});
 			return singleData;
 		}
-		function getAllData(next){
-			$.get(sendUrl,{},function(data){
-				data = $.JSON.parse(data);
-				if( data.code != 0 ){
-					dialog.message(data.msg);
-					return;
-				}
-				next(data.data.data);
-			});
-		}
-		function getCurrentData(next){
-			$.get(sendUrl+"&pageIndex="+defaultOption.pageIndex+"&pageSize="+defaultOption.pageSize,{},function(data){
-				data = $.JSON.parse(data);
-				if( data.code != 0 ){
-					dialog.message(data.msg);
-					return;
-				}
-				next(data.data.data);
-			});
-		}
-		function exportToExcel(title,data){
-			var excelData = [];
-
-			//列名
-			var single = [];
-			for( var i in _option.fields ){
-				single.push( _option.fields[i].thText );
-			}
-			excelData.push(single);
-
-			//列数据
-			for( var i in data ){
-				var single = [];
-				for( var j in _option.fields ){
-					single.push( data[i][j] );
-				}
-				excelData.push(single);
-			}
-			
+		function exportData(type,title,url){
+			var urlInfo = $.url.toInfo(url)
 			//导出
-			var excelFormId = 'excel-form'+$.uniqueNum();
-			var excelUrl = '/excel/exportFromUser';
-			var form = 
-			'<form action="'+excelUrl+'" method="post" style="display:none">'+
-				'<input type="text" name="title" class="input-small"/>'+
-				'<input type="text" name="data" class="input-small"/>'+
-			'</form>';
+			var form = "";
+			form += '<form action="'+urlInfo.originpathname+'" method="get" style="display:none">';
+			for( i in urlInfo.search ){
+				var key = i;
+				var value = urlInfo.search[i];
+				form += '<input type="text" name="'+key+'" class="input-small" value="'+encodeURIComponent(value)+'"/>';
+			}
+			form += '<input type="text" name="title" class="input-small" value="'+encodeURIComponent(title)+'"/>';
+			form += '<input type="text" name="_view" class="input-small" value="'+encodeURIComponent(type)+'"/>';
+			form += '</form>';
 			form = $(form);
 			$('body').append(form);
-			form.find('[name=title]').val(title);
-			form.find('[name=data]').val(JSON.stringify(excelData));
 			form.submit();
 		}
 		return {
@@ -462,15 +426,33 @@ module.exports = {
 				});
 				return data;
 			},
+			exportAllDataToTxt:function(title){
+				exportData(
+					'txt',
+					title,
+					sendUrl
+				);
+			},
+			exportCurrentDataToTxt:function(title){
+				exportData(
+					'txt',
+					title,
+					sendUrl+"&pageIndex="+defaultOption.pageIndex+"&pageSize="+defaultOption.pageSize
+				);
+			},
 			exportAllDataToExcel:function(title){
-				getAllData(function(data){
-					exportToExcel(title,data);
-				});
+				exportData(
+					'excel',
+					title,
+					sendUrl
+				);
 			},
 			exportCurrentDataToExcel:function(title){
-				getCurrentData(function(data){
-					exportToExcel(title,data);
-				});
+				exportData(
+					'excel',
+					title,
+					sendUrl+"&pageIndex="+defaultOption.pageIndex+"&pageSize="+defaultOption.pageSize
+				);
 			},
 		};
 	},
