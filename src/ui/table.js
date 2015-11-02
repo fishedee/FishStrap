@@ -401,6 +401,11 @@ module.exports = {
 		}
 		function exportData(type,title,url){
 			var urlInfo = $.url.toInfo(url)
+			//设置格式化数据
+			var _viewFormat = {}
+			for( var i in _option.fields ){
+				_viewFormat[i] = _option.fields[i].thText
+			}
 			//导出
 			var form = "";
 			form += '<form action="'+urlInfo.originpathname+'" method="get" style="display:none">';
@@ -411,6 +416,7 @@ module.exports = {
 			}
 			form += '<input type="text" name="title" class="input-small" value="'+encodeURIComponent(title)+'"/>';
 			form += '<input type="text" name="_view" class="input-small" value="'+encodeURIComponent(type)+'"/>';
+			form += '<input type="text" name="_viewFormat" class="input-small" value="'+encodeURIComponent(JSON.stringify(_viewFormat))+'"/>';
 			form += '</form>';
 			form = $(form);
 			$('body').append(form);
