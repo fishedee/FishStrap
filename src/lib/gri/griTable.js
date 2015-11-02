@@ -979,10 +979,25 @@
                     if (this.page.count > len + 1) {
 
                         //创建"..."
-                        var strong = document.createElement('span');
-                        strong.className = this.page.dotClass;
-                        strong.innerHTML = '...';
-                        page_right_div.appendChild(strong);
+
+                        var a = document.createElement('A');
+                        a.className = this.page.dotClass;
+                        a.innerHTML = '...';
+                        this.addEvent(a,'click',function(){
+                            var index = prompt('请输入直达跳转的页数');
+                            if( index >= _this.page.count )
+                                index = _this.page.count;
+                            if( index <= 1 )
+                                index = 1
+                            _this.page.index = index - 1;
+                            if (_this.page.ifRealPage) {
+                                _this.createJsonTable(_this);
+                            } else {
+                                _this.createTable(_this.options);
+                            }
+                        })
+                        a.setAttribute('href', 'javascript:void(0);');
+                        page_right_div.appendChild(a);
                     }
 
                     //创建"最后页"
