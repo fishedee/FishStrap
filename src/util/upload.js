@@ -500,6 +500,62 @@ module.exports = {
 		}
 		$('#'+defaultOption.target).click(go);
 	},
+	_crossImage:function(defaultOption){
+		var currentImage = null;
+		function chooseImage(next){
+			$._ajax({
+				url:'/crossapi/image/choose',
+				data:{isShowCamera:true,count:1},
+				success:function(data){
+					data = $.JSON.parse(data);
+					if(data.code != 0 ){
+						alert(data.msg);
+						return;
+					}
+					if( data.data.length == 0 ){
+						return;
+					}
+					defaultOption.onOpen();
+				    defaultOption.onProgress(0);
+				    currentImage = data.data[0];
+				    next();
+				},
+				error:function(xhr,data){
+					alert(data);
+				}
+			});
+		}
+		function uploadImage(next){
+			$._ajax({
+				url:'/crossapi/image/upload',
+				data:{
+					url:defaultOption.url,
+					image:currentImage,
+					field:'data',
+					maxWidth:defaultOption.width,
+					maxHeight:defaultOption.height
+				},
+				success:function(data){
+					data = $.JSON.parse(data);
+					if(data.code != 0 ){
+						defaultOption.onFail(data.msg);
+						return;
+					}
+					defaultOption.onProgress(100);
+					defaultOption.onSuccess(data.data);
+				},
+				error:function(xhr,data){
+					defaultOption.onFail(data);
+				}
+			});
+		}
+		function go(){
+			chooseImage(function(){
+				uploadImage();
+			});
+		}
+		$('#'+defaultOption.target).click(go);
+	},
 	imageV3:function( option ){
 		//初始化option
 		var defaultOption = {
@@ -527,6 +583,8 @@ module.exports = {
 			defaultOption.accept = 'image/*';
 			defaultOption.maxSize = 1024*1024*8;
 			return this.file( defaultOption );
+		}else if( $.os.crossapi ){
+			return this._crossImage(defaultOption);
 		}else{
 			return this.image( defaultOption );
 		}
