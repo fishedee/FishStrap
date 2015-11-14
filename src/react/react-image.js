@@ -8,17 +8,16 @@ module.exports =  React.createClass({
 		var scale = this.props.scale;
 		var width = dom.width();
 		var height = width*scale;
-		dom.attr('src','data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC');
-		dom.attr('width',width);
-		dom.attr('height',height);
-		var img = new Image();  
-	    img.onload = function(){
-	    	dom.attr('src',src);
-	    };
-	    img.src = src;
+		dom.css('background','grey');
+		dom.css('width',width);
+		dom.css('height',height);
+		dom.attr('src',src);
     },
 	componentDidMount: function(){
-		this.updateImage( this.props.src );
+		var self = this;
+		setTimeout(function(){
+			self.updateImage( self.props.src );
+		},100);
 	},
 	componentWillReceiveProps:function(nextProps){
 		if( this.props.src != nextProps.src )
