@@ -36,10 +36,13 @@ function transformSingleObjectToCss(value,originKey){
 	var key = originKey.replace(/[A-Z]+/g,function(word){
 		return '-'+word.toLowerCase();
 	});
-	result += key + ':' + value + ';';
+	var prefixes = [""];
 	if( prefixesProperties.hasOwnProperty(originKey) ){
-		for( var j = 0 ;j != prefixes.length ; ++j ){
-			result += prefixes[j] + key + ':' + value + ';';
+		prefixes = prefixes.concat(prefixes);
+	}
+	for( var i in prefixes ){
+		for( var j in value ){
+			result += prefixes[i] + key + ':' + value[j] + ';';
 		}
 	}
 	return result;
@@ -49,10 +52,15 @@ function transformObjectToCss(obj,namespace){
 	var childrenResult = '';
 	currentResult += namespace+'{';
 	for( var i in obj ){
-		if( typeof(obj[i]) != 'object' )
-			currentResult += transformSingleObjectToCss(obj[i],i);
-		else
-			childrenResult += transformObjectToCss(obj[i],namespace+i);
+		if( typeof obj[i] == 'object'){
+			if( obj[i].constructor != Array ){
+				childrenResult += transformObjectToCss(obj[i],namespace+i);
+			}else{
+				currentResult += transformSingleObjectToCss(obj[i],i);
+			}
+		}else{
+			currentResult += transformSingleObjectToCss([obj[i]],i);
+		}	
 	}
 	currentResult += '}';
 	return currentResult+childrenResult;
@@ -99,7 +107,7 @@ function transformObjectToClass(obj){
 function extendDeep(leftObj,rightObj){
 	for( var i in rightObj ){
 		if( leftObj.hasOwnProperty(i) ){
-			if( typeof(leftObj[i]) == 'object' && typeof(rightObj[i]) == 'object')
+			if( typeof leftObj[i] == 'object' && typeof rightObj[i] == 'object')
 				leftObj[i] = extendDeep(leftObj[i],rightObj[i]);
 			else
 				leftObj[i] = rightObj[i];

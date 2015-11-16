@@ -24,11 +24,6 @@ module.exports =  React.createClass({
 			this.updateImage( nextProps.src );
 	},
 	render: function() {
-		return React.createElement('img',{
-			key:this.props.key,
-			onClick:this.props.onClick,
-			className:this.props.className,
-			style:this.props.style
-		});
+		return React.createElement('img',this.props);
 	}
 });
