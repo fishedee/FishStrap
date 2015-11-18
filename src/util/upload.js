@@ -578,13 +578,13 @@ module.exports = {
 		//处理
 		if( $.os.wx ){
 			return this._wxImage(defaultOption);
+		}else if( $.os.crossapi ){
+			return this._crossImage(defaultOption);
 		}else if( $.os.crosswalk ){
 			defaultOption.type = 'png|jpg|jpeg|gif|bmp';
 			defaultOption.accept = 'image/*';
 			defaultOption.maxSize = 1024*1024*8;
 			return this.file( defaultOption );
-		}else if( $.os.crossapi ){
-			return this._crossImage(defaultOption);
 		}else{
 			return this.image( defaultOption );
 		}
