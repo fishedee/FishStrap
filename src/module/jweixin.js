@@ -1,8 +1,7 @@
 ! function(a, b) {
-    if( "function" == typeof define)
-    	module.exports = b(a);
-    else
-    	b(a, !0)
+    "function" == typeof define && (define.amd || define.cmd) ? define(function() {
+        return b(a)
+    }) : b(a, !0)
 }(window, function(a, b) {
     function c(b, c, d) {
         a.WeixinJSBridge ? WeixinJSBridge.invoke(b, e(c), function(a) {
@@ -17,7 +16,7 @@
     }
 
     function e(a) {
-        return a = a || {}, a.appId = z.appId, a.verifyAppId = z.appId, a.verifySignType = "sha1", a.verifyTimestamp = z.timestamp + "", a.verifyNonceStr = z.nonceStr, a.verifySignature = z.signature, a
+        return a = a || {}, a.appId = C.appId, a.verifyAppId = C.appId, a.verifySignType = "sha1", a.verifyTimestamp = C.timestamp + "", a.verifyNonceStr = C.nonceStr, a.verifySignature = C.signature, a
     }
 
     function f(a) {
@@ -32,7 +31,7 @@
 
     function g(a, b, c) {
         var d, e, f;
-        switch (delete b.err_code, delete b.err_desc, delete b.err_detail, d = b.errMsg, d || (d = b.err_msg, delete b.err_msg, d = h(a, d, c), b.errMsg = d), c = c || {}, c._complete && (c._complete(b), delete c._complete), d = b.errMsg || "", z.debug && !c.isInnerInvoke && alert(JSON.stringify(b)), e = d.indexOf(":"), f = d.substring(e + 1)) {
+        switch (delete b.err_code, delete b.err_desc, delete b.err_detail, d = b.errMsg, d || (d = b.err_msg, delete b.err_msg, d = h(a, d), b.errMsg = d), c = c || {}, c._complete && (c._complete(b), delete c._complete), d = b.errMsg || "", C.debug && !c.isInnerInvoke && alert(JSON.stringify(b)), e = d.indexOf(":"), f = d.substring(e + 1)) {
             case "ok":
                 c.success && c.success(b);
                 break;
@@ -46,23 +45,9 @@
     }
 
     function h(a, b) {
-        var d, e, f, g;
-        if (b) {
-            switch (d = b.indexOf(":"), a) {
-                case o.config:
-                    e = "config";
-                    break;
-                case o.openProductSpecificView:
-                    e = "openProductSpecificView";
-                    break;
-                default:
-                    e = b.substring(0, d), e = e.replace(/_/g, " "), e = e.replace(/\b\w+\b/g, function(a) {
-                        return a.substring(0, 1).toUpperCase() + a.substring(1)
-                    }), e = e.substring(0, 1).toLowerCase() + e.substring(1), e = e.replace(/ /g, ""), -1 != e.indexOf("Wcpay") && (e = e.replace("Wcpay", "WCPay")), f = p[e], f && (e = f)
-            }
-            g = b.substring(d + 1), "confirm" == g && (g = "ok"), "failed" == g && (g = "fail"), -1 != g.indexOf("failed_") && (g = g.substring(7)), -1 != g.indexOf("fail_") && (g = g.substring(5)), g = g.replace(/_/g, " "), g = g.toLowerCase(), ("access denied" == g || "no permission to execute" == g) && (g = "permission denied"), "config" == e && "function not exist" == g && (g = "ok"), b = e + ":" + g
-        }
-        return b
+        var e, f, c = a,
+            d = p[c];
+        return d && (c = d), e = "ok", b && (f = b.indexOf(":"), e = b.substring(f + 1), "confirm" == e && (e = "ok"), "failed" == e && (e = "fail"), -1 != e.indexOf("failed_") && (e = e.substring(7)), -1 != e.indexOf("fail_") && (e = e.substring(5)), e = e.replace(/_/g, " "), e = e.toLowerCase(), ("access denied" == e || "no permission to execute" == e) && (e = "permission denied"), "config" == c && "function not exist" == e && (e = "ok"), "" == e && (e = "fail")), b = c + ":" + e
     }
 
     function i(a) {
@@ -74,20 +59,20 @@
     }
 
     function j(a, b) {
-        if (z.debug && !b.isInnerInvoke) {
+        if (!(!C.debug || b && b.isInnerInvoke)) {
             var c = p[a];
             c && (a = c), b && b._complete && delete b._complete, console.log('"' + a + '",', b || "")
         }
     }
 
     function k() {
-        if (!("6.0.2" > w || y.systemType < 0)) {
+        if (!(u || v || C.debug || "6.0.2" > z || B.systemType < 0)) {
             var b = new Image;
-            y.appId = z.appId, y.initTime = x.initEndTime - x.initStartTime, y.preVerifyTime = x.preVerifyEndTime - x.preVerifyStartTime, C.getNetworkType({
+            B.appId = C.appId, B.initTime = A.initEndTime - A.initStartTime, B.preVerifyTime = A.preVerifyEndTime - A.preVerifyStartTime, F.getNetworkType({
                 isInnerInvoke: !0,
                 success: function(a) {
-                    y.networkType = a.networkType;
-                    var c = "https://open.weixin.qq.com/sdk/report?v=" + y.version + "&o=" + y.isPreVerifyOk + "&s=" + y.systemType + "&c=" + y.clientVersion + "&a=" + y.appId + "&n=" + y.networkType + "&i=" + y.initTime + "&p=" + y.preVerifyTime + "&u=" + y.url;
+                    B.networkType = a.networkType;
+                    var c = "https://open.weixin.qq.com/sdk/report?v=" + B.version + "&o=" + B.isPreVerifyOk + "&s=" + B.systemType + "&c=" + B.clientVersion + "&a=" + B.appId + "&n=" + B.networkType + "&i=" + B.initTime + "&p=" + B.preVerifyTime + "&u=" + B.url;
                     b.src = c
                 }
             })
@@ -99,17 +84,17 @@
     }
 
     function m(b) {
-        t && (a.WeixinJSBridge ? b() : q.addEventListener && q.addEventListener("WeixinJSBridgeReady", b, !1))
+        w && (a.WeixinJSBridge ? b() : q.addEventListener && q.addEventListener("WeixinJSBridgeReady", b, !1))
     }
 
     function n() {
-        C.invoke || (C.invoke = function(b, c, d) {
+        F.invoke || (F.invoke = function(b, c, d) {
             a.WeixinJSBridge && WeixinJSBridge.invoke(b, e(c), d)
-        }, C.on = function(b, c) {
+        }, F.on = function(b, c) {
             a.WeixinJSBridge && WeixinJSBridge.on(b, c)
         })
     }
-    var o, p, q, r, s, t, u, v, w, x, y, z, A, B, C;
+    var o, p, q, r, s, t, u, v, w, x, y, z, A, B, C, D, E, F;
     if (!a.jWeixin) return o = {
         config: "preVerifyJSAPI",
         onMenuShareTimeline: "menu:share:timeline",
@@ -127,66 +112,66 @@
         var b, a = {};
         for (b in o) a[o[b]] = b;
         return a
-    }(), q = a.document, r = q.title, s = navigator.userAgent.toLowerCase(), t = -1 != s.indexOf("micromessenger"), u = -1 != s.indexOf("android"), v = -1 != s.indexOf("iphone") || -1 != s.indexOf("ipad"), w = function() {
+    }(), q = a.document, r = q.title, s = navigator.userAgent.toLowerCase(), t = navigator.platform.toLowerCase(), u = !(!t.match("mac") && !t.match("win")), v = -1 != s.indexOf("wxdebugger"), w = -1 != s.indexOf("micromessenger"), x = -1 != s.indexOf("android"), y = -1 != s.indexOf("iphone") || -1 != s.indexOf("ipad"), z = function() {
         var a = s.match(/micromessenger\/(\d+\.\d+\.\d+)/) || s.match(/micromessenger\/(\d+\.\d+)/);
         return a ? a[1] : ""
-    }(), x = {
+    }(), A = {
         initStartTime: l(),
         initEndTime: 0,
         preVerifyStartTime: 0,
         preVerifyEndTime: 0
-    }, y = {
+    }, B = {
         version: 1,
         appId: "",
         initTime: 0,
         preVerifyTime: 0,
         networkType: "",
         isPreVerifyOk: 1,
-        systemType: v ? 1 : u ? 2 : -1,
-        clientVersion: w,
+        systemType: y ? 1 : x ? 2 : -1,
+        clientVersion: z,
         url: encodeURIComponent(location.href)
-    }, z = {}, A = {
+    }, C = {}, D = {
         _completes: []
-    }, B = {
+    }, E = {
         state: 0,
-        res: {}
+        data: {}
     }, m(function() {
-        x.initEndTime = l()
-    }), C = {
+        A.initEndTime = l()
+    }), F = {
         config: function(a) {
-            z = a, j("config", a);
-            var b = z.check === !1 ? !1 : !0;
+            C = a, j("config", a);
+            var b = C.check === !1 ? !1 : !0;
             m(function() {
                 var a, d, e;
                 if (b) c(o.config, {
-                    verifyJsApiList: i(z.jsApiList)
+                    verifyJsApiList: i(C.jsApiList)
                 }, function() {
-                    A._complete = function(a) {
-                        x.preVerifyEndTime = l(), B.state = 1, B.res = a
-                    }, A.success = function() {
-                        y.isPreVerifyOk = 0
-                    }, A.fail = function(a) {
-                        A._fail ? A._fail(a) : B.state = -1
+                    D._complete = function(a) {
+                        A.preVerifyEndTime = l(), E.state = 1, E.data = a
+                    }, D.success = function() {
+                        B.isPreVerifyOk = 0
+                    }, D.fail = function(a) {
+                        D._fail ? D._fail(a) : E.state = -1
                     };
-                    var a = A._completes;
+                    var a = D._completes;
                     return a.push(function() {
-                        z.debug || k()
-                    }), A.complete = function() {
+                        k()
+                    }), D.complete = function() {
                         for (var c = 0, d = a.length; d > c; ++c) a[c]();
-                        A._completes = []
-                    }, A
-                }()), x.preVerifyStartTime = l();
+                        D._completes = []
+                    }, D
+                }()), A.preVerifyStartTime = l();
                 else {
-                    for (B.state = 1, a = A._completes, d = 0, e = a.length; e > d; ++d) a[d]();
-                    A._completes = []
+                    for (E.state = 1, a = D._completes, d = 0, e = a.length; e > d; ++d) a[d]();
+                    D._completes = []
                 }
-            }), z.beta && n()
+            }), C.beta && n()
         },
         ready: function(a) {
-            0 != B.state ? a() : (A._completes.push(a), !t && z.debug && a())
+            0 != E.state ? a() : (D._completes.push(a), !w && C.debug && a())
         },
         error: function(a) {
-            "6.0.2" > w || (-1 == B.state ? a(B.res) : A._fail = a)
+            "6.0.2" > z || (-1 == E.state ? a(E.data) : D._fail = a)
         },
         checkJsApi: function(a) {
             var b = function(a) {
@@ -198,7 +183,7 @@
                 jsApiList: i(a.jsApiList)
             }, function() {
                 return a._complete = function(a) {
-                    if (u) {
+                    if (x) {
                         var c = a.checkResult;
                         c && (a.checkResult = JSON.parse(c))
                     }
@@ -213,7 +198,9 @@
                         title: a.title || r,
                         desc: a.title || r,
                         img_url: a.imgUrl || "",
-                        link: a.link || location.href
+                        link: a.link || location.href,
+                        type: a.type || "link",
+                        data_url: a.dataUrl || ""
                     }, a)
                 }
             }, a)
@@ -317,10 +304,11 @@
             c("chooseImage", {
                 scene: "1|2",
                 count: a.count || 9,
-                sizeType: a.sizeType || ["original", "compressed"]
+                sizeType: a.sizeType || ["original", "compressed"],
+                sourceType: a.sourceType || ["album", "camera"]
             }, function() {
                 return a._complete = function(a) {
-                    if (u) {
+                    if (x) {
                         var b = a.localIds;
                         b && (a.localIds = JSON.parse(b))
                     }
@@ -392,9 +380,7 @@
             c("showOptionMenu", {}, a)
         },
         closeWindow: function(a) {
-            a = a || {}, c("closeWindow", {
-                immediate_close: a.immediateClose || 0
-            }, a)
+            a = a || {}, c("closeWindow", {}, a)
         },
         hideMenuItems: function(a) {
             c("hideMenuItems", {
@@ -419,14 +405,15 @@
             }, function() {
                 return a._complete = function(a) {
                     var b, c;
-                    v && (b = a.resultStr, b && (c = JSON.parse(b), a.resultStr = c && c.scan_code && c.scan_code.scan_result))
+                    y && (b = a.resultStr, b && (c = JSON.parse(b), a.resultStr = c && c.scan_code && c.scan_code.scan_result))
                 }, a
             }())
         },
         openProductSpecificView: function(a) {
             c(o.openProductSpecificView, {
                 pid: a.productId,
-                view_type: a.viewType || 0
+                view_type: a.viewType || 0,
+                ext_info: a.extInfo
             }, a)
         },
         addCard: function(a) {
@@ -450,7 +437,7 @@
         },
         chooseCard: function(a) {
             c("chooseCard", {
-                app_id: z.appId,
+                app_id: C.appId,
                 location_id: a.shopId || "",
                 sign_type: a.signType || "SHA1",
                 card_id: a.cardId || "",
@@ -478,5 +465,7 @@
         chooseWXPay: function(a) {
             c(o.chooseWXPay, f(a), a)
         }
-    }, b && (a.wx = a.jWeixin = C), C
+    }, b && (a.wx = a.jWeixin = F), F
 });
+
+module.exports = window.jWeixin;
