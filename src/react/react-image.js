@@ -15,7 +15,9 @@ module.exports =  React.createClass({
     },
 	componentDidMount: function(){
 		var self = this;
-		self.updateImage( self.props.src );
+		setTimeout(function(){
+			self.updateImage( self.props.src );
+		},0);
 	},
 	componentWillReceiveProps:function(nextProps){
 		if( this.props.src != nextProps.src )
