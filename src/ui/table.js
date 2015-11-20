@@ -436,6 +436,7 @@ module.exports = {
 				dialog.input('请输入需要导出txt的页数（不填代表导出本页数据）',function(pageSize){
 					if( pageSize == '')
 						pageSize = 1;
+					pageSize = defaultOption.pageSize * pageSize;
 					var url = sendUrl+"&pageIndex="+defaultOption.pageIndex+"&pageSize="+pageSize;
 					exportData(
 						'txt',
@@ -448,6 +449,7 @@ module.exports = {
 				dialog.input('请输入需要导出excel的页数（不填代表导出本页数据）',function(pageSize){
 					if( pageSize == '')
 						pageSize = 1;
+					pageSize = defaultOption.pageSize * pageSize;
 					var url = sendUrl+"&pageIndex="+defaultOption.pageIndex+"&pageSize="+pageSize;
 					exportData(
 						'excel',
