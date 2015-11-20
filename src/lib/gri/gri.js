@@ -443,7 +443,7 @@ GRI.Dialog = function(json, callback) {
 	}, buttonClick = function(btnName) {
 		//仅支持第一个按钮的点击调用回调函数
 		(btnName == 'btn1' && callback) ? function() {
-			callback();
+			callback($('#' + self.dialogId));
 			if(opts.extra.autoClose) {
 				self.hideWindows();
 			}

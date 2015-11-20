@@ -414,7 +414,7 @@ module.exports = {
 				var value = urlInfo.search[i];
 				form += '<input type="text" name="'+key+'" class="input-small" value="'+encodeURIComponent(value)+'"/>';
 			}
-			form += '<input type="text" name="title" class="input-small" value="'+encodeURIComponent(title)+'"/>';
+			form += '<input type="text" name="_viewTitle" class="input-small" value="'+encodeURIComponent(title)+'"/>';
 			form += '<input type="text" name="_view" class="input-small" value="'+encodeURIComponent(type)+'"/>';
 			form += '<input type="text" name="_viewFormat" class="input-small" value="'+encodeURIComponent(JSON.stringify(_viewFormat))+'"/>';
 			form += '</form>';
@@ -432,33 +432,29 @@ module.exports = {
 				});
 				return data;
 			},
-			exportAllDataToTxt:function(title){
-				exportData(
-					'txt',
-					title,
-					sendUrl
-				);
+			exportDataToTxt:function(title){
+				dialog.input('请输入需要导出txt的页数（不填代表导出本页数据）',function(pageSize){
+					if( pageSize == '')
+						pageSize = 1;
+					var url = sendUrl+"&pageIndex="+defaultOption.pageIndex+"&pageSize="+pageSize;
+					exportData(
+						'txt',
+						title,
+						url
+					);
+				});
 			},
-			exportCurrentDataToTxt:function(title){
-				exportData(
-					'txt',
-					title,
-					sendUrl+"&pageIndex="+defaultOption.pageIndex+"&pageSize="+defaultOption.pageSize
-				);
-			},
-			exportAllDataToExcel:function(title){
-				exportData(
-					'excel',
-					title,
-					sendUrl
-				);
-			},
-			exportCurrentDataToExcel:function(title){
-				exportData(
-					'excel',
-					title,
-					sendUrl+"&pageIndex="+defaultOption.pageIndex+"&pageSize="+defaultOption.pageSize
-				);
+			exportDataToExcel:function(title){
+				dialog.input('请输入需要导出excel的页数（不填代表导出本页数据）',function(pageSize){
+					if( pageSize == '')
+						pageSize = 1;
+					var url = sendUrl+"&pageIndex="+defaultOption.pageIndex+"&pageSize="+pageSize;
+					exportData(
+						'excel',
+						title,
+						url
+					);
+				});
 			},
 		};
 	},

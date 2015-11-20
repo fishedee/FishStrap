@@ -26,6 +26,27 @@ module.exports = {
 			$._dialogAjax(opt);
 		}
 	},
+	input:function(msg,callback,defaultValue){
+		var title = '提示信息';
+		var itype = 1;
+		var desc ='';
+		if( typeof defaultValue == 'undefined' )
+			defaultValue = '';
+		var dialog = new GRI.Dialog({ 
+			title : '提示信息', 
+			type : itype, 
+			btnType : 1, 
+			content : '<div style="margin-top:20px;margin-left:50px;"><p style="font-size:14px;">'+msg+'</p><input value="'+defaultValue+'" type="text" style="margin-top:15px;" autofocus="autofocus"/></div>',
+			winSize : 2,
+			desc:desc,
+			extra : {
+				zIndex : 99999,
+				winSize : 2
+			}
+		},function(dialog){
+			callback(dialog.find("input[type=text]").val());
+		}); 
+	},
 	message:function(msg,callback){
 		var title = '提示信息';
 		var itype = 3;
