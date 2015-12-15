@@ -7,10 +7,17 @@ module.exports =  React.createClass({
     	var dom = $(this.getDOMNode());
 		var scale = this.props.scale;
 		var width = dom.width();
-		var height = width*scale;
+		var height = dom.height();
 		dom.css('background','grey');
-		dom.css('width',width);
-		dom.css('height',height);
+		if( width != 0 ){
+			height = width*scale;
+			dom.css('width',width);
+			dom.css('height',height);
+		}else{
+			width = height/scale;
+			dom.css('width',width);
+			dom.css('height',height);
+		}
 		dom.attr('src',src);
     },
 	componentDidMount: function(){

@@ -101,38 +101,25 @@
                     '<div class="header" style="background-color: #FFF;color: #282828;height: 44px;line-height: 44px;font-size: 18px;position: absolute;top: 0;left: 0;right: 0;padding: 0;margin: 0 auto;text-align: center;max-width: 600px;">'+
                         '烘焙帮'+
                     '</div>'+
-                    '<div class="number" style="line-height:110px;font-size:18px;color:'+configMap.progressColor()+';text-align:center;position:absolute;top:0px;left:0px;right:0px;bottom:0px;margin:auto;height:110px;width:110px;">'+
-                        '<div>0%</div>'+
-                        '<ion-spinner class="spinner" style="stroke:#F95050;fill:#F95050;height: 110px !important;width:110px;position:absolute;top:0px;left:0px;">'+
-					      '<svg viewBox="0 0 64 64">'+
-					        '<g stroke-width="0">'+
-					          '<circle cx="24" cy="0" transform="translate(32,32)" r="5.15247">'+
-					            '<animate attributeName="r" dur="750ms" values="8;7;6;5;4;3;2;1;8" repeatCount="indefinite"></animate>'+
-					          '</circle>'+
-					          '<circle cx="16.970562748477143" cy="16.97056274847714" transform="translate(32,32)" r="6.15247">'+
-					            '<animate attributeName="r" dur="750ms" values="1;8;7;6;5;4;3;2;1" repeatCount="indefinite"></animate>'+
-					          '</circle>'+
-					          '<circle cx="1.4695761589768238e-15" cy="24" transform="translate(32,32)" r="7.15247">'+
-					            '<animate attributeName="r" dur="750ms" values="2;1;8;7;6;5;4;3;2" repeatCount="indefinite"></animate>'+
-					          '</circle>'+
-					          '<circle cx="-16.97056274847714" cy="16.970562748477143" transform="translate(32,32)" r="6.93269">'+
-					            '<animate attributeName="r" dur="750ms" values="3;2;1;8;7;6;5;4;3" repeatCount="indefinite"></animate>'+
-					          '</circle>'+
-					          '<circle cx="-24" cy="2.9391523179536475e-15" transform="translate(32,32)" r="1.15247">'+
-					            '<animate attributeName="r" dur="750ms" values="4;3;2;1;8;7;6;5;4" repeatCount="indefinite"></animate>'+
-					          '</circle>'+
-					          '<circle cx="-16.970562748477143" cy="-16.97056274847714" transform="translate(32,32)" r="2.15247">'+
-					            '<animate attributeName="r" dur="750ms" values="5;4;3;2;1;8;7;6;5" repeatCount="indefinite"></animate>'+
-					          '</circle>'+
-					          '<circle cx="-4.408728476930472e-15" cy="-24" transform="translate(32,32)" r="3.15247">'+
-					            '<animate attributeName="r" dur="750ms" values="6;5;4;3;2;1;8;7;6" repeatCount="indefinite"></animate>'+
-					          '</circle>'+
-					          '<circle cx="16.970562748477136" cy="-16.970562748477143" transform="translate(32,32)" r="4.15247">'+
-					            '<animate attributeName="r" dur="750ms" values="7;6;5;4;3;2;1;8;7" repeatCount="indefinite"></animate>'+
-					          '</circle>'+
-					        '</g>'+
-					      '</svg>'+
-					    '</ion-spinner>'+
+                    '<div class="number" style="line-height:50px;font-size:18px;color:'+configMap.progressColor()+';text-align:center;position:absolute;top:0px;left:0px;right:0px;bottom:0px;margin:auto;height:50px;width:50px;">'+
+                        '<ion-spinner icon="dots" class="spinner-dark spinner spinner-dots" style="stroke:#F95050;fill:#F95050;height: 50px !important;width:50px;position:absolute;top:0px;left:0px;">'+
+                         '<svg viewbox="0 0 64 64">'+
+                          '<g>'+
+                           '<circle cx="16" cy="32" stroke-width="0" r="5.5819">'+
+                            '<animate attributename="fill-opacity" dur="950ms" values=".5;.6;.8;1;.8;.6;.5;.5" repeatcount="indefinite"></animate>'+
+                            '<animate attributename="r" dur="950ms" values="3;3;4;5;6;5;4;3" repeatcount="indefinite"></animate>'+
+                           '</circle>'+
+                           '<circle cx="32" cy="32" stroke-width="0" r="5.4181">'+
+                            '<animate attributename="fill-opacity" dur="950ms" values=".5;.5;.6;.8;1;.8;.6;.5" repeatcount="indefinite"></animate>'+
+                            '<animate attributename="r" dur="950ms" values="4;3;3;4;5;6;5;4" repeatcount="indefinite"></animate>'+
+                           '</circle>'+
+                           '<circle cx="48" cy="32" stroke-width="0" r="4.4181">'+
+                            '<animate attributename="fill-opacity" dur="950ms" values=".6;.5;.5;.6;.8;1;.8;.6" repeatcount="indefinite"></animate>'+
+                            '<animate attributename="r" dur="950ms" values="5;4;3;3;4;5;6;5" repeatcount="indefinite"></animate>'+
+                           '</circle>'+
+                          '</g>'+
+                         '</svg>'+
+                        '</ion-spinner>'+
                     '</div>'+
                     '<div class="messagePage" style="position:absolute;top:0px;left:0px;right:0px;bottom:0px;margin:auto;height:280px;width:300px;">'+
                         '<div class="icon" style="height:120px;width:120px;background-size:120px 120px;background-repeat:no-repeat;background-position:center;margin:0 auto;"></div>'+
@@ -153,7 +140,7 @@
             };
         }
         function update(data){
-            progressBar.children[1].children[0].innerText = data + '%';
+            //progressBar.children[1].children[0].innerText = data + '%';
         }
         function end(){
             document.body.removeChild(progressBar);
