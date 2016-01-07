@@ -132,7 +132,7 @@ module.exports = React.createClass({
             		return React.cloneElement(child, {className:'swiper-slide'});
           		})
         	),
-          React.createElement('div',{className:'swiper-pagination'},null)
+          this.props.children.size > 1 ? React.createElement('div',{className:'swiper-pagination'},null):null
       );
     }
 });
