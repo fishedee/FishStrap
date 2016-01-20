@@ -18,6 +18,9 @@ module.exports =  React.createClass({
 			dom.css('width',width);
 			dom.css('height',height);
 		}
+		dom.load(function(){
+			dom.css('background','none');
+		});
 		dom.attr('src',src);
     },
 	componentDidMount: function(){
