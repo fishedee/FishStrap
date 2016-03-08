@@ -422,6 +422,28 @@ module.exports = {
 			$('body').append(form);
 			form.submit();
 		}
+		function exportDataAsync(type,title,pageIndex,pageSize){
+			//设置格式化数据
+			var _viewFormat = {}
+			for( var i in _option.fields ){
+				_viewFormat[i] = _option.fields[i].thText
+			}
+			//导出
+			$.get('/export/'+type,{
+				source:sendUrl,
+				pageIndex:pageIndex,
+				pageSize:pageSize,
+				viewTitle:title,
+				viewFormat:JSON.stringify(_viewFormat)
+			},function(data){
+				data = $.JSON.parse(data);
+				if( data.code != 0 ){
+					dialog.message(data.msg);
+					return;
+				}
+				dialog.message("导出数据成功，请稍候留意邮箱！");
+			})
+		}
 		return {
 			getCheckData:function(){
 				var target = $('#'+defaultOption.id+' .gri_td_checkbox:checked');
@@ -455,6 +477,19 @@ module.exports = {
 						'excel',
 						title,
 						url
+					);
+				});
+			},
+			exportDataToExcelAsync:function(title){
+				dialog.input('请输入需要导出excel的页数（不填代表导出本页数据）',function(pageSize){
+					if( pageSize == '')
+						pageSize = 1;
+					pageSize = defaultOption.pageSize * pageSize;
+					exportDataAsync(
+						'excel',
+						title,
+						defaultOption.pageIndex,
+						pageSize
 					);
 				});
 			},
