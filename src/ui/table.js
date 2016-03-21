@@ -331,6 +331,17 @@ module.exports = {
 				dialog.message(result.msg);
 				return;
 			}
+			var escapeDiv = $("<div/>");
+ 			var temp = result.data[_option.data];
+ 			for( var i in temp ){
+ 				var singleTemp = temp[i];
+ 				for( var j in singleTemp){
+ 					var singleTempData = singleTemp[j];
+ 					if( typeof singleTempData == 'string'){
+ 						singleTemp[j] = escapeDiv.text(singleTempData).html();
+ 					}
+ 				}
+ 			}
 			dt = GRI.initDataTable({
 				resultObj: result,
 				name: _option.data,
