@@ -492,7 +492,7 @@ $.addCssToHead = function(str_css) {
 			if( search[i] == '')
 				continue;
 
-			result.push( search[i] );
+			result.push( decodeURIComponent(search[i]) );
 		}
 		return result;
 	}
@@ -537,7 +537,6 @@ $.addCssToHead = function(str_css) {
 				};
 			}
 			//正则提取
-			url = decodeURI(url);
 			var regex = /^(?:([a-zA-Z]+):\/\/)?([^?#\/:]*)?(?::([0-9]+))?(?:(\/[^?#]*))?(\?[^#]*)?(#.*)?$/;
 			var regexInfo = regex.exec(url);
 
