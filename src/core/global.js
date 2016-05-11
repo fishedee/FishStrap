@@ -518,7 +518,7 @@ $.addCssToHead = function(str_css) {
 					url += '&';
 				url += i + '='+ encodeURIComponent(urlArgv[i]);
 			}
-			return encodeURI(url);
+			return url;
 		},
 		toInfo:function(url){
 			if( typeof(url) != 'string' ){
