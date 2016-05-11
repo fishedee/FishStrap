@@ -658,7 +658,7 @@ $.addCssToHead = function(str_css) {
 			for( var i in argv ){
 				hash += i+'='+encodeURIComponent(argv[i])+'&';
 			}
-			window.location.hash = '#'+encodeURI(hash);
+			window.location.hash = '#'+hash;
 		},
 		redirect:function(a){
 			location.href = a;
