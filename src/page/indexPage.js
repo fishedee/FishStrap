@@ -70,6 +70,7 @@ module.exports = {
 			'	width:200px;'+
 			'	background:#f5f5f5;'+
 			'	border-right:1px solid #eee;'+
+			'	overflow:auto;'+
 			'}'+
 			'#leftbar .category:first-child{'+
 			'	margin-top:15px;'+
