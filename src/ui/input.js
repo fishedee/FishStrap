@@ -50,7 +50,7 @@ module.exports = {
 				$('#'+defaultOption.id).find('input[name='+field.id+']').datetimepicker({
 					lang:'ch',
 					timepicker:false,
-					format: 'Y-m-d',
+					format: 'Y-m-d H:i:s',
 					closeOnDateSelect:true
 				});
 			}
@@ -98,14 +98,14 @@ module.exports = {
 		};
 		for( var i in option )
 			defaultOption[i] = option[i];
-		
+
 		//执行业务逻辑
 		var div = "";
 		var contentDiv = "";
 		$.console.log($.JSON.stringify(defaultOption.field));
 		for( var i = 0; i != defaultOption.field.length; ++i ){
 			var field = defaultOption.field[i];
-			contentDiv += 
+			contentDiv +=
 				'<tr>'+
 					'<td class="tableleft" style="width:20%;">'+field.name+'</td>';
 			if( typeof field.targetId != 'undefined'){
@@ -141,7 +141,7 @@ module.exports = {
 				field.tableId = $.uniqueNum();
 				field.fileTargetId = $.uniqueNum();
 				field.fileProgressTargetId = $.uniqueNum();
-				contentDiv += 
+				contentDiv +=
 					'<div id="'+field.tableId+'"></div>'+
 					'<div class="progress"><div class="bar" id="'+field.fileProgressTargetId+'"></div></div>'+
 					'<div class="btn" id="'+field.fileTargetId+'"><span>点击这里上传压缩文件</span></div>';
@@ -191,7 +191,7 @@ module.exports = {
 		var buttonDiv = '';
 		if( _.isUndefined(defaultOption.submit) == false ||
 			_.isUndefined(defaultOption.cancel) == false ){
-			buttonDiv += 
+			buttonDiv +=
 			'<tr>'+
 				'<td class="tableleft"></td>'+
 				'<td>';
@@ -199,7 +199,7 @@ module.exports = {
 				buttonDiv += '<button type="button" class="btn btn-primary submit" >提交</button>';
 			if( _.isUndefined(defaultOption.cancel) == false)
 				buttonDiv += '<button type="button" class="btn btn-success cancel">返回列表</button>';
-			buttonDiv += 
+			buttonDiv +=
 				'</td>'+
 			'</tr>';
 		}
@@ -314,7 +314,7 @@ module.exports = {
 					$('#'+defaultOption.id).find('input[name='+field.id+']').datetimepicker({
 						lang:'ch',
 						timepicker:false,
-						format: 'Y-m-d',
+						format: 'Y-m-d H:i:s',
 						closeOnDateSelect:true
 					});
 				}else if( field.type == 'table'){
