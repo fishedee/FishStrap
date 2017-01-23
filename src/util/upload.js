@@ -375,6 +375,73 @@ module.exports = {
 			});
 		});
 	},
+	video:function( option ){
+		var self = this;
+		//初始化option
+		var defaultOption = {
+			url:'',
+			target:'',
+			field:'',
+			type:null,
+			maxSize:null,
+			accept:null,
+			iframe:null,
+		};
+		defaultOption = $.extend(defaultOption,option);
+		//绘制图形
+		var div = "";
+		var formId = $.uniqueNum();
+		var frameId = $.uniqueNum();
+		var fileId = $.uniqueNum();
+		if(defaultOption.accept)
+			defaultOption.accept = 'accept="'+defaultOption.accept+'"';
+		if( !window.FormData || !window.File )
+			defaultOption.iframe = '<iframe name="'+frameId+'" id="'+frameId+'" style="display:none">';
+		div = '<form id="'+formId+'" action="'+defaultOption.url+'" target="'+frameId+'" method="post" enctype="multipart/form-data" style="opacity:0;filter:alpha(opacity=0);display:block;position:absolute;top:0px;bottom:0px;left:0px;right:0px;width:100%;height:100%;z-index:9;overflow:hidden;">'+
+			'<input type="file" id="'+fileId+'" style="width:100%;height:100%;font-size:1000px;" name="'+defaultOption.field+'"'+defaultOption.accept+'/>'+
+			defaultOption.iframe+
+		'</form>';
+		div = $(div);
+		$('#'+defaultOption.target).css('position','relative');
+		$('#'+defaultOption.target).append(div);
+		
+		//挂载iframe载入事件
+		if( defaultOption.iframe ){
+			$('#'+frameId).load(function(){
+				//iframe载入事件会触发两次，一次是空白页面，第二次是提交文件后的页面
+				//检查progress是否存在就能区分这两种事件了。
+				if(!defaultOption._progress)
+					return;
+				var result;
+				if(this.contentWindow){
+					result = $(this.contentWindow.document.body).text();
+				}else{
+					result = $(this.contentDocument.document.body).text();
+				}
+				clearInterval(defaultOption._progressInterval);
+				defaultOption.onProgress(100);
+				defaultOption.onSuccess(result);
+			});
+		}
+		//挂载上传事件操作
+		div.find('input').on('change',function(){
+			var file = this;
+			self._checkCanUpload( file , defaultOption , function(){
+				self._checkFileSelect( file , defaultOption , function(){
+					self._checkFileType( file , defaultOption , function(){
+						self._checkFileSize( file , defaultOption , function(){
+							if( defaultOption.iframe ){
+								self._iframeUpload(frameId,formId,defaultOption);
+							}else{
+								defaultOption._uploadData = file.files[0];
+								self._localImageUpload(file,defaultOption);
+							}
+						});
+					});
+				});
+			});
+		});
+	},
 	_cordovaImage:function(defaultOption){
 		function chooseImage(next){
 			window.imagePicker.getPictures(
