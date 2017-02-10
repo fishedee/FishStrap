@@ -137,6 +137,12 @@ module.exports = {
 				contentDiv += '<div><video name="' + field.id + '" src="" controls="controls"/></div>' +
 					'<div class="progress"><div class="bar" id="' + field.videoProgressTargetId + '"></div></div>' +
 				'<div class="btn" id="'+field.videoTargetId+'"><span>点击这里上传视频</span></div>';
+			}else if( field.type == 'audio'){
+				field.audioTargetId = $.uniqueNum();
+				field.audioProgressTargetId = $.uniqueNum();
+				contentDiv += '<div><audio name="' + field.id + '" src="" controls="controls"/></div>' +
+					'<div class="progress"><div class="bar" id="' + field.audioProgressTargetId + '"></div></div>' +
+				'<div class="btn" id="'+field.audioTargetId+'"><span>点击这里上传音频</span></div>';
 			}else if( field.type == 'file'){
 				field.fileTargetId = $.uniqueNum();
 				field.fileProgressTargetId = $.uniqueNum();
@@ -270,6 +276,29 @@ module.exports = {
 							dialog.message(msg);
 						}
 					});
+				}else if( field.type == 'audio'){ 
+					upload.audio({
+						url:field.option.url,
+						target:field.audioTargetId,
+						field:'data',
+						type:field.option.type,
+						maxSize:field.option.maxSize,
+						onProgress:function(progress){
+							$('#'+field.audioProgressTargetId).text(progress+'%');
+							$('#'+field.audioProgressTargetId).css('width',progress+'%');
+						},
+						onSuccess:function(data){
+							data = $.JSON.parse(data);
+							if( data.code != 0 ){
+								dialog.message(data.msg);
+								return;
+							}
+							div.find('audio[name='+field.id+']').attr('src',data.data);
+						},
+						onFail:function(msg){
+							dialog.message(msg);
+						}
+					});
 				}else if( field.type == 'file'){
 					upload.file({
 						url:field.option.url,
@@ -381,6 +410,8 @@ module.exports = {
 					div.find('img[name='+field.id+']').attr("src",dataValue[field.id]);
 				} else if ( field.type == 'video'){ 
 					div.find('video[name='+field.id+']').attr("src",dataValue[field.id]);
+				} else if ( field.type == 'audio'){ 
+					div.find('audio[name='+field.id+']').attr("src",dataValue[field.id]);
 				}else if( field.type == 'file'){
 					div.find('div[name='+field.id+']').text(dataValue[field.id]);
 				}else if( field.type == 'compressFile'){
@@ -426,8 +457,10 @@ module.exports = {
 					data[field.id] = field._editor.getContent();
 				}else if( field.type == 'image'){
 					data[field.id] = $.trim($('#'+defaultOption.id).find('img[name='+field.id+']').attr("src"));
-				} else if ( field.type == 'video'){ 
+				}else if( field.type == 'video'){ 
 					data[field.id] = $.trim($('#'+defaultOption.id).find('video[name='+field.id+']').attr("src"));
+				}else if( field.type == 'audio') {
+					data[field.id] = $.trim($('#' + defaultOption.id).find('audio[name=' + field.id + ']').attr("src"));
 				}else if( field.type == 'file'){
 					data[field.id] = $.trim($('#'+defaultOption.id).find('div[name='+field.id+']').text());
 				}else if( field.type == 'compressFile'){
