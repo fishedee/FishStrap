@@ -100,6 +100,14 @@ module.exports = {
 					moveDown:function(){
 						var next = tr.next();
 						next.insertBefore(tr);
+					},
+					moveFirst:function(){
+						var first = tr.parent('tbody').children().first();
+						tr.insertBefore(first);
+					},
+					moveLast:function(){
+						var last = tr.parent('tbody').children().last();
+						last.after(tr);
 					}
 				};
 				next(data,operation);
