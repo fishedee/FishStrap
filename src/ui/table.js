@@ -40,6 +40,8 @@ module.exports = {
 					$(this).find('img').attr('src',singleData[singleColumn.id]);
 				else if( singleColumn.type == 'textInput')
 					$(this).find('input').val(singleData[singleColumn.id]);
+				else if( singleColumn.type == 'fullEditor')
+					$(this).html(singleData[singleColumn.id]);
 				else 
 					$(this).text(singleData[singleColumn.id]);
 			});
@@ -63,6 +65,8 @@ module.exports = {
 					singleData[singleColumn.id] = $(this).find('img').attr('src');
 				else if( singleColumn.type == 'textInput')
 					singleData[singleColumn.id] = $(this).find('input').val();
+				else if( singleColumn.type == 'fullEditor')
+					singleData[singleColumn.id] = $(this).html();
 				else 
 					singleData[singleColumn.id] = $(this).text();
 			});
