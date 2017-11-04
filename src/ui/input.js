@@ -253,13 +253,16 @@ module.exports = {
 							dialog.message(msg);
 						}
 					});
-				}else if( field.type == 'video'){ 
+				}else if( field.type == 'video'){
 					upload.video({
 						url:field.option.url,
 						target:field.videoTargetId,
 						field:'data',
 						type:field.option.type,
 						maxSize:field.option.maxSize,
+						urlType:field.option.urlType,
+						key:field.option.key,
+						token:field.option.token,
 						onProgress:function(progress){
 							$('#'+field.videoProgressTargetId).text(progress+'%');
 							$('#'+field.videoProgressTargetId).css('width',progress+'%');
@@ -270,13 +273,19 @@ module.exports = {
 								dialog.message(data.msg);
 								return;
 							}
-							div.find('video[name='+field.id+']').attr('src',data.data);
+							playUrl = ''
+							if (field.option.playUrl != ''){
+								playUrl = field.option.playUrl
+							}else{
+								playUrl = data.data
+							}
+							div.find('video[name='+field.id+']').attr('src',playUrl);
 						},
 						onFail:function(msg){
 							dialog.message(msg);
 						}
 					});
-				}else if( field.type == 'audio'){ 
+				}else if( field.type == 'audio'){
 					upload.audio({
 						url:field.option.url,
 						target:field.audioTargetId,
@@ -408,9 +417,9 @@ module.exports = {
 					field._editor.setFormatData(dataValue[field.id]);
 				}else if( field.type == 'image'){
 					div.find('img[name='+field.id+']').attr("src",dataValue[field.id]);
-				} else if ( field.type == 'video'){ 
+				} else if ( field.type == 'video'){
 					div.find('video[name='+field.id+']').attr("src",dataValue[field.id]);
-				} else if ( field.type == 'audio'){ 
+				} else if ( field.type == 'audio'){
 					div.find('audio[name='+field.id+']').attr("src",dataValue[field.id]);
 				}else if( field.type == 'file'){
 					div.find('div[name='+field.id+']').text(dataValue[field.id]);
@@ -457,7 +466,7 @@ module.exports = {
 					data[field.id] = field._editor.getContent();
 				}else if( field.type == 'image'){
 					data[field.id] = $.trim($('#'+defaultOption.id).find('img[name='+field.id+']').attr("src"));
-				}else if( field.type == 'video'){ 
+				}else if( field.type == 'video'){
 					data[field.id] = $.trim($('#'+defaultOption.id).find('video[name='+field.id+']').attr("src"));
 				}else if( field.type == 'audio') {
 					data[field.id] = $.trim($('#' + defaultOption.id).find('audio[name=' + field.id + ']').attr("src"));

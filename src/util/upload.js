@@ -66,7 +66,7 @@ module.exports = {
 			defaultOption.onFail('您当前的微信版本太低，不支持传图，请升级到最新版');
 			return;
 		}
-		nextStep(); 
+		nextStep();
 	},
 	_checkFileSelect:function( file , defaultOption , nextStep ){
 		if( file.files ){
@@ -80,7 +80,7 @@ module.exports = {
 			}else{
 				defaultOption._fileAddress = file.value;
 			}
-			
+
 		}else{
 			//不支持HTML5的浏览器
 			if( !file.value || file.value == null )
@@ -101,7 +101,7 @@ module.exports = {
 				if( allowType == "")
 					continue;
 				var allowType = '.'+allowType;
-				if( defaultOption._fileName.substring( 
+				if( defaultOption._fileName.substring(
 					defaultOption._fileName.length - allowType.length ).toLowerCase() == allowType.toLowerCase() ){
 					isAllow = true;
 					break;
@@ -249,9 +249,55 @@ module.exports = {
 		httpReuqest.addEventListener("load", complete, false);
 		httpReuqest.addEventListener("abort", abort, false);
 		httpReuqest.addEventListener("error", failed, false);
-		httpReuqest.setRequestHeader("Authorization", "UpToken "+defaultOption.urlToken); 
-		httpReuqest.setRequestHeader("Content-Type","application/octet-stream"); 
+		httpReuqest.setRequestHeader("Authorization", "UpToken "+defaultOption.urlToken);
+		httpReuqest.setRequestHeader("Content-Type","application/octet-stream");
 		httpReuqest.send(data);
+	},
+	_cloudVideoUpload:function(file,defaultOption){
+	  //构造数据
+		var formData = new FormData();
+		formData.append('file', defaultOption._uploadData);
+		formData.append('key', defaultOption.key);
+		formData.append('token', defaultOption.token);
+
+		var progress = function(e) {
+			if(e.lengthComputable){
+				defaultOption._progress = Math.ceil(100 * (e.loaded / e.total));
+				defaultOption.onProgress(defaultOption._progress);
+			}
+		}
+		var complete = function(e) {
+			var response = $.JSON.parse(e.target.response);
+			if( _.isUndefined(response.error) == false ){
+				defaultOption.onFail(response.error);
+				return;
+			}
+			var result = {
+				code:0,
+				msg:'',
+				data:'http://'+defaultOption.url+'/'+response.key
+			};
+			defaultOption.onSuccess($.JSON.stringify(result));
+		}
+		var failed = function() {
+			defaultOption.onFail('网络断开，请稍后重新操作');
+		}
+		var abort = function() {
+			defaultOption.onFail('上传已取消');
+		}
+		var readystatechange = function(e) {
+			if (e.readyState === 4) {
+				console.log(e.responseText);
+			}
+		}
+		var httpReuqest = new XMLHttpRequest();
+		httpReuqest.open("POST", "http://upload.qiniu.com/",true);
+		httpReuqest.addEventListener('progress',progress, false);
+		httpReuqest.addEventListener("load", complete, false);
+		httpReuqest.addEventListener("abort", abort, false);
+		httpReuqest.addEventListener("error", failed, false);
+		httpReuqest.addEventListener("readystatechange", readystatechange);
+		httpReuqest.send(formData);
 	},
 	_localImageUpload:function(file,defaultOption){
 		//构造数据
@@ -287,9 +333,9 @@ module.exports = {
 	_uploadImage:function( file,defaultOption  ){
 		var self = this;
 		if( defaultOption.urlType == 'local')
-			self._localImageUpload(file,defaultOption);	
+			self._localImageUpload(file,defaultOption);
 		else
-			self._cloudImageUpload(file,defaultOption);	
+			self._cloudImageUpload(file,defaultOption);
 	},
 	_iframeUpload:function(frameId,formId,defaultOption){
 		//制作虚假的进度条，1000毫秒自动往上增加5%
@@ -337,7 +383,7 @@ module.exports = {
 		div = $(div);
 		$('#'+defaultOption.target).css('position','relative');
 		$('#'+defaultOption.target).append(div);
-		
+
 		//挂载iframe载入事件
 		if( defaultOption.iframe ){
 			$('#'+frameId).load(function(){
@@ -382,6 +428,9 @@ module.exports = {
 			url:'',
 			target:'',
 			field:'',
+			urlType:'local',
+			key:'',
+			token:'',
 			type:null,
 			maxSize:null,
 			accept:null,
@@ -404,7 +453,7 @@ module.exports = {
 		div = $(div);
 		$('#'+defaultOption.target).css('position','relative');
 		$('#'+defaultOption.target).append(div);
-		
+
 		//挂载iframe载入事件
 		if( defaultOption.iframe ){
 			$('#'+frameId).load(function(){
@@ -434,7 +483,11 @@ module.exports = {
 								self._iframeUpload(frameId,formId,defaultOption);
 							}else{
 								defaultOption._uploadData = file.files[0];
-								self._localImageUpload(file,defaultOption);
+								if ( defaultOption.urlType == 'local') {
+									self._localImageUpload(file,defaultOption);
+								}else {
+									self._cloudVideoUpload(file,defaultOption);
+								}
 							}
 						});
 					});
@@ -471,7 +524,7 @@ module.exports = {
 		div = $(div);
 		$('#'+defaultOption.target).css('position','relative');
 		$('#'+defaultOption.target).append(div);
-		
+
 		//挂载iframe载入事件
 		if( defaultOption.iframe ){
 			$('#'+frameId).load(function(){
