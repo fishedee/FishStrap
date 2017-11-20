@@ -274,7 +274,7 @@ module.exports = {
 								return;
 							}
 							playUrl = ''
-							if (field.option.playUrl != ''){
+							if (field.option.playUrl != undefined){
 								playUrl = field.option.playUrl
 							}else{
 								playUrl = data.data
