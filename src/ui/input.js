@@ -59,7 +59,7 @@ module.exports = {
 		for( var i = 0 ; i != defaultOption.field.length ; ++i ){
 			var field = defaultOption.field[i];
 			var data = defaultOption.value[field.id];
-			if( !data )
+			if( !data || typeof(data) == 'function')
 				continue;
 			if( field.type == 'text'){
 				$('#'+defaultOption.id).find('input[name='+field.id+']').val(data);
