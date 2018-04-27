@@ -495,6 +495,8 @@ module.exports = {
 		}
 		setAllData(defaultOption.value);
 		div.find('.submit').click(function(){
+			// 关闭意外退出提示
+			window.onbeforeunload = null
 			defaultOption.submit(getAllData());
 		});
 		div.find('.cancel').click(defaultOption.cancel);

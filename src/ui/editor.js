@@ -23,6 +23,11 @@ module.exports = {
 			serverUrl:defaultOption.url,
 			autoHeightEnabled: true,
 		});
+		// 防止编辑富文本意外退出
+		window.onbeforeunload = function (e) {
+			var e = window.event || e;
+			e.returnValue = ("您输入的内容尚未保存，确定离开此页面吗？");
+		};
 		//计算editor的函数
 		return {
 			getContent:function(){
