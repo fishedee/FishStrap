@@ -142,7 +142,7 @@ module.exports = {
 			conf.maxH = defaultOption.height;
 		if( conf.maxW && conf.maxH )
 			conf.scale = conf.maxW/conf.maxH ;
-		if (file.files[0].type == 'image/jpeg') {
+		if (file.files[0].type == 'image/jpeg' && defaultOption.isCompression) {
 			try {
 				var jpg = new jpegMeta.JpegFile(defaultOption._fieldata,defaultOption._fileName);
 			} catch (e) {
@@ -157,7 +157,7 @@ module.exports = {
 		//读取并压缩图片
 		var img = new Image();
 		img.onload = function() {
-			if (file.files[0].type == 'image/jpeg') {
+			if (file.files[0].type == 'image/jpeg' && defaultOption.isCompression) {
 				//预览用的perviewBase64
 				var perviewBase64;
 				try {
@@ -844,6 +844,8 @@ module.exports = {
 			width:null,
 			height:null,
 			quality:0.8,
+			// 是否压缩图片
+			isCompression:true,
 			onOpen:function(data){
 			},
 			onProgress:function(data){

@@ -235,6 +235,7 @@ module.exports = {
 						field:'data',
 						width:field.option.width,
 						height:field.option.height,
+						isCompression:field.option.isCompression,
 						quality:0.8,
 						onProgress:function(progress){
 							$.console.log(progress);
