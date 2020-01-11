@@ -254,7 +254,7 @@ module.exports = {
 		httpReuqest.send(data);
 	},
 	_cloudVideoUpload:function(file,defaultOption){
-	  //构造数据
+		//构造数据
 		var formData = new FormData();
 		formData.append('file', defaultOption._uploadData);
 		formData.append('key', defaultOption.key);
@@ -297,6 +297,56 @@ module.exports = {
 		httpReuqest.addEventListener("abort", abort, false);
 		httpReuqest.addEventListener("error", failed, false);
 		httpReuqest.addEventListener("readystatechange", readystatechange);
+		httpReuqest.send(formData);
+	},
+	_cloudVideoUploadByAliyunOss: function (file, defaultOption) {
+		console.log(defaultOption.formData)
+		//构造数据
+		var formData = new FormData();
+		formData.append('key', defaultOption.formData.dir + defaultOption.key);
+		formData.append('policy', defaultOption.formData.policy);
+		formData.append('OSSAccessKeyId', defaultOption.formData.OSSAccessKeyId);
+		formData.append('success_action_status','200');
+		formData.append('signature', defaultOption.formData.signature);
+		formData.append('file', defaultOption._uploadData);
+
+		var progress = function(e) {
+			if(e.lengthComputable){
+				defaultOption._progress = Math.ceil(100 * (e.loaded / e.total));
+				defaultOption.onProgress(defaultOption._progress);
+			}
+		}
+		var complete = function(e) {
+			if (e.target.status != 200){
+				defaultOption.onFail(e.target.statusText);
+				return
+			}
+			var result = {
+				code:0,
+				msg:'',
+				data: defaultOption.formData.host + defaultOption.formData.dir + defaultOption.key
+			};
+			defaultOption.onSuccess($.JSON.stringify(result));
+		}
+		var failed = function() {
+			defaultOption.onFail('网络断开，请稍后重新操作');
+		}
+		var abort = function() {
+			defaultOption.onFail('上传已取消');
+		}
+		var readystatechange = function(e) {
+			if (e.readyState === 4) {
+				console.log(e.responseText);
+			}
+		}
+		var httpReuqest = new XMLHttpRequest();
+		httpReuqest.open("POST", defaultOption.formData.host, true);
+		httpReuqest.addEventListener('progress',progress, false);
+		httpReuqest.addEventListener("load", complete, false);
+		httpReuqest.addEventListener("abort", abort, false);
+		httpReuqest.addEventListener("error", failed, false);
+		httpReuqest.addEventListener("readystatechange", readystatechange);
+		httpReuqest.setRequestHeader('x-oss-forbid-overwrite', 'true');
 		httpReuqest.send(formData);
 	},
 	_localImageUpload:function(file,defaultOption){
@@ -379,7 +429,7 @@ module.exports = {
 		div = '<form id="'+formId+'" action="'+defaultOption.url+'" target="'+frameId+'" method="post" enctype="multipart/form-data" style="opacity:0;filter:alpha(opacity=0);display:block;position:absolute;top:0px;bottom:0px;left:0px;right:0px;width:100%;height:100%;z-index:9;overflow:hidden;">'+
 			'<input type="file" id="'+fileId+'" style="width:100%;height:100%;font-size:1000px;" name="'+defaultOption.field+'"'+defaultOption.accept+'/>'+
 			defaultOption.iframe+
-		'</form>';
+			'</form>';
 		div = $(div);
 		$('#'+defaultOption.target).css('position','relative');
 		$('#'+defaultOption.target).append(div);
@@ -431,6 +481,7 @@ module.exports = {
 			urlType:'local',
 			key:'',
 			token:'',
+			formData:{},
 			type:null,
 			maxSize:null,
 			accept:null,
@@ -449,7 +500,7 @@ module.exports = {
 		div = '<form id="'+formId+'" action="'+defaultOption.url+'" target="'+frameId+'" method="post" enctype="multipart/form-data" style="opacity:0;filter:alpha(opacity=0);display:block;position:absolute;top:0px;bottom:0px;left:0px;right:0px;width:100%;height:100%;z-index:9;overflow:hidden;">'+
 			'<input type="file" id="'+fileId+'" style="width:100%;height:100%;font-size:1000px;" name="'+defaultOption.field+'"'+defaultOption.accept+'/>'+
 			defaultOption.iframe+
-		'</form>';
+			'</form>';
 		div = $(div);
 		$('#'+defaultOption.target).css('position','relative');
 		$('#'+defaultOption.target).append(div);
@@ -485,8 +536,10 @@ module.exports = {
 								defaultOption._uploadData = file.files[0];
 								if ( defaultOption.urlType == 'local') {
 									self._localImageUpload(file,defaultOption);
-								}else {
-									self._cloudVideoUpload(file,defaultOption);
+								} else if (defaultOption.urlType == 'aliyunOss') {
+									self._cloudVideoUploadByAliyunOss(file,defaultOption);
+								} else {
+									self._cloudVideoUpload(file, defaultOption);
 								}
 							}
 						});
@@ -520,7 +573,7 @@ module.exports = {
 		div = '<form id="'+formId+'" action="'+defaultOption.url+'" target="'+frameId+'" method="post" enctype="multipart/form-data" style="opacity:0;filter:alpha(opacity=0);display:block;position:absolute;top:0px;bottom:0px;left:0px;right:0px;width:100%;height:100%;z-index:9;overflow:hidden;">'+
 			'<input type="file" id="'+fileId+'" style="width:100%;height:100%;font-size:1000px;" name="'+defaultOption.field+'"'+defaultOption.accept+'/>'+
 			defaultOption.iframe+
-		'</form>';
+			'</form>';
 		div = $(div);
 		$('#'+defaultOption.target).css('position','relative');
 		$('#'+defaultOption.target).append(div);
@@ -565,18 +618,18 @@ module.exports = {
 	_cordovaImage:function(defaultOption){
 		function chooseImage(next){
 			window.imagePicker.getPictures(
-			    function(results) {
-			    	if( results.length == 0 ){
-			    		defaultOption.onFail('请选择图片上传噢');
-			    		return;
-			    	}
-			        next(results[0]);
-			    }, function (error) {
-			    	defaultOption.onFail(error);
-			    },{
-			        maximumImagesCount: 1,
-			        width: defaultOption.width
-			    }
+				function(results) {
+					if( results.length == 0 ){
+						defaultOption.onFail('请选择图片上传噢');
+						return;
+					}
+					next(results[0]);
+				}, function (error) {
+					defaultOption.onFail(error);
+				},{
+					maximumImagesCount: 1,
+					width: defaultOption.width
+				}
 			);
 		}
 		function uploadImageToServer(fileURL){
@@ -599,10 +652,10 @@ module.exports = {
 
 			var fileTransfer = new window.FileTransfer();
 			fileTransfer.onprogress = function(progressEvent) {
-			    if (progressEvent.lengthComputable) {
-			    	var precent =  Math.ceil(100 * (progressEvent.loaded / progressEvent.total));
-			    	defaultOption.onProgress(precent);
-			    }
+				if (progressEvent.lengthComputable) {
+					var precent =  Math.ceil(100 * (progressEvent.loaded / progressEvent.total));
+					defaultOption.onProgress(precent);
+				}
 			};
 			fileTransfer.upload(fileURL, encodeURI(defaultOption.url), success, fail, options);
 		}
@@ -620,27 +673,27 @@ module.exports = {
 		function chooseImage(next){
 			wxSdk.chooseImage({
 				success: function (res) {
-			        var localIds = res.localIds;
-			        if( localIds.length == 0 )
-			        	return;
-			        currentLocalId = localIds[0];
-			        defaultOption.onOpen(currentLocalId);
-			        defaultOption.onProgress(0);
-			        next();
-			    }
+					var localIds = res.localIds;
+					if( localIds.length == 0 )
+						return;
+					currentLocalId = localIds[0];
+					defaultOption.onOpen(currentLocalId);
+					defaultOption.onProgress(0);
+					next();
+				}
 			});
 		}
 		function uploadImageToWeixin(next){
 			wxSdk.uploadImage({
-			    localId:currentLocalId,
-			    isShowProgressTips: 1,
-			    success: function (res) {
-			      	currentServerId = res.serverId;
-			      	next();
-			    },
-			    fail:function(){
-			    	defaultOption.onFail('上传图片到微信服务器失败');
-			    }
+				localId:currentLocalId,
+				isShowProgressTips: 1,
+				success: function (res) {
+					currentServerId = res.serverId;
+					next();
+				},
+				fail:function(){
+					defaultOption.onFail('上传图片到微信服务器失败');
+				}
 			});
 		}
 		function uploadImageToServer(next){
@@ -703,9 +756,9 @@ module.exports = {
 						return;
 					}
 					defaultOption.onOpen();
-				    defaultOption.onProgress(0);
-				    currentImage = data.data[0];
-				    next();
+					defaultOption.onProgress(0);
+					currentImage = data.data[0];
+					next();
 				},
 				error:function(xhr,data){
 					alert(data);

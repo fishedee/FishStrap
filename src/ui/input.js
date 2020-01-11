@@ -264,6 +264,7 @@ module.exports = {
 						urlType:field.option.urlType,
 						key:field.option.key,
 						token:field.option.token,
+						formData:field.option.formData,
 						onProgress:function(progress){
 							$('#'+field.videoProgressTargetId).text(progress+'%');
 							$('#'+field.videoProgressTargetId).css('width',progress+'%');
